@@ -1,21 +1,23 @@
-// Import the functions you need from the SDKs you need
-import { initializeApp } from "firebase/app";
-import { getAnalytics } from "firebase/analytics";
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
+const { cert, getApp, getApps, initializeApp } = require('firebase-admin/app');
+const { FieldValue, getFirestore } = require('firebase-admin/firestore');
 
-// Your web app's Firebase configuration
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
-const firebaseConfig = {
-  apiKey: "AIzaSyBv-ymRc3da77Gk8niBp-Ai0IXavAJ5EgY",
-  authDomain: "laili-birthday.firebaseapp.com",
-  projectId: "laili-birthday",
-  storageBucket: "laili-birthday.firebasestorage.app",
-  messagingSenderId: "165799794057",
-  appId: "1:165799794057:web:ba84fd9cc44e33a7bdfd58",
-  measurementId: "G-V07E1TWWJ3"
+const serviceAccountJson = process.env.FIREBASE_SERVICE_ACCOUNT;
+if (!serviceAccountJson) {
+  throw new Error('FIREBASE_SERVICE_ACCOUNT environment variable is required.');
+}
+
+let serviceAccount;
+try {
+  serviceAccount = JSON.parse(serviceAccountJson);
+} catch (error) {
+  throw new Error('FIREBASE_SERVICE_ACCOUNT must contain valid JSON.', { cause: error });
+}
+
+const app = getApps().length
+  ? getApp()
+  : initializeApp({ credential: cert(serviceAccount) });
+
+module.exports = {
+  db: getFirestore(app),
+  FieldValue,
 };
-
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);

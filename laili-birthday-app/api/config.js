@@ -1,8 +1,7 @@
 const DEFAULTS = {
   nama: 'Laili',
-  dari: '— dari seseorang yang senang lihat kamu ngopi',
   pesan:
-    'Semoga umur barumu penuh kopi yang enak, hari yang ringan, dan orang-orang yang bikin kamu tenang. Terima kasih sudah jadi kamu.',
+    'Jadi guru itu kayak nyalain lampu buat orang lain, sering kali sampai lupa kalau cahayanya juga buat diri sendiri. Gue cuma pengen bilang, makasih ya udah bertahan dan berjuang sejauh ini. Semoga di umur baru ini lo ketemu orang-orang yang bikin hati tenang, dijauhin dari yang bikin capek, dan dikasih keberhasilan yang pantas buat semua perjuangan lo. Percaya sama diri lo ya, Laili. Lo bisa sampai sini karena lo memang mampu.',
 };
 
 // GET /api/config -> teks ucapan, diambil dari Firestore: birthday/config

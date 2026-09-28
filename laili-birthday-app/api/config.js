@@ -1,5 +1,3 @@
-const { db } = require('../lib/firebase');
-
 const DEFAULTS = {
   nama: 'Laili',
   dari: '— dari seseorang yang senang lihat kamu ngopi',
@@ -11,7 +9,9 @@ const DEFAULTS = {
 module.exports = async (req, res) => {
   res.setHeader('Cache-Control', 'no-store');
   if (req.method !== 'GET') return res.status(405).end();
+  if (!process.env.FIREBASE_SERVICE_ACCOUNT) return res.status(200).json(DEFAULTS);
   try {
+    const { db } = require('../lib/firebase');
     const snap = await db.collection('birthday').doc('config').get();
     const data = snap.exists ? snap.data() : {};
     const out = {};
@@ -20,7 +20,6 @@ module.exports = async (req, res) => {
     }
     return res.status(200).json(out);
   } catch (e) {
-    console.error(e);
     return res.status(200).json(DEFAULTS);
   }
 };

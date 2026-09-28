@@ -129,13 +129,13 @@ const ITEMS=[{x:2,y:22,e:'🌸',n:'bunga'},{x:44,y:22,e:'🐈',n:'kucing'},{x:28
 let started=0,ended=0,boxOn=0,boxOpen=0,held=null,last=0,lines=[],li=0,typing=null,after=null,busy=0;
 const got=()=>ITEMS.filter(i=>i.got).length,cnt=()=>Object.values(Q).filter(Boolean).length;
 const API='/api';
-let ready;
-async function save(){try{await ready;await fetch(API+'/progress',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({Q,A:AC,items:ITEMS.map(i=>!!i.got),boxOn:!!boxOn,boxOpen:!!boxOpen,ended:!!ended})})}catch(e){}}
-async function boot(){try{
-  const[c,p]=await Promise.all([fetch(API+'/config').then(r=>r.json()),fetch(API+'/progress').then(r=>r.json())]);
-  Object.assign(CFG,c);
-  if(p&&p.Q){Object.assign(Q,p.Q);Object.assign(AC,p.A||{});KEYS.forEach(k=>{if(Q[k])AC[k]=1});(p.items||[]).forEach((v,i)=>{if(ITEMS[i])ITEMS[i].got=!!v});if(cnt()===NQ)boxOn=1;hud()}
-}catch(e){}}
+const STORE='laili-birthday-progress-v1';
+let ready,remoteAvailable=0;
+function restore(p){if(!p||!p.Q)return;Object.assign(Q,p.Q);Object.assign(AC,p.A||{});KEYS.forEach(k=>{if(Q[k])AC[k]=1});(p.items||[]).forEach((v,i)=>{if(ITEMS[i])ITEMS[i].got=!!v});boxOn=!!p.boxOn||cnt()===NQ;boxOpen=!!p.boxOpen;ended=!!p.ended;hud();if(ended)showEnd()}
+async function save(){try{await ready}catch(e){}const p={Q,A:AC,items:ITEMS.map(i=>!!i.got),boxOn:!!boxOn,boxOpen:!!boxOpen,ended:!!ended};try{localStorage.setItem(STORE,JSON.stringify(p))}catch(e){}if(!remoteAvailable)return;try{const r=await fetch(API+'/progress',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(p)});if(!r.ok)throw new Error('Progress API unavailable')}catch(e){remoteAvailable=0}}
+async function boot(){let local=null;try{local=JSON.parse(localStorage.getItem(STORE)||'null');restore(local)}catch(e){}
+  try{const r=await fetch(API+'/config');if(!r.ok)throw new Error('Config API unavailable');Object.assign(CFG,await r.json());if(ended)showEnd()}catch(e){}
+  try{const r=await fetch(API+'/progress');if(!r.ok)throw new Error('Progress API unavailable');const p=await r.json();if(p&&p.available===false)return;remoteAvailable=1;if(p&&p.Q){restore(p);try{localStorage.setItem(STORE,JSON.stringify(p))}catch(e){}}}catch(e){}}
 ready=boot();hud();
 function hud(){$('kode').textContent='KODE '+KEYS.map(k=>Q[k]?DIG[k]:'_').join(' ');$('misi').textContent='MISI '+cnt()+'/'+NQ;const ac=ORD.filter(k=>AC[k]&&!Q[k]);$('qb').innerHTML='<b>MISI AKTIF</b><br>'+(ac.length?ac.map(k=>'▸ '+OBJ[k]+(k==='n'?' ('+got()+'/3)':'')).join('<br>'):(cnt()===NQ?(boxOpen?'Semua selesai!':'Buka kotak berkilau di dekat kolam'):'Belum ada. Cari tanda ! kuning di desa'))}
 function say(a,cb){lines=a;li=0;after=cb||null;$('ch').style.display='none';$('arrow').style.display='block';$('dlg').style.display='block';typeLine()}
@@ -194,7 +194,8 @@ function talk(k){if(Q[k]||AC[k])return QS[k]();AC[k]=1;save();say([INTRO[k],'�
 function openBox(){const ent=(d)=>ask('Kunci kotak butuh '+NQ+' angka.\nKODE: '+d.padEnd(NQ,'_'),[...'0123456789'],-1,()=>{},o=>{d+=o;if(d.length<NQ)return ent(d);
   if(d===KEYS.map(k=>DIG[k]).join('')){boxOpen=1;say(['Klik... kotaknya terbuka!','Isinya sebuah kue dengan satu lilin. 🎂','Buat permintaan dulu, Laili... lalu tiup lilinnya!'],finish)}
   else say(['Kodenya salah.','Petunjuk: urutan angka mengikuti urutan kolom KODE di atas layar. Coba pikirkan artinya.'])});ent('')}
-function finish(){ended=1;save();$('msg').textContent=CFG.pesan;$('from').textContent=CFG.dari;$('end').style.display='flex';
+function showEnd(){$('msg').textContent=CFG.pesan;$('from').textContent=CFG.dari;$('end').style.display='flex'}
+function finish(){ended=1;save();showEnd();
   for(let i=0;i<22;i++){const s=document.createElement('span');s.className='cf';s.textContent=['🎉','✨','☕','🎂','💛'][i%5];s.style.left=Math.random()*94+'%';s.style.animationDuration=(3+Math.random()*3)+'s';s.style.animationDelay=(-Math.random()*4)+'s';$('stage').appendChild(s)}}
 function move(d){P.dir=d;const[x,y]=DX[d],nx=P.x+x,ny=P.y+y,c=M[ny]&&M[ny][nx];if(!c||SOLID.includes(c)||(boxOn&&nx===BX&&ny===BY))return;P.x=nx;P.y=ny;P.step++;
   const it=ITEMS.find(i=>AC.n&&!i.got&&i.x===nx&&i.y===ny);if(it){it.got=1;save();hud();say(['Kamu menemukan '+it.n+' '+it.e+' ('+got()+'/3)'])}}

@@ -1,13 +1,19 @@
-const { db, FieldValue } = require('../lib/firebase');
-
-const ref = db.collection('birthday').doc('progress');
 const QUESTS = ['n', 'c', 't', 's', 'b', 'y', 'm'];
 
 // GET  /api/progress -> progres tersimpan
 // POST /api/progress -> simpan progres (misi, barang, kotak, selesai)
 module.exports = async (req, res) => {
   res.setHeader('Cache-Control', 'no-store');
+  if (req.method !== 'GET' && req.method !== 'POST') return res.status(405).end();
+  if (!process.env.FIREBASE_SERVICE_ACCOUNT) {
+    return req.method === 'GET'
+      ? res.status(200).json({ available: false })
+      : res.status(200).json({ ok: true, localOnly: true });
+  }
   try {
+    const { db, FieldValue } = require('../lib/firebase');
+    const ref = db.collection('birthday').doc('progress');
+
     if (req.method === 'GET') {
       const snap = await ref.get();
       return res.status(200).json(snap.exists ? snap.data() : {});
@@ -42,7 +48,6 @@ module.exports = async (req, res) => {
 
     return res.status(405).end();
   } catch (e) {
-    console.error(e);
     return res.status(500).json({ error: 'server_error' });
   }
 };

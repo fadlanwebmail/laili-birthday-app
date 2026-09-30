@@ -1032,7 +1032,7 @@ const SR=[
  [[41,27],[23,27],[23,17],[6,17]],[[46,27],[41,27],[41,7]],
  [[16,31],[38,31]],[[18,27],[18,31],[38,31]]
 ];
-const SKS=Array.from({length:16},(_,i)=>({i,female:i%2===1,
+const SKS=Array.from({length:10},(_,i)=>({i,female:i%2===1,
  scarf:i%4===1?['#d18a43','#7f5ad6','#238b89','#e0648a'][(i>>2)%4]:null,
  hair:['#3a2318','#2a1810','#5a3a20','#151515'][i%4],
  bag:['#d95a5a','#5aa8e8','#f2c94c','#5ad17a','#b98cff','#ff8a3d'][i%6],
@@ -1046,7 +1046,7 @@ function spawnStudent(sk){let best=null,bd=1e9;
  sk.a=0;sk.on=1;sk.out=0;sk.gc=0;sk.b=0;sk.w=0;sk.bt=0}
 function student(){if(!started||ended||lines.length||busy||partyOn){stPrev=0;return}
  const dt=stPrev?Math.min(60,NOW-stPrev):16;stPrev=NOW;
- if(!studentsReady){studentsReady=1;SKS.forEach((sk,i)=>sk.t=NOW+400+i*700);return}
+ if(!studentsReady){studentsReady=1;SKS.forEach((sk,i)=>sk.t=NOW+400+i*900);return}
  SKS.forEach(sk=>{
   if(!sk.on){if(NOW>=sk.t)spawnStudent(sk);return}
   if(sk.out){sk.a-=dt/500;if(sk.a<=0){sk.on=0;sk.t=NOW+1500+Math.random()*3500}return}

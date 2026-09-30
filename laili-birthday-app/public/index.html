@@ -152,7 +152,7 @@ body.arrival-active #pad,body.arrival-active #qb{visibility:hidden}
 </style>
 </head>
 <body>
-<div id="hud"><span id="misi">MISI 0/7</span><span><span id="saldo">Rp100.000</span><button id="mute" aria-label="Suara">🔊</button></span></div>
+<div id="hud"><span id="misi">MISI 0/10</span><span><span id="saldo">Rp100.000</span><button id="mute" aria-label="Suara">🔊</button></span></div>
 <div id="stage">
   <canvas id="c"></canvas><div id="qb"></div><div id="vendor-hint" role="status" aria-live="polite"></div>
   <div id="arrival-scene" aria-live="polite">
@@ -199,12 +199,12 @@ const CFG={
   pesan:"Menjadi guru berarti menyalakan cahaya untuk banyak orang. Tapi jangan lupa, lo juga pantas mendapat cahaya yang sama. Terima kasih sudah bertahan dan berjuang sejauh ini, Laili. Di usia yang baru ini, semoga lo dikelilingi orang-orang yang menenangkan, dijauhkan dari hal-hal yang melelahkan, dan mendapat kebahagiaan yang sepadan dengan semua usaha lo. Tetap percaya pada diri lo sendiri. Lo sudah sampai sejauh ini karena lo mampu."
 };
 // ==========================
-const $=id=>document.getElementById(id),cv=$('c'),g=cv.getContext('2d'),T=16,W=48,H=36;
+let $=id=>document.getElementById(id),cv=$('c'),g=cv.getContext('2d'),T=16,W=48,H=36;
 const SN={s:0,x:0,y:0};
 const R=(c,x,y,w,h)=>{g.fillStyle=c;if(SN.s){const s=SN.s,a=Math.floor((x-SN.x)*s),b=Math.floor((y-SN.y)*s),e=Math.ceil((x+w-SN.x)*s),f=Math.ceil((y+h-SN.y)*s);g.fillRect(a/s+SN.x,b/s+SN.y,(e-a)/s,(f-b)/s)}else g.fillRect(x,y,w,h)};
 const M=[...Array(H)].map(()=>Array(W).fill('.'));
 const fill=(c,x0,y0,x1,y1)=>{for(let y=y0;y<=y1;y++)for(let x=x0;x<=x1;x++)M[y][x]=c};
-const ICON={C:'☕',S:'🏫',T:'🚉',A:'🥐',B:'🌷',V:'🏛️',Y:'📚',M:'🛒',Q:'🏡',U:'🏪'},SIGN=[],NAME={C:'Kafe',S:'Sekolah',T:'Stasiun',A:'Toko Roti',B:'Toko Bunga',V:'Balai Desa',Y:'Perpustakaan',M:'Pasar',Q:'Rumah Pohon',U:'Minimarket'};
+const ICON={C:'☕',S:'🏫',T:'🚉',A:'🥐',B:'🌷',V:'🏛️',Y:'📚',M:'🛒',Q:'🏡',U:'🏪',K:'🎵',P:'📮',J:'🎨'},SIGN=[],NAME={C:'Kafe',S:'Sekolah',T:'Stasiun',A:'Toko Roti',B:'Toko Bunga',V:'Balai Desa',Y:'Perpustakaan',M:'Pasar',Q:'Rumah Pohon',U:'Minimarket',K:'Balai Musik',P:'Kantor Pos',J:'Sanggar Seni'};
 const bld=(l,x,y,w,d,dl)=>{fill(l,x,y,x+w-1,y+1);M[y+1][d]=dl||'d';if(ICON[l])SIGN.push([ICON[l],x+w/2,y,NAME[l]])};
 const sc=(y0,y1,m)=>{for(let y=y0;y<=y1;y++)for(let x=1;x<W-1;x++)if(M[y][x]==='.'&&(x*31+y*17)%m===0)M[y][x]='#'};
 const lil=(x0,y0,x1,y1,m)=>{for(let y=y0;y<=y1;y++)for(let x=x0;x<=x1;x++)if(M[y][x]==='.'&&(x*5+y*11)%m<2)M[y][x]=(x+y)%3?'l':'L'};
@@ -235,6 +235,8 @@ const SAKURA_TREES=[[7,10],[5,11],[7,21],[40,23],[42,21],[27,9],[36,9],[9,19],[4
 SAKURA_TREES.forEach(([x,y])=>M[y][x]='k');
 fill('.',1,1,8,4);M[4][3]='N';[5,6,7].forEach(x=>M[4][x]='N');
 fill('.',1,9,4,14);M[30][27]='N';
+// Bangunan misi baru: utara tengah & timur
+bld('K',21,5,4,23,'D');bld('P',27,5,4,29,'D');bld('J',43,11,4,44,'D');
 const VENDORS=[
  {x:21,y:18,stand:[20,18],seller:'Penjual es krim',food:'Es krim',short:'Es krim',icon:'🍦',price:7000,color:'#df79b1',female:true,scarf:'#e4a84b'},
  {x:25,y:19,stand:[24,20],seller:'Penjual sate',food:'Sate ayam',short:'Sate',icon:'🍢',price:10000,color:'#d9534f',female:false},
@@ -247,16 +249,16 @@ const VENDORS=[
 const CARTS=VENDORS.map(v=>[v.x,v.y,v.color,v.icon,v.short]),ZL=[[35,18.2,'Lapangan Bola'],[3,8.4,'Bulu Tangkis'],[6.3,5.4,'Area Piknik']];
 CARTS.forEach(([x,y])=>{M[y][x]='O';M[y][x+1]='O'});
 const FLAV={'4,16':'Toko bunga: Lily putih ini baru mekar pagi tadi. Harumnya menenangkan. 🌷','10,6':'Toko roti: Roti hangat baru keluar dari oven. Aromanya tercium sampai ke jalan. 🥐','18,15':'Balai Desa: Tempat warga berkumpul. Sepertinya sedang ada kegiatan di dalam.','28,15':'Perpustakaan desa: Suasananya tenang dan nyaman, cocok untuk membaca. 📚','38,26':'Pasar desa: Para pedagang menjajakan sayur dan buah segar. 🛒','38,6':'Minimarket desa: Berbagai kebutuhan sehari-hari tersedia di sini.'};
-const SOLID='#CSTHABVYMDdNrwFibOfQUk',DX={up:[0,-1],down:[0,1],left:[-1,0],right:[1,0]};
-const P={x:23,y:9,dir:'down',step:0},Q={n:0,c:0,t:0,s:0,b:0,y:0,m:0},AC={};
-const KEYS=['n','c','t','s','b','y','m'],NQ=7,ORD=['t','m','n','b','y','c','s'],
- OBJ={n:'Bantu Ibu mencari tiga barangnya',b:'Bantu penjual bunga menyiapkan pesanan',c:'Bantu barista memperbaiki mesin kopi',m:'Bantu pedagang menghitung belanjaan',t:'Bantu petugas merapikan jadwal kereta',y:'Bantu pustakawan merapikan rak buku',s:'Ikuti cerdas cermat di sekolah'};
+const SOLID='#CSTHABVYMDdNrwFibOfQUkKPJ',DX={up:[0,-1],down:[0,1],left:[-1,0],right:[1,0]};
+const P={x:23,y:9,dir:'down',step:0},Q={n:0,c:0,t:0,s:0,b:0,y:0,m:0,k:0,p:0,j:0},AC={};
+const KEYS=['n','c','t','s','b','y','m','k','p','j'],NQ=10,ORD=['t','m','n','b','c','s','k','p','y','j'],
+ OBJ={n:'Bantu Ibu mencari tiga barangnya',b:'Bantu penjual bunga menyiapkan pesanan',c:'Bantu barista memperbaiki mesin kopi',m:'Bantu pedagang menghitung belanjaan',t:'Bantu petugas merapikan jadwal kereta',y:'Bantu pustakawan merapikan rak buku',s:'Ikuti cerdas cermat di sekolah',k:'Bantu guru musik menyetel alat musik',p:'Bantu petugas pos memilah surat dan paket',j:'Bantu pelukis menyelesaikan lukisannya'};
 const ITEMS=[{x:2,y:22,e:'🌸',n:'bunga'},{x:44,y:22,e:'🐈',n:'kucing'},{x:28,y:22,e:'📦',n:'paket'}];
 let started=0,ended=0,partyOn=0,partyReady=0,last=0,lines=[],li=0,typing=null,after=null,busy=0;
 let arrivalState=0,arrivalStartedAt=0,arrivalTimer=null,arrivalCaptionIndex=-1;
 const ARR={zoom:2,zoomIn:[3400,5000],door:5600,appear:[6600,8000],walk:[8000,10600],wave:[10600,12400],depart:12400,zoomOut:[14000,15600],end:16200};
 const ARRIVAL_SCRIPT=[
- [0,'Laili berangkat dari desa sebelah dengan kereta lokal.'],
+ [0,'Sebuah undangan dari Kepala Desa tiba. Laili berangkat dengan kereta lokal.'],
  [1800,'Di balik jendela, sawah dan rumah-rumah kecil berlalu perlahan.'],
  [3400,'Kereta melambat. Stasiun Desa sudah terlihat.'],
  [5600,'Pintu gerbong terbuka. Laili menggenggam tasnya erat-erat.'],
@@ -272,16 +274,19 @@ const MOVE_INTERVAL=180;
 let wallet=100000,heldItem=null,heldDirection=null;
 const got=()=>ITEMS.filter(i=>i.got).length,cnt=()=>Object.values(Q).filter(Boolean).length;
 const CUR=()=>ORD.find(k=>!Q[k]);
-const GO={t:'Temui petugas di Stasiun',m:'Ke Pasar (timur desa)',n:'Temui Ibu di dekat Balai Desa',b:'Ke Toko Bunga (barat desa)',y:'Ke Perpustakaan (tengah desa)',c:'Ke Kafe (kiri atas desa)',s:'Ke Sekolah (atas desa)'};
-const NPC={t:'Petugas',m:'Pedagang',n:'Ibu',b:'Penjual bunga',y:'Pustakawan',c:'Barista',s:'Bu Guru'};
+const GO={t:'Temui petugas di Stasiun',m:'Ke Pasar (timur desa)',n:'Temui Ibu di dekat Balai Desa',b:'Ke Toko Bunga (barat desa)',y:'Ke Perpustakaan (tengah desa, di selatan Kantor Pos)',c:'Ke Kafe (kiri atas desa)',s:'Ke Sekolah (atas desa)',k:'Ke Balai Musik (utara, di kanan Sekolah)',p:'Ke Kantor Pos (utara tengah)',j:'Ke Sanggar Seni (ujung timur desa)'};
+const NPC={t:'Petugas',m:'Pedagang',n:'Ibu',b:'Penjual bunga',y:'Pustakawan',c:'Barista',s:'Bu Guru',k:'Guru Musik',p:'Petugas Pos',j:'Pelukis'};
 const NEXT={
- t:['Petugas: Terima kasih, Bu Laili. Oh iya, Kepala Desa titip pesan supaya Ibu mampir ke Pasar dulu.','Pasar ada di sisi timur desa, tepat di bawah Lapangan Bola. Sambil jalan, silakan jajan atau menyapa warga dulu.'],
- m:['Pedagang: Hitungan Ibu tepat sekali! Belanjaan sebanyak ini untuk... eh, untuk stok pasar, maksudnya.','Pedagang: Oh ya, Ibu di sebelah Balai Desa tadi sedang mencari bantuan. Balai Desa itu bangunan merah besar di kiri-tengah desa.'],
- n:['Ibu: Terima kasih banyak, Laili! Barang-barang ini penting sekali untuk acara... eh, untuk keperluan Ibu sehari-hari.','Ibu: Toko Bunga di ujung barat desa sedang kewalahan. Mampirlah ke sana, ya.'],
- b:['Penjual bunga: Terima kasih, Laili. Kepala Desa memesan bunga segar untuk sore ini. Eh, maksudnya pesanan biasa!','Penjual bunga: Perpustakaan di tengah desa, di atas Lapangan Bola, juga butuh bantuan. Coba mampir ke sana.'],
- y:['Pustakawan: Terima kasih, Bu Guru. Tadi murid-muridmu meminjam gunting dan kertas warna, katanya untuk "tugas kelas". Aneh, ya?','Pustakawan: Barista di Kafe pojok kiri atas sepertinya butuh bantuan. Coba tengok ke sana.'],
+ t:['Petugas: Terima kasih, Bu Laili. Oh iya, Kepala Desa titip pesan supaya Ibu mampir ke Pasar dulu sebelum ke Balai Desa.','Pasar ada di sisi timur desa, tepat di bawah Lapangan Bola. Sambil jalan, silakan jajan atau menyapa warga dulu.'],
+ m:['Pedagang: Hitungannya tepat sekali, Bu! Belanjaan sebanyak ini untuk... eh, untuk stok pasar, maksud saya.','Pedagang: Oh ya, ada Ibu di dekat Balai Desa yang kebingungan mencari barangnya. Balai Desa itu bangunan merah besar di kiri-tengah desa.'],
+ n:['Ibu: Wah, semuanya ketemu! Terima kasih, Nak. Barang-barang ini penting sekali untuk acara... eh, untuk keperluan Ibu sehari-hari.','Ibu: Toko Bunga di ujung barat desa sedang kewalahan. Mampirlah ke sana, ya.'],
+ b:['Penjual bunga: Terima kasih, Bu Laili. Kepala Desa memesan bunga segar untuk sore ini. Eh, maksudnya pesanan biasa!','Penjual bunga: Barista di Kafe, pojok kiri atas desa, sepertinya butuh bantuan. Coba tengok ke sana.'],
+ y:['Pustakawan: Terima kasih, Bu Guru. Tadi ada yang meminjam gunting dan kertas warna, katanya untuk "tugas kelas". Aneh, ya?','Pustakawan: Pelukis di Sanggar Seni, ujung timur desa, menunggu bantuan Ibu. Ikuti jalan ke timur, ya.'],
  c:['Barista: Mesinnya menyala lagi! Kopi dan kuenya untuk sore ini... eh, untuk pengunjung, tentu saja aman.','Barista: Bu Guru di Sekolah mencari Ibu. Sekolahnya tidak jauh di sebelah kanan Kafe.'],
- s:['Bu Guru: Nilaimu sempurna! Sekarang semuanya sudah siap. Eh, maksudku, semua urusan sudah beres.','Bu Guru: Silakan tunggu telepon dari Kepala Desa, ya.']
+ s:['Bu Guru: Nilainya sempurna! Murid-murid di sini pasti senang kalau diajar Ibu... eh, maksudku, kalau Ibu berkunjung ke kelas kami.','Bu Guru: Guru Musik di Balai Musik, tepat di sebelah kanan Sekolah ini, butuh bantuan. Coba mampir, ya.'],
+ k:['Guru Musik: Nadanya sudah pas! Terima kasih, Bu Laili. Soal latihan kami tadi, jangan bilang siapa-siapa ya... eh, maksud saya latihan paduan suara desa.','Guru Musik: Petugas Pos di sebelah kanan sana sedang kewalahan memilah surat. Bisa Ibu tengok?'],
+ p:['Petugas Pos: Semua surat dan paket sudah terpilah. Banyak sekali kiriman dari desa sebelah hari ini, Bu. Ah, itu bukan urusan saya. Hehe.','Petugas Pos: Pustakawan di Perpustakaan, tengah desa ke arah selatan dari sini, sedang butuh bantuan. Coba mampir ke sana, Bu.'],
+ j:['Pelukis: Lukisannya selesai! Jangan diintip dulu ya... ini untuk pameran, maksud saya.','Pelukis: Sepertinya semua urusan sudah beres. Silakan tunggu telepon dari Kepala Desa, Bu Laili.']
 };
 const ITEM_HINT={
  bunga:['Bunga: di tepi barat desa, tepat di bawah Rumah Pohon.'],
@@ -314,44 +319,62 @@ function play(){slock=1;si=0;sq=[...Array(5)].map(()=>Math.random()*4|0);$('ss')
 function press(i){if(slock)return;flash(i);if(i===sq[si]){si++;$('ss').textContent='Giliranmu ('+si+' dari 5)';if(si===5){slock=1;setTimeout(()=>{$('sm').style.display='none';simonCb()},500)}}else{slock=1;sfx('bad');$('ss').textContent='Belum tepat. Kita mulai lagi dari awal, ya.';setTimeout(play,1300)}}
 function simon(cb){simonCb=cb;busy=1;$('sm').style.display='flex';play()}
 const QS={
- n(){if(Q.n)return say(['Ibu: Terima kasih, Laili. Ibu senang barang-barangnya sudah ditemukan.']);
+ n(){if(Q.n)return say(['Ibu: Terima kasih, Nak Laili. Ibu senang barang-barangnya sudah ketemu.']);
   if(got()<3){const rest=ITEMS.filter(i=>!i.got);
-  return say([got()?'Ibu: Tinggal '+rest.length+' barang lagi, Laili.':'Ibu: Tiga barang Ibu tercecer waktu belanja tadi. Bisa bantu mencarinya, Laili?'].concat(rest.flatMap(i=>ITEM_HINT[i.n].map((t,j)=>j?t:i.e+' '+t)),['Kalau sudah ketemu semua, kembali ke sini.']))}
-  done('n',['Ibu: Wah, semuanya sudah ditemukan. Terima kasih banyak, Laili.'])},
+  return say([got()?'Ibu: Tinggal '+rest.length+' barang lagi, Nak.':'Ibu: Tiga barang Ibu tercecer waktu belanja tadi. Bisa bantu mencarinya, Nak?'].concat(rest.flatMap(i=>ITEM_HINT[i.n].map((t,j)=>j?t:i.e+' '+t)),['Kalau sudah ketemu semua, kembali ke sini.']))}
+  done('n',['Ketiga barang Ibu sudah kembali. 📦'])},
  c(){if(Q.c)return say(['Barista: Mesin kopi kembali berfungsi. Terima kasih sudah membantu.']);
-  say(['Barista: Mesin ini hanya bisa diperbaiki dengan urutan tombol yang tepat.','Perhatikan lampu yang menyala, lalu ulangi urutannya. Ada lima langkah.'],()=>simon(()=>{busy=0;done('c',['Mesin kopi kembali menyala. ☕','Barista: Aku dengar Kepala Desa sedang mencari guru untuk acara khusus.'])}))},
+  say(['Barista: Mesin ini hanya bisa diperbaiki dengan urutan tombol yang tepat.','Perhatikan lampu yang menyala, lalu ulangi urutannya. Ada lima langkah.'],()=>simon(()=>{busy=0;done('c',['Mesin kopi kembali menyala. ☕'])}))},
  t(){if(Q.t)return say(['Petugas: Jadwal kereta sudah rapi. Terima kasih atas bantuanmu.']);
   say(['Petugas: Jadwal kereta berantakan. Bisa bantu menghitungnya?'],()=>quiz([
    {q:'Kereta berangkat pukul 14.00 dan tiba pukul 15.30. Berapa lama perjalanannya?',o:['1 jam','1,5 jam','2 jam','2,5 jam'],a:1,h:'Hitung selisih waktu dari pukul 14.00 sampai 15.30.'},
    {q:'Satu tiket seharga Rp5.000. Berapa total harga tiga tiket?',o:['Rp10.000','Rp15.000','Rp20.000','Rp25.000'],a:1}
-  ],()=>done('t',['Jadwalnya sudah rapi. Kereta bisa berangkat. 🚉','Petugas: Kudengar ada acara khusus di Balai Desa malam ini.'])))},
+  ],()=>done('t',['Jadwalnya sudah rapi. Kereta bisa berangkat. 🚉'])))} ,
  s(){if(Q.s)return say(['Bu Guru: Nilaimu sempurna. Kamu memang guru yang hebat.']);
   say(['Bu Guru: Sebelum masuk, ada empat soal cerdas cermat untuk guru hebat. Siap?'],()=>quiz([
    {q:'Siapa Bapak Pendidikan Nasional Indonesia?',o:['R.A. Kartini','Ki Hajar Dewantara','Dewi Sartika','Soekarno'],a:1},
    {q:'Hari Guru Nasional diperingati setiap tanggal berapa?',o:['2 Mei','20 Mei','25 November','17 Agustus'],a:2},
    {q:"Semboyan Ki Hajar Dewantara adalah 'Tut Wuri ...'",o:['Handayani','Handarbeni','Hanggayuh','Handoyo'],a:0},
    {q:'Siapa tokoh yang mengembangkan teori perkembangan kognitif dalam empat tahap?',o:['Skinner','Vygotsky','Piaget','Bandura'],a:2,h:'Tokoh ini juga dikenal lewat tahap perkembangan kognitif.'}
-  ],()=>done('s',['Jawabanmu tepat semua. Kamu lulus! 🏫','Bu Guru: Kepala Desa ingin bertemu denganmu di Balai Desa sebelum petang. Katanya ada hal penting yang ingin dibicarakan.'])))},
- b(){if(Q.b)return say(['Penjual bunga: Pesanannya sudah siap. Terima kasih, Laili!']);
+  ],()=>done('s',['Jawabanmu tepat semua. Kamu lulus! 🏫'])))},
+ b(){if(Q.b)return say(['Penjual bunga: Pesanannya sudah siap. Terima kasih, Bu Laili!']);
   say(['Penjual bunga: Ada pelanggan memesan rangkaian bunga, tapi aku lupa beberapa detailnya.','Bisa bantu menjawab dua soal?'],()=>quiz([
    {q:'Bunga nasional Indonesia yang harum dan berwarna putih, serta sering dirangkai untuk pengantin, adalah...',o:['Melati','Mawar','Anggrek','Tulip'],a:0},
    {q:'Satu rangkaian berisi 12 tangkai. Tiga rangkaian terjual dan tersisa 5 tangkai. Berapa tangkai bunga semula?',o:['36','41','39','45'],a:1,h:'Hitung 12 × 3, lalu tambahkan lima tangkai yang tersisa.'}
-  ],()=>done('b',['Rangkaiannya siap. 🌷','Penjual bunga: Kepala Desa memesan bunga segar untuk acara malam ini. Kira-kira ada acara apa, ya?'])))},
+  ],()=>done('b',['Rangkaiannya siap. 🌷'])))},
  m(){if(Q.m)return say(['Pedagang: Hitunganmu tepat. Terima kasih sudah membantu!']);
   say(['Pedagang: Bisa bantu menghitung hasil belanja hari ini?'],()=>quiz([
    {q:'Apel seharga Rp12.000/kg dan jeruk Rp9.000/kg. Berapa harga 2 kg apel dan 3 kg jeruk?',o:['Rp45.000','Rp51.000','Rp48.000','Rp57.000'],a:1},
    {q:'Total belanja Rp51.000 mendapat diskon 10%. Jika membayar Rp100.000, berapa kembaliannya?',o:['Rp54.100','Rp49.000','Rp45.900','Rp50.000'],a:0,h:'Diskonnya Rp5.100. Kurangi total belanja dengan diskon, lalu hitung kembaliannya.'}
-  ],()=>done('m',['Kembaliannya tepat. 🛒','Pedagang: Kepala Desa tadi membeli banyak makanan untuk seorang tamu istimewa.'])))},
+  ],()=>done('m',['Kembaliannya tepat. 🛒'])))},
  y(){if(Q.y)return say(['Pustakawan: Rak bukunya sudah rapi. Terima kasih sudah membantu.']);
   say(['Pustakawan: Beberapa buku di rak tertukar. Bisa bantu menjawab teka-teki agar bisa kususun kembali?'],()=>quiz([
    {q:'Aku punya kota tanpa rumah dan sungai tanpa air. Apakah aku?',o:['Peta','Mimpi','Buku','Lukisan'],a:0},
    {q:'Deret 2, 4, 6, 8. Angka berikutnya berapa?',o:['9','10','12','11'],a:1,h:'Bilangan bertambah dua setiap langkah.'},
    {q:'Jika hari ini Senin, besok hari apa?',o:['Selasa','Rabu','Minggu','Jumat'],a:0}
-  ],()=>done('y',['Rak buku sudah rapi. 📚','Pustakawan: Kudengar murid-muridmu sibuk sekali hari ini. Ada kegiatan apa, ya?'])))},
+  ],()=>done('y',['Rak buku sudah rapi. 📚'])))},
+ k(){if(Q.k)return say(['Guru Musik: Semua alat sudah disetel. Terima kasih, Bu Laili.']);
+  say(['Guru Musik: Alat-alat ini belum disetel dan latihan kami hampir mulai.','Bantu saya menjawab tiga pertanyaan musik, ya?'],()=>quiz([
+   {q:'Alat musik tradisional dari bambu yang dimainkan dengan cara digoyangkan adalah...',o:['Angklung','Sasando','Kolintang','Gendang'],a:0},
+   {q:'Dalam birama 4/4, berapa ketukan dalam satu birama?',o:['2','3','4','6'],a:2,h:'Angka di atas pada birama menunjukkan jumlah ketukan.'},
+   {q:'Urutan tangga nada: do, re, mi, fa, sol, la, si, ...',o:['do','re','mi','fa'],a:0,h:'Tangga nada kembali ke nada awal pada oktaf berikutnya.'}
+  ],()=>done('k',['Semua alat musik sudah disetel. 🎵'])))},
+ p(){if(Q.p)return say(['Petugas Pos: Semua surat sudah terpilah. Terima kasih, Bu Laili!']);
+  say(['Petugas Pos: Surat dan paket menumpuk, padahal harus terkirim sebelum sore.','Bisa bantu menjawab tiga pertanyaan?'],()=>quiz([
+   {q:'Satu prangko Rp2.000. Petugas menempel 5 prangko dan membayar ongkos kirim Rp3.500. Berapa total biayanya?',o:['Rp10.000','Rp13.500','Rp15.500','Rp12.000'],a:1,h:'Hitung 5 × Rp2.000, lalu tambahkan ongkos kirim.'},
+   {q:'Kode pos di Indonesia terdiri dari berapa angka?',o:['4','5','6','7'],a:1},
+   {q:"Wilayah Indonesia membentang 'dari Sabang sampai ...'",o:['Merauke','Kupang','Makassar','Jayapura'],a:0}
+  ],()=>done('p',['Semua surat dan paket sudah terpilah. 📮'])))},
+ j(){if(Q.j)return say(['Pelukis: Lukisannya sudah selesai. Terima kasih, Bu Laili!']);
+  say(['Pelukis: Lukisan ini hampir selesai, tapi saya butuh bantuan memilih warna dan detailnya.','Bisa bantu menjawab tiga pertanyaan?'],()=>quiz([
+   {q:'Jika warna merah dicampur dengan kuning, hasilnya warna...',o:['Hijau','Oranye','Ungu','Cokelat'],a:1},
+   {q:'Batik Indonesia diakui UNESCO sebagai Warisan Budaya Takbenda pada tahun...',o:['2005','2009','2012','2015'],a:1,h:'Setiap 2 Oktober diperingati sebagai Hari Batik Nasional.'},
+   {q:'Lukisan Mona Lisa dilukis oleh...',o:['Vincent van Gogh','Leonardo da Vinci','Pablo Picasso','Raden Saleh'],a:1}
+  ],()=>done('j',['Lukisannya selesai. 🎨'])))}
 };
 const TG=()=>CUR();
-const INTRO={t:'Petugas: Selamat datang, Bu Laili! Kebetulan sekali. Jadwal kereta hari ini berantakan. Bisa bantu menghitungnya?',m:'Pedagang: Eh, Bu Laili! Kepala Desa sudah cerita soal kedatangan Ibu. Bisa bantu saya menghitung belanjaan hari ini?',n:'Ibu: Aduh, Laili, kebetulan sekali. Ada tiga barang Ibu yang tercecer di desa. Bisa bantu mencarinya?',b:'Penjual bunga: Bu Laili! Pas sekali. Ada pesanan rangkaian bunga yang belum selesai. Bantu saya, ya?',y:'Pustakawan: Bu Guru datang di saat yang tepat. Beberapa buku di rak tertukar. Bisa bantu menyusunnya?',c:'Barista: Bu Laili, mesin kopinya mendadak rusak. Bisa bantu memperbaikinya?',s:'Bu Guru: Akhirnya Ibu sampai juga. Sebelum ke Balai Desa, ikut cerdas cermat dulu, ya?'};
-const QDOOR={c:[3,6],s:[16,6],t:[23,30],n:[13,16],b:[4,16],y:[28,15],m:[38,26]};
+const INTRO={t:'Petugas: Selamat datang, Bu Laili! Kepala Desa sudah bilang akan ada tamu guru dari desa sebelah. Kebetulan sekali, jadwal kereta hari ini berantakan. Bisa bantu menghitungnya?',m:'Pedagang: Eh, ini pasti Bu Laili, tamunya Kepala Desa! Selamat datang. Bisa bantu saya menghitung belanjaan hari ini?',n:'Ibu: Aduh, ini pasti tamu dari desa sebelah, ya? Kebetulan sekali, Nak. Ada tiga barang Ibu yang tercecer di desa. Bisa bantu mencarinya?',b:'Penjual bunga: Bu Laili, ya? Kepala Desa sudah cerita soal Ibu. Pas sekali, ada pesanan rangkaian bunga yang belum selesai. Bantu saya, ya?',y:'Pustakawan: Jadi Ibu guru yang diundang Kepala Desa itu? Datang di saat yang tepat. Beberapa buku di rak tertukar. Bisa bantu menyusunnya?',c:'Barista: Selamat datang, Bu Laili! Mesin kopinya mendadak rusak. Bisa bantu memperbaikinya?',s:'Bu Guru: Akhirnya tamu kehormatan kita sampai juga. Sebelum ke Balai Desa, ikut cerdas cermat dulu, ya?',k:'Guru Musik: Selamat datang, Bu Laili! Kebetulan saya butuh telinga tambahan untuk menyetel alat musik. Bisa bantu?',p:'Petugas Pos: Bu Laili, ya? Wah, surat dan paket hari ini menumpuk. Bisa bantu saya memilahnya?',j:'Pelukis: Ah, tamu dari desa sebelah! Saya butuh pendapat segar untuk lukisan ini. Bisa bantu menyelesaikannya?'};
+const QDOOR={c:[3,6],s:[16,6],t:[23,30],n:[13,16],b:[4,16],y:[28,15],m:[38,26],k:[23,6],p:[29,6],j:[44,12]};
 const STATION_MASTER={x:27,y:30};
 const PARTY_POS={x:18,y:16}; // Depan Balai Desa
 
@@ -361,11 +384,12 @@ function shop(v){const price='Rp'+v.price.toLocaleString('id-ID');ask(v.seller+'
 
 // ===== CUTSCENE SURPRISE PARTY =====
 function triggerPartySequence(){partyReady=1;hud();sfx('win');
-  say(['Ponsel Laili berdering.','Kepala Desa: "Bu Laili, terima kasih sudah membantu warga seharian ini."','Kepala Desa: "Bisa datang ke Balai Desa sekarang? Ada hal penting yang ingin kami sampaikan."','Balai Desa adalah bangunan merah besar di kiri-tengah desa. Ikuti topi pesta di peta.'],()=>{partyOn=1},false)}
+  say(['Ponsel Laili berdering.','Kepala Desa: "Bu Laili, terima kasih sudah membantu warga seharian ini. Mereka semua memuji Ibu."','Kepala Desa: "Bisa datang ke Balai Desa sekarang? Ada hal penting yang ingin kami sampaikan."','Balai Desa adalah bangunan merah besar di kiri-tengah desa. Ikuti topi pesta di peta.'],()=>{partyOn=1},false)}
 
 // ===== CUTSCENE PESTA PIXEL-ART =====
 let partyCut=0,pcT0=0,pcTimer=null,pcCap=-1,pcF=[0,0];
-const PC_END=28800,BC=['#ff7aa8','#ffd54a','#5ab8ff','#5ad17a','#b98cff'],
+const PC_END=31800,BC=['#ff7aa8','#ffd54a','#5ab8ff','#5ad17a','#b98cff'],
+WARGA=['pustaka','petugas','pedagang','musik','pos','seni'],
 PC_CAP=[
  [0,'Balai Desa','Laili membuka pintu Balai Desa...',''],
  [1700,'Balai Desa','Di dalam gelap. Sunyi. Tidak ada siapa-siapa.',''],
@@ -374,14 +398,16 @@ PC_CAP=[
  [8300,'Murid-murid','Terima kasih sudah sabar membimbing kami, Bu Laili!','murid'],
  [11500,'Barista','Kopi dan kuenya sudah siap. Makanya mesinnya harus diperbaiki tadi!','barista'],
  [14700,'Penjual bunga','Rangkaian yang tadi Ibu bantu siapkan ternyata untuk Ibu sendiri.','bunga'],
- [17900,'Ibu','Paket yang Ibu minta kamu cari tadi sebenarnya hadiah untukmu, Laili.','ibu'],
- [21100,'Kepala Desa','Maaf sudah membuat Ibu berkeliling desa. Kami butuh waktu menyiapkan semuanya.','kades'],
- [24500,'Semua','Panjang umur dan bahagia selalu, Bu Laili!','all']
+ [17900,'Ibu','Paket yang tadi Ibu minta kamu cari sebenarnya hadiah untukmu, Nak Laili.','ibu'],
+ [21100,'Para warga','Surat, lagu, dan lukisan yang tadi Ibu bantu... semuanya ucapan untuk Ibu!','warga'],
+ [24500,'Kepala Desa','Kami sudah lama mendengar cerita tentang Ibu dari murid-murid dan keluarga. Maaf sudah membuat Ibu berkeliling desa.','kades'],
+ [28000,'Semua','Panjang umur dan bahagia selalu, Bu Laili!','all']
 ],
 PC_ACT=[
  ['ibu',14.9,16.05],['pustaka',15.9,16.05],['barista',16.9,16.05],['bunga',19.1,16.05],['petugas',20.1,16.05],['pedagang',21.1,16.05],
  ['guru',14.3,17.15,'#3d8a8a',1,'#d18a43'],['murid',15.3,17.5,'#fff',0],['murid',16.3,17.7,'#fff',1,'#d18a43'],['teman',17.1,17.95,'#e0648a',1,'#7f5ad6'],
  ['teman',19.05,17.95,'#5aa8e8',0],['murid',20.0,17.7,'#fff',1],['murid',21.0,17.5,'#fff',0],['teman',22.0,17.15,'#6ad99a',1,'#d95a8a'],
+ ['musik',13.3,17.35],['pos',22.2,18.25],['seni',15.0,18.55],
  ['kades',18.0,16.3]
 ].map(([kind,x,y,c,f,sc],i)=>({kind,x,y,c,f:!!f,sc,i,d:kind==='kades'?6300:3700+i*100,dur:kind==='kades'?1900:700}));
 const pcCam=ms=>{const zt=Math.max(1,Math.min(1.3,cv.width/ZS/(10.5*T),cv.height/ZS/(12*T)));
@@ -414,6 +440,9 @@ function pcPerson(a,px,py,t,arms){const k=a.kind;
   else if(k==='petugas'){person(px,py,'#344f70','#2a2830');R('#25354d',px+3,py,10,2);R('#e3bd59',px+5,py-2,6,3)}
   else if(k==='pedagang'){person(px,py,'#d18a3d','#2a2830');R('#fff4d6',px+4,py+9,8,3)}
   else if(k==='kades'){person(px,py,'#7a4a2a','#151515');R('#151515',px+3,py,10,3);R('#e3bd59',px+7,py+8,2,4)}
+  else if(k==='musik')villager(px,py,'#7d4fb0','#3a2318',true,'#e0b830');
+  else if(k==='pos'){person(px,py,'#c0492f','#2a2830');R('#c0492f',px+3,py-2,10,2);R('#ffe28a',px+5,py-4,6,2)}
+  else if(k==='seni'){person(px,py,'#2f8f9a','#3a2318');R('#d94f57',px+3,py-1,10,3);R('#d94f57',px+6,py-3,5,2)}
   else if(k==='guru')villager(px,py,a.c,'#3a2318',true,a.sc);
   else if(k==='murid'){villager(px,py,a.c,'#3a2318',a.f,a.sc);R('#d95a5a',px+1,py+8,3,5)}
   else villager(px,py,a.c,'#3a2318',a.f,a.sc);
@@ -444,7 +473,7 @@ function drawPartyCut(cx,cy){
     hijabi(lx,yy,t<3500?'up':'down',0);
     if(lit){R('#ffd54a',lx+4,yy-2,8,1);R('#ffd54a',lx+4,yy-4,1,2);R('#ffd54a',lx+7,yy-5,2,3);R('#ffd54a',lx+11,yy-4,1,2);R('#fff',lx+7,yy-4,2,1);
       if(t<5400){R('#f2c9a0',lx+2,yy+5,3,3);R('#f2c9a0',lx+11,yy+5,3,3)}}}]);
-  PC_ACT.forEach(a=>{if(t<a.d)return;const e=ea(sg(a.d,a.d+a.dur)),isSp=sp==='all'||sp===a.kind,
+  PC_ACT.forEach(a=>{if(t<a.d)return;const e=ea(sg(a.d,a.d+a.dur)),isSp=sp==='all'||sp===a.kind||(sp==='warga'&&WARGA.includes(a.kind)),
     hop=e<1?0:Math.round(Math.abs(Math.sin(t/(isSp?150:430)+a.i*1.7))*(isSp?3:1)),
     px=Math.round(18*T+(a.x-18)*T*e),py=Math.round(15*T+2+(a.y*T-15*T-2)*e-Math.sin(e*Math.PI)*8-hop),al=Math.min(1,(t-a.d)/150);
     items.push([py,()=>{g.globalAlpha=al;pcPerson(a,px,py,t,isSp||(t<7600&&e>=1));g.globalAlpha=1}])});
@@ -525,10 +554,10 @@ function act(){if(!started||ended||busy)return;if(lines.length){nextLine();retur
   if(interaction==='vendor'){const vendor=VENDORS.find(v=>Math.max(Math.abs(P.x-v.stand[0]),Math.abs(P.y-v.stand[1]))<=1);shop(vendor);return}
   if(interaction==='quest'){const near=ORD.find(k=>{const[x,y]=QDOOR[k];return Math.max(Math.abs(P.x-x),Math.abs(P.y-y))<=1});talk(near);return}
   const[x,y]=DX[P.dir],tx=P.x+x,ty=P.y+y,c=(M[ty]||[])[tx];
-  if(c==='D'){const quest={'3,6':'c','16,6':'s','23,30':'t','4,16':'b','28,15':'y','38,26':'m'}[tx+','+ty];if(quest)talk(quest);else say([FLAV[tx+','+ty]||'Pintu ini terkunci. Penghuninya mungkin sedang pergi.'])}else if(c==='d')say([FLAV[tx+','+ty]||'Rumah warga. Tirainya tertutup; sepertinya penghuninya sedang keluar.'])}
+  if(c==='D'){const quest={'3,6':'c','16,6':'s','23,30':'t','4,16':'b','28,15':'y','38,26':'m','23,6':'k','29,6':'p','44,12':'j'}[tx+','+ty];if(quest)talk(quest);else say([FLAV[tx+','+ty]||'Pintu ini terkunci. Penghuninya mungkin sedang pergi.'])}else if(c==='d')say([FLAV[tx+','+ty]||'Rumah warga. Tirainya tertutup; sepertinya penghuninya sedang keluar.'])}
 
 let NOW=0,ZS=3,VW=240,VH=176;
-const RC={C:'#8a5a3a',S:'#e0b830',T:'#4a6a9a',A:'#e88aa8',B:'#5ab88a',V:'#b03a3a',Y:'#6a5ad0',M:'#d18a3d',Q:'#68904d',U:'#4f8c65'},WC={C:'#ead5b5',S:'#dbe5ec',T:'#d7e0ec',A:'#f1dfcc',B:'#f2d8e3',V:'#eadfc9',Y:'#d5e2e5',M:'#eadbbc',Q:'#c6a77d',U:'#d5e8d5'},HC=['#c8503d','#3d8a8a','#8a4aa8','#d18a3d','#4a7ac8'];
+const RC={C:'#8a5a3a',S:'#e0b830',T:'#4a6a9a',A:'#e88aa8',B:'#5ab88a',V:'#b03a3a',Y:'#6a5ad0',M:'#d18a3d',Q:'#68904d',U:'#4f8c65',K:'#7d4fb0',P:'#c0492f',J:'#2f8f9a'},WC={C:'#ead5b5',S:'#dbe5ec',T:'#d7e0ec',A:'#f1dfcc',B:'#f2d8e3',V:'#eadfc9',Y:'#d5e2e5',M:'#eadbbc',Q:'#c6a77d',U:'#d5e8d5',K:'#e6dcf0',P:'#f0dcd0',J:'#d6eef0'},HC=['#c8503d','#3d8a8a','#8a4aa8','#d18a3d','#4a7ac8'];
 const ox=(x,y,c)=>{while(M[y][x-1]===c)x--;return x};
 function fit(){const st=$('stage'),cw=st.clientWidth,ch=st.clientHeight,dpr=Math.min(window.devicePixelRatio||1,3);cv.width=Math.round(cw*dpr);cv.height=Math.round(ch*dpr);ZS=Math.max(2,Math.floor(Math.min(cv.width,cv.height)/190));VW=cv.width/ZS;VH=cv.height/ZS}
 function tile(c,x,y){const px=x*T,py=y*T;R((x+y)%2?'#4f9d5d':'#4a9558',px,py,T,T);
@@ -602,6 +631,19 @@ function drawBadmintonPlayers(){const swing=Math.sin(NOW/210),sx=2*T,sy=10*T,tx=
  g.font='8px serif';g.textAlign='center';g.fillText('🏸',T*2.6+Math.sin(NOW/210)*13,T*11+Math.cos(NOW/210)*10);
 }
 function drawStationMaster(){const x=27*T,y=30*T;person(x,y,'#344f70','#2a2830');R('#25354d',x+3,y-2,10,2);R('#e3bd59',x+5,y-5,6,3);R('#e3bd59',x+6,y+8,4,3)}
+// NPC penjaga yang menetap di ambang pintu tiap bangunan misi
+const KEEP={
+ c:(x,y)=>{person(x,y,'#8a5a3a','#2a2018');R('#fff4d6',x+5,y+9,6,5);R('#fff',x+3,y-1,10,2)},
+ s:(x,y)=>villager(x,y,'#3d8a8a','#3a2318',true,'#d18a43'),
+ t:(x,y)=>{person(x,y,'#344f70','#2a2830');R('#25354d',x+3,y-2,10,2);R('#e3bd59',x+5,y-5,6,3)},
+ b:(x,y)=>villager(x,y,'#ff7aa8','#3a2318',true),
+ y:(x,y)=>{villager(x,y,'#5a8ad9','#3a2318',true,'#238b89');R('#e7f7ff',x+4,y+4,3,1);R('#e7f7ff',x+8,y+4,3,1)},
+ m:(x,y)=>{person(x,y,'#d18a3d','#2a2830');R('#fff4d6',x+4,y+9,8,3)},
+ k:(x,y)=>villager(x,y,'#7d4fb0','#3a2318',true,'#e0b830'),
+ p:(x,y)=>{person(x,y,'#c0492f','#2a2830');R('#c0492f',x+3,y-2,10,2);R('#ffe28a',x+5,y-4,6,2)},
+ j:(x,y)=>{person(x,y,'#2f8f9a','#3a2318');R('#d94f57',x+3,y-1,10,3);R('#d94f57',x+6,y-3,5,2)}
+};
+function drawKeepers(){if(partyCut)return;Object.keys(KEEP).forEach(k=>{const d=QDOOR[k];KEEP[k](d[0]*T,d[1]*T)})}
 function clearGlasses(px,py,dir,eye){const frame='#e7f7ff',lens='rgba(190,235,255,.35)';if(dir==='down'){R(lens,px+4,py+3,4,3);R(lens,px+8,py+3,4,3);R(frame,px+4,py+3,4,1);R(frame,px+8,py+3,4,1);R(frame,px+4,py+5,4,1);R(frame,px+8,py+5,4,1);R(frame,px+4,py+3,1,3);R(frame,px+7,py+3,1,3);R(frame,px+8,py+3,1,3);R(frame,px+11,py+3,1,3);R(frame,px+7,py+4,2,1);R(eye,px+6,py+4,1,1);R(eye,px+9,py+4,1,1)}else if(dir==='left'){R(lens,px+4,py+3,4,3);R(frame,px+4,py+3,4,1);R(frame,px+4,py+5,4,1);R(frame,px+4,py+3,1,3);R(frame,px+7,py+3,1,3);R(eye,px+5,py+4,1,1)}else if(dir==='right'){R(lens,px+8,py+3,4,3);R(frame,px+8,py+3,4,1);R(frame,px+8,py+5,4,1);R(frame,px+8,py+3,1,3);R(frame,px+11,py+3,1,3);R(eye,px+10,py+4,1,1)}}
 function hijabi(px,py,dir,st){const hi='#b07acc',hd='#8f5aae',sk='#f2c9a0',ey='#3a2318',fr='#2a2a3a',gl=(a,b)=>{R(fr,px+a,py+b,3,1);R(fr,px+a,py+b+2,3,1);R(fr,px+a,py+b+1,1,1);R(fr,px+a+2,py+b+1,1,1)};
  R('rgba(0,0,0,.25)',px+3,py+14,10,2);R('#4a3a6a',px+4+st,py+14,3,2);R('#4a3a6a',px+9-st,py+14,3,2);
@@ -613,7 +655,7 @@ function hijabi(px,py,dir,st){const hi='#b07acc',hd='#8f5aae',sk='#f2c9a0',ey='#
 function drawHeroAura(px,py,time){const pulse=(Math.sin(time/480)+1)/2;g.save();const halo=g.createRadialGradient(px+8,py+7,3,px+8,py+7,24+pulse*4);halo.addColorStop(0,'rgba(255,232,135,.16)');halo.addColorStop(.55,'rgba(255,184,208,.12)');halo.addColorStop(1,'rgba(255,184,208,0)');g.fillStyle=halo;g.fillRect(px-17,py-17,50,50);g.globalAlpha=.35+pulse*.45;const drift=Math.sin(time/360)*2;[[px-4,py+4+drift],[px+19,py-3-drift]].forEach(([sx,sy])=>{R('#fff4d6',sx,sy-2,1,5);R('#fff4d6',sx-2,sy,5,1);R('#ffb84d',sx-1,sy-1,3,3)});g.restore()}
 const WK=[[12,7,'#5a8ad9',false],[35,7,'#d9a05a',true,'#d18a43'],[20,17,'#6ad99a',true],[30,17,'#d95a8a',false],[12,27,'#8a5ad9',true,'#287f80'],[6,15,'#5ad9d9',false]].map(([x,y,c,female,scarf])=>({x,y,c,female,scarf,t:0}));
 function walkers(){WK.forEach(w=>{if(NOW>w.t){w.t=NOW+500+Math.random()*900;const d=Object.values(DX)[Math.random()*4|0],nx=w.x+d[0],ny=w.y+d[1];if(M[ny]&&M[ny][nx]==='p'&&!(nx===P.x&&ny===P.y)){w.x=nx;w.y=ny}}})}
-const QM=[['c',3,4.6],['s',16,4.6],['t',23,28.6],['n',13,15],['b',4,13.6],['y',28,13.6],['m',38,24.6]];
+const QM=[['c',3,4.6],['s',16,4.6],['t',23,28.6],['n',13,15],['b',4,13.6],['y',28,13.6],['m',38,24.6],['k',23,4.6],['p',29,4.6],['j',44,9.6]];
 const CL=(sh)=>{for(let k=0;k<7;k++){const cx=((NOW/(70-k*4)+k*173)%(W*T+240))-120,cy=(k*97)%(H*T-80)+30,o=sh?[12,40]:[0,0];g.fillStyle=sh?'rgba(0,0,0,.09)':'rgba(255,255,255,.8)';[[0,0,36,8],[6,-5,22,7],[20,-3,20,6]].forEach(([a,b,w,h])=>g.fillRect(cx+a+o[0],cy+b+o[1],w,h))}};
 const BD=()=>{g.fillStyle='#2a2a3a';for(let k=0;k<5;k++){const bx=Math.round(((NOW/(16+k*3)+k*211)%(W*T+300))-150),by=Math.round(40+(k*127)%(H*T-120)+Math.sin(NOW/500+k)*8),f=((NOW/140|0)+k)%2;g.fillRect(bx,by,3,2);g.fillRect(bx-3,by-(f?2:0),3,1);g.fillRect(bx+3,by-(f?2:0),3,1);g.fillRect(bx-5,by+(f?0:1),2,1);g.fillRect(bx+6,by+(f?0:1),2,1)}};
 function drawSakuraPetals(cx,cy){g.save();for(let tree=0;tree<SAKURA_TREES.length;tree++){const[tx,ty]=SAKURA_TREES[tree],x=tx*T,y=ty*T;if(x<cx-30||x>cx+VW+30||y<cy-40||y>cy+VH+40)continue;for(let i=0;i<3;i++){const phase=((NOW/32+i*43+tree*29)%120)/120,px=x+((i*11+Math.sin(NOW/430+i+tree)*4+phase*16)%30)-7,py=y-8+phase*34;if(px<cx-12||px>cx+VW+12||py<cy-12||py>cy+VH+12)continue;g.save();g.globalAlpha=.18+Math.sin(phase*Math.PI)*.62;g.fillStyle=i%2?'#ffd5e2':'#f58db0';g.translate(px,py);g.rotate(Math.sin(NOW/260+i+tree)*.8);g.beginPath();g.ellipse(0,0,2,3,.3,0,Math.PI*2);g.fill();g.restore()}}g.restore()}
@@ -621,7 +663,7 @@ function draw(){NOW=Date.now();const cam=arrivalState?arrCam(NOW-arrivalStartedA
  R('#2b6e3a',0,0,VW,VH);g.save();g.translate(-cx,-cy);SN.s=Math.abs(ZE-Math.round(ZE))>1e-6?ZE:0;SN.x=cx;SN.y=cy;
  const x0=Math.max(0,cx/T|0),x1=Math.min(W-1,(cx+VW)/T|0),y0=Math.max(0,cy/T|0),y1=Math.min(H-1,(cy+VH)/T|0);
  for(let y=y0;y<=y1;y++)for(let x=x0;x<=x1;x++)tile(M[y][x],x,y);
- for(let y=y0;y<=y1;y++)for(let x=x0;x<=x1;x++){const c=M[y][x];if('CSTHABVYMDd'.includes(c)&&M[y+1]&&!'CSTHABVYMDd'.includes(M[y+1][x]))R('rgba(0,0,0,.22)',x*T,y*T+T,T,3)}
+ for(let y=y0;y<=y1;y++)for(let x=x0;x<=x1;x++){const c=M[y][x];if('CSTHABVYMDdKPJ'.includes(c)&&M[y+1]&&!'CSTHABVYMDdKPJ'.includes(M[y+1][x]))R('rgba(0,0,0,.22)',x*T,y*T+T,T,3)}
  drawKoiPond();drawTreehouse();
  drawPicnic();drawBadminton();drawBadmintonPlayers();
  CL(1);g.textAlign='center';g.textBaseline='middle';
@@ -636,7 +678,7 @@ function draw(){NOW=Date.now();const cam=arrivalState?arrCam(NOW-arrivalStartedA
  for(let k=0;k<3;k++){const bx=tx+k*44;R('#3a6ab0',bx,ty+1,42,9);R('#fff4d6',bx,ty+1,42,2);for(let j=0;j<4;j++)R('#bfe6ff',bx+4+j*10,ty+4,7,3);R('#2a2a3a',bx,ty+9,42,2);R('#222',bx+4,ty+9,5,4);R('#222',bx+33,ty+9,5,4);R('#222',bx+42,ty+6,2,2)}
  {const bx=tx+132;R('#c0392b',bx,ty+1,40,9);R('#222',bx+26,ty-2,8,4);R('#fff4d6',bx,ty+1,40,2);R('#bfe6ff',bx+6,ty+4,8,3);R('#ffe28a',bx+37,ty+5,3,3);R('#2a2a3a',bx,ty+9,40,2);R('#222',bx+4,ty+9,5,4);R('#222',bx+30,ty+9,5,4);if(arrivalState&&cinematicMs>=ARR.door&&cinematicMs<ARR.wave[1]){R('#4a2630',bx+17,ty+3,7,6);R('#ffb84d',bx+18,ty+4,1,2)}
  if(arrivalState&&cinematicMs>=ARR.wave[0]&&cinematicMs<ARR.depart+1500){const wv=Math.round(Math.sin(NOW/110));R('#25354d',bx+8,ty+3,5,1);R('#f2c9a0',bx+9,ty+4,3,3);R('#3a2318',bx+9,ty+5,1,1);R('#344f70',bx+13,ty+4,2,2);R('#f2c9a0',bx+14,ty+1+wv,2,3)}}
- drawStationMaster();
+ drawStationMaster();drawKeepers();
  if(AC.n)ITEMS.forEach(i=>{if(i.got)return;const ix=i.x*T+8,iy=i.y*T+9,pulse=(Math.sin(NOW/170)+1)/2;g.save();g.globalAlpha=.4+pulse*.45;g.fillStyle='#ffe887';g.shadowColor='#fff1a6';g.shadowBlur=7+pulse*7;g.beginPath();g.arc(ix,iy,6+pulse*3,0,Math.PI*2);g.fill();g.restore();g.font='10px serif';g.textAlign='center';g.fillText(i.e,ix,iy+4);g.font='bold 8px monospace';g.fillStyle='#fff4d6';g.fillText('!',ix+7,iy-5)});
  if(!partyCut){person(13*T,16*T,'#8a4aa8','#bbb');walkers();WK.forEach(w=>villager(w.x*T,w.y*T,w.c,'#3a2318',w.female));drawStudent()}
  g.font='8px serif';[[30,9],[14,10],[24,21],[6,22],[38,13],[44,3]].forEach(([bx,by],i)=>g.fillText('🦋',bx*T+8+Math.cos(NOW/600+i)*16,by*T+Math.sin(NOW/380+i*2)*9));
@@ -695,14 +737,49 @@ const duck=v=>{if(bgG)bgG.gain.setTargetAtTime(v,AX.currentTime,.15)};
 
 // ===== KARTU & MAIN LAGI =====
 function wrapT(x,s,mw){let l='',o=[];s.split(' ').forEach(z=>{const t=l?l+' '+z:z;if(x.measureText(t).width>mw&&l){o.push(l);l=z}else l=t});if(l)o.push(l);return o}
-function card(){(document.fonts?document.fonts.ready:Promise.resolve()).then(()=>{const c=document.createElement('canvas'),Wd=1080,Hd=1350;c.width=Wd;c.height=Hd;const x=c.getContext('2d'),F='"Press Start 2P",monospace';
- const gr=x.createLinearGradient(0,0,0,Hd);gr.addColorStop(0,'#2a2048');gr.addColorStop(1,'#1b1430');x.fillStyle=gr;x.fillRect(0,0,Wd,Hd);
- x.strokeStyle='#ffb84d';x.lineWidth=8;x.strokeRect(36,36,Wd-72,Hd-72);x.textAlign='center';x.textBaseline='alphabetic';
- const oc=document.createElement('canvas');oc.width=48;oc.height=40;cakeOn(oc.getContext('2d'),true);x.imageSmoothingEnabled=false;x.drawImage(oc,Wd/2-168,100,336,280);
- x.fillStyle='#ffb84d';x.font='44px '+F;x.fillText('SELAMAT ULANG TAHUN',Wd/2,470);x.font='84px '+F;x.fillText(CFG.nama.toUpperCase()+'!',Wd/2,590);
- x.fillStyle='#fff4d6';let fs=28,ls,lh;for(;fs>=14;fs-=2){x.font=fs+'px '+F;ls=wrapT(x,CFG.pesan,Wd-200);lh=Math.round(fs*2.1);if(720+ls.length*lh<=Hd-110)break}
- let y=720;ls.forEach(l=>{x.fillText(l,Wd/2,y);y+=lh});
- c.toBlob(b=>{if(!b)return;const f=new File([b],'ulang-tahun-'+CFG.nama+'.png',{type:'image/png'}),download=()=>{const a=document.createElement('a'),url=URL.createObjectURL(b);a.href=url;a.download=f.name;a.click();setTimeout(()=>URL.revokeObjectURL(url),1000)};if(navigator.canShare&&navigator.canShare({files:[f]}))navigator.share({files:[f]}).catch(e=>{if(e.name!=='AbortError')download()});else download()})})}
+function spriteCanvas(w,h,fn){const oc=document.createElement('canvas');oc.width=w;oc.height=h;const og=g,os=SN.s;g=oc.getContext('2d');SN.s=0;try{fn()}finally{g=og;SN.s=os}return oc}
+function card(){
+ const fr=document.fonts?Promise.all([document.fonts.load('600 44px "DM Sans"'),document.fonts.load('28px "Press Start 2P"')]).catch(()=>{}):Promise.resolve();
+ fr.then(()=>{
+  const c=document.createElement('canvas'),Wd=1080,Hd=1350;c.width=Wd;c.height=Hd;
+  const x=c.getContext('2d'),F='"Press Start 2P",monospace',D='"DM Sans",sans-serif';
+  let sd=7;const rnd=()=>(sd=(sd*1664525+1013904223)>>>0)/4294967296;
+  const p6=v=>Math.round(v/6)*6,rc=(col,a,b,w,h)=>{x.fillStyle=col;x.fillRect(a,b,w,h)};
+  const Z=[[110,110,860,250],[250,370,580,300],[100,760,880,400],[250,1170,580,120]],
+   bad=(a,b)=>Z.some(([zx,zy,zw,zh])=>a>zx-12&&a<zx+zw+12&&b>zy-12&&b<zy+zh+12);
+  const gr=x.createLinearGradient(0,0,0,Hd);gr.addColorStop(0,'#2a2048');gr.addColorStop(1,'#1b1430');x.fillStyle=gr;x.fillRect(0,0,Wd,Hd);
+  const gl=x.createRadialGradient(Wd/2,520,30,Wd/2,520,430);gl.addColorStop(0,'rgba(255,184,77,.26)');gl.addColorStop(1,'rgba(255,184,77,0)');x.fillStyle=gl;x.fillRect(0,0,Wd,Hd);
+  for(let i=0;i<70;i++){const a=p6(70+rnd()*940),b=p6(70+rnd()*1210),al=.25+rnd()*.4;if(bad(a,b))continue;x.globalAlpha=al;rc('#fff4d6',a,b,6,6)}
+  x.globalAlpha=1;
+  for(let i=0;i<110;i++){const a=p6(72+rnd()*930),b=p6(72+rnd()*1200),s=rnd();if(bad(a,b))continue;rc(BC[i%5],a,b,s<.4?12:6,s<.7?6:12)}
+  for(let i=0;i<16;i++){const a=p6(72+rnd()*920),b=p6(72+rnd()*1190);if(bad(a,b))continue;rc(i%2?'#ffb2ca':'#f58db0',a,b,12,6);rc(i%2?'#f58db0':'#ffb2ca',a+6,b+6,6,6)}
+  x.strokeStyle='#ffb84d';x.lineWidth=8;x.strokeRect(36,36,Wd-72,Hd-72);
+  x.strokeStyle='#ff7aa8';x.lineWidth=2;x.strokeRect(58,58,Wd-116,Hd-116);
+  [[30,30],[Wd-50,30],[30,Hd-50],[Wd-50,Hd-50]].forEach(([a,b])=>rc('#ffb84d',a,b,20,20));
+  const bl=(a,b)=>{rc('#ef78a2',a+6,b,6,6);rc('#ef78a2',a,b+6,6,6);rc('#ef78a2',a+12,b+6,6,6);rc('#ef78a2',a+6,b+12,6,6);rc('#ffe0e9',a+6,b+6,6,6)};
+  [[84,84],[978,84],[84,1248],[978,1248],[88,400],[966,430],[90,660],[972,690],[84,1120],[978,1100]].forEach(([a,b])=>bl(a,b));
+  x.textAlign='center';x.textBaseline='alphabetic';
+  x.fillStyle='#ffb84d';x.font='44px '+F;x.fillText('SELAMAT ULANG TAHUN',Wd/2,190);
+  x.font='84px '+F;x.fillStyle='#3a2a6a';x.fillText(CFG.nama.toUpperCase()+'!',Wd/2+5,305);
+  x.fillStyle='#ffb84d';x.fillText(CFG.nama.toUpperCase()+'!',Wd/2,300);
+  x.imageSmoothingEnabled=false;
+  const oc=document.createElement('canvas');oc.width=48;oc.height=40;cakeOn(oc.getContext('2d'),true);
+  x.drawImage(oc,280,380,336,280);
+  const lili=spriteCanvas(20,24,()=>{hijabi(2,6,'down',0);R('#ffd54a',6,4,8,1);R('#ffd54a',6,2,1,2);R('#ffd54a',9,1,2,3);R('#ffd54a',13,2,1,2);R('#fff',9,2,2,1)});
+  x.drawImage(lili,608,389,240,288);
+  [[862,430],[592,470],[880,620]].forEach(([a,b])=>{rc('#fff4d6',a,b-12,6,30);rc('#fff4d6',a-12,b,30,6)});
+  rc('#ffb84d',Wd/2-190,737,150,4);rc('#ffb84d',Wd/2+40,737,150,4);
+  rc('#ff7aa8',Wd/2-6,730,12,6);rc('#ff7aa8',Wd/2-18,736,36,6);rc('#ff7aa8',Wd/2-6,742,12,6);
+  const msg=(CFG.pesan.match(/[^.!?]+[.!?]+/g)||[CFG.pesan]).slice(0,2).join(' ').replace(/\s+/g,' ').trim();
+  let fs=44,ls,lh;for(;fs>=30;fs-=2){x.font='600 '+fs+'px '+D;ls=wrapT(x,msg,Wd-240);lh=Math.round(fs*1.45);if(ls.length*lh<=360)break}
+  fs=Math.max(fs,30);x.font='600 '+fs+'px '+D;x.fillStyle='#fff4d6';
+  const m0=770,m1=1150;let y=Math.round(m0+(m1-m0-ls.length*lh)/2+fs*.95);
+  ls.forEach(l=>{x.fillText(l,Wd/2,y);y+=lh});
+  rc('rgba(255,184,77,.12)',Wd/2-270,1186,540,84);x.strokeStyle='#ffb84d';x.lineWidth=3;x.strokeRect(Wd/2-270,1186,540,84);
+  x.fillStyle='#ff7aa8';x.font='22px '+F;x.fillText('PETUALANGAN DI DESA',Wd/2,1224);
+  x.fillStyle='#ffb84d';x.font='18px '+F;x.fillText('MISI '+NQ+'/'+NQ+' SELESAI',Wd/2,1254);
+  c.toBlob(b=>{if(!b)return;const f=new File([b],'ulang-tahun-'+CFG.nama+'.png',{type:'image/png'}),download=()=>{const a=document.createElement('a'),url=URL.createObjectURL(b);a.href=url;a.download=f.name;a.click();setTimeout(()=>URL.revokeObjectURL(url),1000)};if(navigator.canShare&&navigator.canShare({files:[f]}))navigator.share({files:[f]}).catch(e=>{if(e.name!=='AbortError')download()});else download()})
+ })}
 $('shot').onclick=card;
 function reset(){location.reload()}
 $('again').onclick=reset;
@@ -738,7 +815,7 @@ setInterval(()=>{const hint=$('vendor-hint'),vendor=started&&!ended&&!busy&&!lin
   if(!started||ended||busy||lines.length){$('a').classList.remove('can-interact');return}
   const has=checkInteraction();if(has)$('a').classList.add('can-interact');else $('a').classList.remove('can-interact')},200);
 
-function finishArrival(){if(!arrivalState)return;clearInterval(arrivalTimer);arrivalTimer=null;arrivalState=0;arrivalCaptionIndex=-1;$('arrival-scene').classList.remove('active');document.body.classList.remove('arrival-active');P.x=27;P.y=31;P.dir='up';P.step++;busy=0;$('dlg').classList.add('big');$('a').classList.add('pulse');say(['Selamat datang di desa ini, Bu Laili. 🌸','Kepala Desa mengundang Ibu berkunjung. Beliau akan menemui Ibu di Balai Desa nanti sore.','Sambil menunggu, temui Petugas Stasiun di pintu Stasiun. Jalan saja ke kiri beberapa langkah dan cari tanda !.','Kamu bebas berkeliling desa kapan saja: jajan, ngobrol dengan warga, atau menikmati bunga sakura.'],()=>{$('dlg').classList.remove('big');$('a').classList.remove('pulse')})}
+function finishArrival(){if(!arrivalState)return;clearInterval(arrivalTimer);arrivalTimer=null;arrivalState=0;arrivalCaptionIndex=-1;$('arrival-scene').classList.remove('active');document.body.classList.remove('arrival-active');P.x=27;P.y=31;P.dir='up';P.step++;busy=0;$('dlg').classList.add('big');$('a').classList.add('pulse');say(['Ini pertama kalinya Laili menginjakkan kaki di desa ini. Di tasnya ada surat undangan bergambar bunga sakura. 🌸','Isinya singkat: "Kepala Desa mengundang Bu Laili sebagai tamu kehormatan. Mohon datang ke Balai Desa sore ini."','Sambil menunggu sore, sapalah warga. Mulai dari Petugas Stasiun di pintu Stasiun: jalan saja ke kiri beberapa langkah dan cari tanda !.','Kamu bebas berkeliling desa kapan saja: jajan, ngobrol dengan warga, atau menikmati bunga sakura.'],()=>{$('dlg').classList.remove('big');$('a').classList.remove('pulse')})}
 function startArrivalCutscene(){started=1;busy=1;arrivalState=1;arrivalStartedAt=Date.now();arrivalCaptionIndex=0;P.x=30.25;P.y=32;P.dir='left';P.step=0;document.body.classList.add('arrival-active');$('arrival-text').textContent=ARRIVAL_SCRIPT[0][1];$('arrival-scene').classList.add('active');arrivalTimer=setInterval(()=>{const elapsed=Date.now()-arrivalStartedAt;let index=0;ARRIVAL_SCRIPT.forEach((s,i)=>{if(elapsed>=s[0])index=i});if(index!==arrivalCaptionIndex){arrivalCaptionIndex=index;$('arrival-text').textContent=ARRIVAL_SCRIPT[index][1]}if(elapsed>=ARR.end)finishArrival()},80)}
 $('arrival-skip').onclick=finishArrival;
 $('go').onclick=()=>{$('start').style.display='none';bgStart('calm');startArrivalCutscene()};

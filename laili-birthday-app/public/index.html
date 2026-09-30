@@ -4,6 +4,14 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Petualangan di Desa</title>
+<meta property="og:type" content="website">
+<meta property="og:title" content="Petualangan di Desa">
+<meta property="og:description" content="Sebuah desa kecil menantimu. Yuk mulai petualangannya!">
+<meta property="og:image" content="https://petualangan-desa-misterius.vercel.app/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:url" content="https://petualangan-desa-misterius.vercel.app/">
+<meta name="twitter:card" content="summary_large_image">
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@600&family=Pixelify+Sans:wght@400..700&family=Press+Start+2P&display=swap" rel="stylesheet">
 <style>
 :root{--bg:#1b1430;--panel:#2a2048;--ink:#fff4d6;--acc:#ffb84d;--pink:#ff7aa8;--k:clamp(46px,8vmin,70px);--fs:clamp(13px,2.2vmin + 8px,18px);box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
@@ -1032,7 +1040,7 @@ const SR=[
  [[41,27],[23,27],[23,17],[6,17]],[[46,27],[41,27],[41,7]],
  [[16,31],[38,31]],[[18,27],[18,31],[38,31]]
 ];
-const SKS=Array.from({length:10},(_,i)=>({i,female:i%2===1,
+const SKS=Array.from({length:7},(_,i)=>({i,female:i%2===1,
  scarf:i%4===1?['#d18a43','#7f5ad6','#238b89','#e0648a'][(i>>2)%4]:null,
  hair:['#3a2318','#2a1810','#5a3a20','#151515'][i%4],
  bag:['#d95a5a','#5aa8e8','#f2c94c','#5ad17a','#b98cff','#ff8a3d'][i%6],

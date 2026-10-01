@@ -3,15 +3,16 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Petualangan di Desa</title>
+<title>Petualangan di Desa Misterius</title>
 <meta property="og:type" content="website">
-<meta property="og:title" content="Petualangan di Desa">
-<meta property="og:description" content="Sebuah desa kecil menantimu. Yuk mulai petualangannya!">
+<meta property="og:title" content="Petualangan di Desa Misterius">
+<meta property="og:description" content="Laili datang lagi ke desa ini. Tapi hari ini, warganya bersikap agak aneh...">
 <meta property="og:image" content="https://petualangan-desa-misterius.vercel.app/og.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta property="og:url" content="https://petualangan-desa-misterius.vercel.app/">
 <meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Petualangan di Desa Misterius">
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@600&family=Pixelify+Sans:wght@400..700&family=Press+Start+2P&display=swap" rel="stylesheet">
 <style>
 :root{--bg:#1b1430;--panel:#2a2048;--ink:#fff4d6;--acc:#ffb84d;--pink:#ff7aa8;--k:clamp(46px,8vmin,70px);--fs:clamp(13px,2.2vmin + 8px,18px);box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
@@ -174,6 +175,36 @@ body.arrival-active #pad,body.arrival-active #qb{visibility:hidden}
 @media (max-width:380px){#endcake{width:96px;height:80px}#endlaili{width:72px;height:86px;margin-bottom:-5px}#endbq{width:56px;height:70px}}
 @media (prefers-reduced-motion:reduce){#endlaili,#endbq,#crowd canvas{animation:none}}
 @media (max-width:380px){#endcake{width:104px;height:87px}#endlaili{width:70px;height:84px}#endbq{width:56px;height:70px}}
+/* ===== LAYAR AKHIR: tombol selalu terlihat ===== */
+body.is-end #pad{display:none}
+#end{overflow:hidden;justify-content:center;gap:8px;padding:max(10px,env(safe-area-inset-top,0px)) 12px max(12px,env(safe-area-inset-bottom,0px))}
+#end h1{flex:none;font-size:calc(var(--fs)*1.05);line-height:1.4}
+#endscene{flex:none}
+#msgbox{flex:0 1 auto;min-height:0;overflow-y:auto;overscroll-behavior:contain;padding:12px 14px;scrollbar-width:thin;scrollbar-color:#ffb84d transparent}
+#msgbox::-webkit-scrollbar{width:6px}
+#msgbox::-webkit-scrollbar-thumb{background:#ffb84d;border-radius:3px}
+#end .row{flex:none;display:grid;grid-template-columns:repeat(3,auto);gap:8px;justify-content:center;width:100%}
+#end .row button{font-size:calc(var(--fs)*.8);padding:.8em .5em}
+@media (max-width:560px){#end .row{grid-template-columns:1fr 1fr}#end .row #shot{grid-column:1/-1}}
+@media (max-height:480px){#end h1{font-size:calc(var(--fs)*.95)}}
+
+/* ===== MODE JALAN-JALAN & FOTO ===== */
+#xbar{position:absolute;right:8px;top:8px;display:none;flex-direction:column;gap:8px;z-index:9}
+#xbar button{width:44px;height:44px;padding:0;font-size:20px;line-height:1;border-radius:50%;background:rgba(27,20,48,.78);color:var(--ink);border:2px solid var(--acc);box-shadow:none}
+#xphoto-menu{display:none;gap:6px;padding:4px;border:1px solid rgba(255,184,77,.65);border-radius:28px;background:rgba(27,20,48,.88)}
+body.explore.photo-choose #xphoto-menu{display:flex}
+#xphoto-menu button{width:40px;height:40px}
+#xphoto-menu button.selected{background:var(--acc);color:var(--bg)}
+body.explore #xbar{display:flex}
+body:has(#dlg[style*="block"]) #xbar{visibility:hidden}
+#xhint{position:absolute;left:50%;bottom:12px;transform:translateX(-50%);display:none;max-width:calc(100% - 24px);padding:7px 10px;background:rgba(27,20,48,.88);border:1px solid rgba(255,184,77,.55);color:var(--ink);font:600 13px/1.35 'DM Sans',sans-serif;text-align:center;pointer-events:none;z-index:9}
+body.photo #hud,body.photo #qb,body.photo #pad,body.photo #vendor-hint,body.photo #dlg{display:none!important}
+body.photo #stage{border:0}
+body.photo #xend{display:none}
+body.photo #xfoto{transition:opacity .4s}
+body.photo.xhide #xfoto{opacity:0;pointer-events:none}
+body.photo:not(.xhide) #xhint{display:block}
+@media (orientation:landscape){#xbar{top:46px}}
 </style>
 </head>
 <body>
@@ -188,8 +219,8 @@ body.arrival-active #pad,body.arrival-active #qb{visibility:hidden}
   <div id="pcut"><button id="pcut-skip" type="button">Lewati adegan</button><div id="pcut-cap"><div id="pcut-kick"></div><p id="pcut-text"></p></div></div>
   <div class="ov" id="start">
     <h1>Selamat datang,<br>Laili!</h1>
-    <div>Sebuah desa kecil menantimu. Warganya membutuhkan bantuan, dan ada rahasia yang belum terungkap.<br><br>Siap memulai petualangan?</div>
-    <button id="go">Mulai petualangan</button>
+    <div>Hari ini kamu datang lagi ke desa yang sudah sering kamu kunjungi. Warganya sudah kenal kamu, tapi hari ini sikap mereka agak aneh.<br><br>Siap berkunjung?</div>
+    <button id="go">Berangkat ke desa</button>
     <div id="keyhint" style="font-size:max(10px,calc(var(--fs)*.75));opacity:.7">Desktop: panah / WASD untuk bergerak · Space / Enter untuk berinteraksi</div>
     <div style="font-size:max(10px,calc(var(--fs)*.75));opacity:.7">Aktifkan suara untuk musik dan efek.</div>
   </div>
@@ -202,11 +233,13 @@ body.arrival-active #pad,body.arrival-active #qb{visibility:hidden}
     <button id="man">Lanjut tanpa mikrofon</button>
   </div>
   <canvas id="endfx"></canvas>
+  <div id="xbar"><button id="xfoto" type="button" aria-label="Pilih suasana foto">📷</button><div id="xphoto-menu" role="group" aria-label="Suasana foto"><button id="xday" type="button" aria-label="Foto siang" aria-pressed="true">☀️</button><button id="xevening" type="button" aria-label="Foto senja" aria-pressed="false">🌇</button></div><button id="xend" type="button" aria-label="Selesai jalan-jalan">✕</button></div>
+  <div id="xhint">Ketuk layar untuk menampilkan tombol keluar</div>
   <div class="ov" id="end">
     <div id="endscene"><canvas id="endcake" width="48" height="40"></canvas><canvas id="endlaili" width="20" height="24"></canvas><canvas id="endbq" width="16" height="20"></canvas></div>
     <h1>Selamat ulang tahun,<br>Laili!</h1>
     <div id="msgbox"><div id="msg"></div></div>
-    <div class="row"><button id="shot">Simpan kartu 📸</button><button id="again">Main lagi ↻</button></div>
+    <div class="row"><button id="shot">Simpan kartu 📸</button><button id="roam">Jalan-jalan 🌸</button><button id="again">Main lagi ↻</button></div>
   </div>
 </div>
 <div id="pad">
@@ -290,7 +323,6 @@ const VENDORS=[
  {x:37,y:13,stand:[39,13],seller:'Penjual es kelapa',food:'Es kelapa',short:'Kelapa',icon:'🥥',price:8000,color:'#4a7ac8',female:false},
  {x:10,y:8,stand:[12,8],seller:'Penjual martabak',food:'Martabak mini',short:'Martabak',icon:'🥞',price:15000,color:'#a86835',female:true},
  {x:16,y:18,stand:[18,19],seller:'Penjual seblak',food:'Seblak',short:'Seblak',icon:'🍜',price:8000,color:'#c84f38',female:true,scarf:'#238b89'},
- {x:34,y:18,stand:[36,18],seller:'Penjual telur gulung',food:'Telur gulung',short:'Telur',icon:'🥚',price:5000,color:'#e5b53d',female:true},
  {x:42,y:8,stand:[44,8],seller:'Penjual mi ayam',food:'Mi ayam',short:'Mi ayam',icon:'🍲',price:12000,color:'#55a75c',female:false}
  ];
 const CARTS=VENDORS.map(v=>[v.x,v.y,v.color,v.icon,v.short]),ZL=[[35,18.2,'Lapangan Bola'],[3,8.4,'Bulu Tangkis'],[6.3,5.4,'Area Piknik']];
@@ -316,17 +348,18 @@ const KEYS=['n','c','t','s','b','y','m','k','p','j'],NQ=10,ORD=['t','m','n','b',
  OBJ={n:'Bantu Ibu mencari tiga barangnya',b:'Bantu penjual bunga menyiapkan pesanan',c:'Bantu barista memperbaiki mesin kopi',m:'Bantu pedagang menghitung belanjaan',t:'Bantu petugas merapikan jadwal kereta',y:'Bantu pustakawan merapikan rak buku',s:'Ikuti cerdas cermat di sekolah',k:'Bantu guru musik menyetel alat musik',p:'Bantu petugas pos memilah surat dan paket',j:'Bantu pelukis menyelesaikan lukisannya'};
 const ITEMS=[{x:2,y:22,e:'{L}',n:'bunga'},{x:44,y:22,e:'🐈',n:'kucing'},{x:28,y:22,e:'📦',n:'paket'}];
 let started=0,ended=0,partyOn=0,partyReady=0,last=0,lines=[],li=0,typing=null,after=null,busy=0;
+let explore=0,photo=0,smsDone=0,photoTime=0;
 let arrivalState=0,arrivalStartedAt=0,arrivalTimer=null,arrivalCaptionIndex=-1;
 const ARR={zoom:2,zoomIn:[3400,5000],door:5600,appear:[6600,8000],walk:[8000,10600],wave:[10600,12400],depart:12400,zoomOut:[14000,15600],end:16200};
 const ARRIVAL_SCRIPT=[
- [0,'Sebuah undangan dari Kepala Desa tiba. Laili berangkat dengan kereta lokal.'],
- [1800,'Di balik jendela, sawah dan rumah-rumah kecil berlalu perlahan.'],
+ [0,'Pagi itu, Laili naik kereta lokal ke desa yang sudah sering ia kunjungi.'],
+ [1800,'Pemandangan di luar jendela sudah tidak asing lagi baginya.'],
  [3400,'Kereta melambat. Stasiun Desa sudah terlihat.'],
- [5600,'Pintu gerbong terbuka. Laili menggenggam tasnya erat-erat.'],
- [7000,'Langkah pertama Laili di desa yang belum pernah ia kunjungi.'],
- [10600,'Laili berbalik dan melambaikan tangan kepada masinis.'],
+ [5600,'Pintu gerbong terbuka. Laili turun sambil membawa tasnya.'],
+ [7000,'Ia sudah hafal jalan di desa ini, jadi langkahnya santai.'],
+ [10600,'Laili menoleh dan melambaikan tangan kepada masinis, seperti biasa.'],
  [12400,'Kereta kembali melaju, meninggalkan Laili di peron.'],
- [14000,'Desa kecil itu menyambutnya dengan tenang.']
+ [14000,'Desa terlihat tenang seperti biasa.']
 ];
 const arrSeg=(ms,a,b)=>Math.max(0,Math.min(1,(ms-a)/(b-a))),arrEase=t=>t*t*(3-2*t);
 function arrCam(ms){const zi=arrEase(arrSeg(ms,ARR.zoomIn[0],ARR.zoomIn[1])),zo=arrEase(arrSeg(ms,ARR.zoomOut[0],ARR.zoomOut[1])),bx=30.25*T+8,by=32*T+8+12*zi,ex=27*T+8,ey=31*T+8;
@@ -339,15 +372,15 @@ const GO={t:'Temui petugas di Stasiun',m:'Ke Pasar (timur desa)',n:'Temui Ibu di
 const NPC={t:'Petugas',m:'Pedagang',n:'Ibu',b:'Penjual bunga',y:'Pustakawan',c:'Barista',s:'Bu Guru',k:'Guru Musik',p:'Petugas Pos',j:'Pelukis'};
 const NEXT={
  t:['Petugas: Terima kasih, Bu Laili. Oh iya, Kepala Desa titip pesan supaya Ibu mampir ke Pasar dulu sebelum ke Balai Desa.','Pasar ada di sisi timur desa, tepat di bawah Lapangan Bola. Sambil jalan, silakan jajan atau menyapa warga dulu.'],
- m:['Pedagang: Hitungannya tepat sekali, Bu! Belanjaan sebanyak ini untuk... eh, untuk stok pasar, maksud saya.','Pedagang: Oh ya, ada Ibu di dekat Balai Desa yang kebingungan mencari barangnya. Balai Desa itu bangunan merah besar di kiri-tengah desa.'],
- n:['Ibu: Wah, semuanya ketemu! Terima kasih, Nak. Barang-barang ini penting sekali untuk acara... eh, untuk keperluan Ibu sehari-hari.','Ibu: Toko Bunga di ujung barat desa sedang kewalahan. Mampirlah ke sana, ya.'],
+ m:['Pedagang: Hitungannya tepat sekali, Bu! Stok sebanyak ini memang untuk... eh, untuk jualan besok, maksud saya.','Pedagang: Oh ya, ada Ibu di dekat Balai Desa yang kebingungan mencari barangnya. Balai Desa itu bangunan merah besar di kiri-tengah desa.'],
+ n:['Ibu: Wah, semuanya ketemu! Terima kasih, Nak. Barang-barang ini penting sekali untuk... eh, untuk keperluan Ibu sehari-hari.','Ibu: Toko Bunga di ujung barat desa sedang kewalahan. Mampirlah ke sana, ya.'],
  b:['Penjual bunga: Terima kasih, Bu Laili. Kepala Desa memesan bunga segar untuk sore ini. Eh, maksudnya pesanan biasa!','Penjual bunga: Barista di Kafe, pojok kiri atas desa, sepertinya butuh bantuan. Coba tengok ke sana.'],
  y:['Pustakawan: Terima kasih, Bu Guru. Tadi ada yang meminjam gunting dan kertas warna, katanya untuk "tugas kelas". Aneh, ya?','Pustakawan: Pelukis di Sanggar Seni, ujung timur desa, menunggu bantuan Ibu. Ikuti jalan ke timur, ya.'],
- c:['Barista: Mesinnya menyala lagi! Kopi dan kuenya untuk sore ini... eh, untuk pengunjung, tentu saja aman.','Barista: Bu Guru di Sekolah mencari Ibu. Sekolahnya tidak jauh di sebelah kanan Kafe.'],
- s:['Bu Guru: Nilainya sempurna! Murid-murid di sini pasti senang kalau diajar Ibu... eh, maksudku, kalau Ibu berkunjung ke kelas kami.','Bu Guru: Guru Musik di Balai Musik, tepat di sebelah kanan Sekolah ini, butuh bantuan. Coba mampir, ya.'],
- k:['Guru Musik: Nadanya sudah pas! Terima kasih, Bu Laili. Soal latihan kami tadi, jangan bilang siapa-siapa ya... eh, maksud saya latihan paduan suara desa.','Guru Musik: Petugas Pos di sebelah kanan sana sedang kewalahan memilah surat. Bisa Ibu tengok?'],
- p:['Petugas Pos: Semua surat dan paket sudah terpilah. Banyak sekali kiriman dari desa sebelah hari ini, Bu. Ah, itu bukan urusan saya. Hehe.','Petugas Pos: Pustakawan di Perpustakaan, tengah desa ke arah selatan dari sini, sedang butuh bantuan. Coba mampir ke sana, Bu.'],
- j:['Pelukis: Lukisannya selesai! Jangan diintip dulu ya... ini untuk pameran, maksud saya.','Pelukis: Sepertinya semua urusan sudah beres. Silakan tunggu telepon dari Kepala Desa, Bu Laili.']
+ c:['Barista: Mesinnya menyala lagi! Soalnya kopi dan kue untuk sore ini... eh, untuk pengunjung, tentu saja harus aman.','Barista: Bu Guru di Sekolah mencari Ibu. Sekolahnya tidak jauh di sebelah kanan Kafe.'],
+ s:['Bu Guru: Nilainya sempurna! Pantas murid-murid selalu cerita betapa hebatnya Ibu mengajar.','Bu Guru: Guru Musik di Balai Musik, tepat di sebelah kanan Sekolah ini, butuh bantuan. Coba mampir, ya.'],
+ k:['Guru Musik: Nadanya sudah pas! Terima kasih, Bu Laili. Soal latihan kami tadi, jangan bilang siapa-siapa ya... maksud saya, latihan paduan suara desa.','Guru Musik: Petugas Pos di sebelah kanan sana sedang kewalahan memilah surat. Bisa Ibu tengok?'],
+ p:['Petugas Pos: Semua surat dan paket sudah terpilah. Banyak sekali kiriman untuk satu orang hari ini, Bu. Ah, itu bukan urusan saya. Hehe.','Petugas Pos: Pustakawan di Perpustakaan, tengah desa ke arah selatan dari sini, sedang butuh bantuan. Coba mampir ke sana, Bu.'],
+ j:['Pelukis: Lukisannya selesai! Jangan diintip dulu ya... ini untuk pameran desa, maksud saya.','Pelukis: Sepertinya semua urusan sudah beres. Silakan tunggu telepon dari Kepala Desa, Bu Laili.']
 };
 const ITEM_HINT={
  bunga:['Bunga: di tepi barat desa, tepat di bawah Rumah Pohon.'],
@@ -355,7 +388,7 @@ const ITEM_HINT={
  paket:['Paket: di taman kecil berpohon, tepat di bawah Perpustakaan dan di sebelah kiri Lapangan Bola.','Pohon menutup sisi kiri, kanan, dan atas, jadi masuklah dari arah bawah.']
 };
 hud();
-function hud(){$('misi').textContent='Misi '+cnt()+'/'+NQ;$('saldo').textContent='Rp'+wallet.toLocaleString('id-ID');const cur=CUR();let t;
+function hud(){if(explore){$('misi').textContent='Jalan-jalan';$('saldo').textContent='Rp'+wallet.toLocaleString('id-ID');$('qb').innerHTML='<b>Santai</b><br>Bebas keliling desa, jajan, atau berfoto';return}$('misi').textContent='Misi '+cnt()+'/'+NQ;$('saldo').textContent='Rp'+wallet.toLocaleString('id-ID');const cur=CUR();let t;
  if(cur)t=AC[cur]?'› '+OBJ[cur]+(cur==='n'?' ('+got()+'/3)':''):'› '+GO[cur];
  else t=partyReady?'› Menuju Balai Desa, ikuti topi pesta di peta':'Tunggu kabar dari Kepala Desa.';
  $('qb').innerHTML='<b>'+(cur&&AC[cur]?'Misi aktif':'Tujuan')+'</b><br>'+t}
@@ -370,7 +403,7 @@ function ask(q,opts,ans,ok,bad){lines=[];busy=1;$('tico').style.display='none';c
   opts.forEach((o,i)=>{const b=document.createElement('button');b.textContent=o;b.onclick=()=>{ch.style.display='none';busy=0;$('dlg').style.display='none';setDialogBack(false);sfx(ans<0?'key':i===ans?'ok':'bad');i===ans?ok():bad(o)};ch.appendChild(b)})}
 function quiz(list,cb){let i=0;const next=()=>{const it=list[i];ask(it.q,it.o,it.a,()=>{i++;i>=list.length?cb():say(['Benar!'],next)},()=>say([it.h||'Belum tepat. Coba sekali lagi, ya.'],next))};next()}
 function done(k,txt){Q[k]=1;hud();sfx('win');spark();if(navigator.vibrate)navigator.vibrate([100,50,100]);
-  say([txt[0]].concat(NEXT[k]),()=>{if(cnt()===NQ)setTimeout(triggerPartySequence,1500)},false)}
+  say([txt[0]].concat(NEXT[k]),()=>{if(cnt()===NQ)setTimeout(triggerPartySequence,1500);else if(cnt()===5)setTimeout(kadesSMS,1200)},false)}
 function spark(){const h=$('misi');h.classList.remove('pop');void h.offsetWidth;h.classList.add('pop');const s=document.createElement('span');s.className='plus';s.textContent='Misi selesai!';$('stage').appendChild(s);setTimeout(()=>s.remove(),1600)}
 let wr=0;
 const SC=['#e85a5a','#5aa8e8','#f2c94c','#5ad17a'];let sq=[],si=0,slock=1,simonCb=null;
@@ -434,7 +467,7 @@ const QS={
   ],()=>done('j',['Lukisannya selesai. 🎨'])))}
 };
 const TG=()=>CUR();
-const INTRO={t:'Petugas: Selamat datang, Bu Laili! Kepala Desa sudah bilang akan ada tamu guru dari desa sebelah. Kebetulan sekali, jadwal kereta hari ini berantakan. Bisa bantu menghitungnya?',m:'Pedagang: Eh, ini pasti Bu Laili, tamunya Kepala Desa! Selamat datang. Bisa bantu saya menghitung belanjaan hari ini?',n:'Ibu: Aduh, ini pasti tamu dari desa sebelah, ya? Kebetulan sekali, Nak. Ada tiga barang Ibu yang tercecer di desa. Bisa bantu mencarinya?',b:'Penjual bunga: Bu Laili, ya? Kepala Desa sudah cerita soal Ibu. Pas sekali, ada pesanan rangkaian bunga yang belum selesai. Bantu saya, ya?',y:'Pustakawan: Jadi Ibu guru yang diundang Kepala Desa itu? Datang di saat yang tepat. Beberapa buku di rak tertukar. Bisa bantu menyusunnya?',c:'Barista: Selamat datang, Bu Laili! Mesin kopinya mendadak rusak. Bisa bantu memperbaikinya?',s:'Bu Guru: Akhirnya tamu kehormatan kita sampai juga. Sebelum ke Balai Desa, ikut cerdas cermat dulu, ya?',k:'Guru Musik: Selamat datang, Bu Laili! Kebetulan saya butuh telinga tambahan untuk menyetel alat musik. Bisa bantu?',p:'Petugas Pos: Bu Laili, ya? Wah, surat dan paket hari ini menumpuk. Bisa bantu saya memilahnya?',j:'Pelukis: Ah, tamu dari desa sebelah! Saya butuh pendapat segar untuk lukisan ini. Bisa bantu menyelesaikannya?'};
+const INTRO={t:'Petugas: Eh, Bu Laili! Datang lagi, ya? Pas banget, jadwal kereta hari ini berantakan dan saya butuh tangan yang teliti. Bisa bantu menghitung?',m:'Pedagang: Bu Laili! Sering mampir ke sini, ya. Kebetulan, saya butuh bantuan menghitung belanjaan hari ini. Bisa, Bu?',n:'Ibu: Eh, Nak Laili, datang lagi ya? Aduh, kebetulan sekali. Ada tiga barang Ibu yang tercecer di desa waktu belanja tadi. Bisa bantu mencarinya?',b:'Penjual bunga: Bu Laili! Pas sekali Ibu lewat. Ada pesanan rangkaian bunga yang belum selesai dan saya agak bingung. Bantu saya, ya?',y:'Pustakawan: Bu Laili, sering mampir ke perpustakaan ya. Kebetulan sekali, beberapa buku di rak tertukar. Bisa bantu menyusunnya?',c:'Barista: Bu Laili, mampir lagi! Mesin kopinya mendadak rusak pagi ini. Bisa bantu memperbaikinya?',s:'Bu Guru: Bu Laili! Murid-murid sering cerita tentang Ibu. Sebelum ke mana-mana, ikut cerdas cermat dulu ya, sekalian latihan buat anak-anak.',k:'Guru Musik: Bu Laili! Kebetulan saya butuh telinga tambahan untuk menyetel alat musik. Bisa bantu?',p:'Petugas Pos: Bu Laili, ya? Wah, surat dan paket hari ini menumpuk sekali. Bisa bantu saya memilahnya?',j:'Pelukis: Ah, Bu Laili! Saya butuh pendapat dari orang yang jeli untuk lukisan ini. Bisa bantu menyelesaikannya?'};
 const QDOOR={c:[3,6],s:[16,6],t:[23,30],n:[13,16],b:[4,16],y:[28,15],m:[38,26],k:[23,6],p:[29,6],j:[44,12]};
 const STATION_MASTER={x:27,y:30};
 const PARTY_POS={x:18,y:16}; // Depan Balai Desa
@@ -445,23 +478,23 @@ function shop(v){const price='Rp'+v.price.toLocaleString('id-ID');ask(v.seller+'
 
 // ===== CUTSCENE SURPRISE PARTY =====
 function triggerPartySequence(){partyReady=1;hud();sfx('win');
-  say(['Ponsel Laili berdering.','Kepala Desa: "Bu Laili, terima kasih sudah membantu warga seharian ini. Mereka semua memuji Ibu."','Kepala Desa: "Bisa datang ke Balai Desa sekarang? Ada hal penting yang ingin kami sampaikan."','Balai Desa adalah bangunan merah besar di kiri-tengah desa. Ikuti topi pesta di peta.'],()=>{partyOn=1},false)}
+  say(['Ponsel Laili berdering. Nama Kepala Desa muncul di layar.','Kepala Desa: "Bu Laili, terima kasih sudah membantu warga seharian ini. Mereka semua cerita betapa Ibu selalu bisa diandalkan."','Kepala Desa: "Sekarang bisa mampir ke Balai Desa? Ada hal yang ingin kami sampaikan, seperti yang saya kabari tadi pagi."','Balai Desa adalah bangunan merah besar di kiri-tengah desa. Ikuti topi pesta di peta.'],()=>{partyOn=1},false)}
 
 // ===== CUTSCENE PESTA PIXEL-ART =====
 let partyCut=0,pcT0=0,pcTimer=null,pcCap=-1,pcF=[0,0];
 const PC_END=31800,BC=['#ff7aa8','#ffd54a','#5ab8ff','#5ad17a','#b98cff'],
 WARGA=['pustaka','petugas','pedagang','musik','pos','seni'],
 PC_CAP=[
- [0,'Balai Desa','Laili membuka pintu Balai Desa...',''],
- [1700,'Balai Desa','Di dalam gelap. Sunyi. Tidak ada siapa-siapa.',''],
+ [0,'Balai Desa','Laili mendorong pintu Balai Desa seperti biasa...',''],
+ [1700,'Balai Desa','Di dalam gelap dan sunyi. "Lho, Pak Kades ke mana ya?"',''],
  [3300,'Balai Desa','Tiba-tiba... lampu menyala!',''],
  [4800,'Semua','Kejutan! Selamat ulang tahun, Bu Laili!','all'],
- [8300,'Murid-murid','Terima kasih sudah sabar membimbing kami, Bu Laili!','murid'],
- [11500,'Barista','Kopi dan kuenya sudah siap. Makanya mesinnya harus diperbaiki tadi!','barista'],
+ [8300,'Murid-murid','Ibu lupa ya hari ini ulang tahun Ibu? Kami nggak lupa, Bu Laili!','murid'],
+ [11500,'Barista','Kopi dan kuenya sudah siap. Makanya mesinnya harus diperbaiki tadi, Bu!','barista'],
  [14700,'Penjual bunga','Rangkaian yang tadi Ibu bantu siapkan ternyata untuk Ibu sendiri.','bunga'],
- [17900,'Ibu','Paket yang tadi Ibu minta kamu cari sebenarnya hadiah untukmu, Nak Laili.','ibu'],
+ [17900,'Ibu','Barang dan kucing yang tadi Ibu minta cari itu untuk pesta ini, Nak Laili. Maaf ya, Ibu pura-pura panik.','ibu'],
  [21100,'Para warga','Surat, lagu, dan lukisan yang tadi Ibu bantu... semuanya ucapan untuk Ibu!','warga'],
- [24500,'Kepala Desa','Kami sudah lama mendengar cerita tentang Ibu dari murid-murid dan keluarga. Maaf sudah membuat Ibu berkeliling desa.','kades'],
+ [24500,'Kepala Desa','Ibu sudah sering membantu desa ini. Hari ini giliran kami merayakan Ibu. Maaf sudah membuat Ibu keliling desa.','kades'],
  [28000,'Semua','Panjang umur dan bahagia selalu, Bu Laili!','all']
 ],
 PC_ACT=[
@@ -469,6 +502,7 @@ PC_ACT=[
  ['guru',14.3,17.15,'#3d8a8a',1,'#d18a43'],['murid',15.3,17.5,'#fff',0],['murid',16.3,17.7,'#fff',1,'#d18a43'],['teman',17.1,17.95,'#e0648a',1,'#7f5ad6'],
  ['teman',19.05,17.95,'#5aa8e8',0],['murid',20.0,17.7,'#fff',1],['murid',21.0,17.5,'#fff',0],['teman',22.0,17.15,'#6ad99a',1,'#d95a8a'],
  ['musik',13.3,17.35],['pos',22.2,18.25],['seni',15.0,18.55],
+ ['kucing',17.9,18.85],
  ['kades',18.0,16.3]
 ].map(([kind,x,y,c,f,sc],i)=>({kind,x,y,c,f:!!f,sc,i,d:kind==='kades'?6300:3700+i*100,dur:kind==='kades'?1900:700}));
 const pcCam=ms=>{const zt=Math.max(1,Math.min(1.3,cv.width/ZS/(10.5*T),cv.height/ZS/(12*T)));
@@ -493,7 +527,7 @@ function pixelCake(x,y,t){const f=n=>((t/130|0)+n)%2;
   for(let i=0;i<5;i++)R('#fff',x+i*3,y+5,1,1+i%2);
   R('#d94f57',x+3,y+1,2,2);R('#d94f57',x+9,y+1,2,2);
   [4,7,10].forEach((c,i)=>{R('#7fc0f0',x+c,y-1,1,3);R('#ffd54a',x+c,y-3-f(i),1,2);R('#ff8a3d',x+c,y-2,1,1)})}
-function pcPerson(a,px,py,t,arms){const k=a.kind;
+function pcPerson(a,px,py,t,arms){const k=a.kind;if(k==='kucing'){pixelCat(px,py,t,a.i);return}
   if(k==='ibu')person(px,py,'#8a4aa8','#bbb');
   else if(k==='pustaka'){villager(px,py,'#5a8ad9','#3a2318',true,'#238b89');R('#e7f7ff',px+4,py+4,3,1);R('#e7f7ff',px+8,py+4,3,1)}
   else if(k==='barista'){person(px,py,'#8a5a3a','#2a2018');R('#fff4d6',px+5,py+9,6,5)}
@@ -629,13 +663,15 @@ function fxLoop(){if(!fxOn)return;const w=FX.width,h=FX.height,u=fxU,t=RM?0:Date
  requestAnimationFrame(fxLoop)}
 addEventListener('resize',()=>{if(fxOn)fxFit()});
 function showEnd(){
+ document.body.classList.add('is-end');
  cakeOn($('endcake').getContext('2d'));
  const l=$('endlaili'),lc=l.getContext('2d');lc.imageSmoothingEnabled=false;lc.clearRect(0,0,20,24);
  lc.drawImage(spriteCanvas(20,24,()=>{hijabi(2,6,'down',0);R('#ffd54a',6,4,8,1);R('#ffd54a',6,2,1,2);R('#ffd54a',9,1,2,3);R('#ffd54a',13,2,1,2);R('#fff',9,2,2,1)}),0,0);
  {const bq=$('endbq').getContext('2d');bq.imageSmoothingEnabled=false;bq.clearRect(0,0,16,20);bq.drawImage(spriteCanvas(16,20,()=>lilyBouquet(0,0)),0,0)}
  fxInit();
  $('endfx').style.display='block';$('end').style.display='flex';
- typeMsg($('msg'),CFG.pesan)}
+ typeMsg($('msg'),CFG.pesan);fitMsg();
+ if(document.fonts)document.fonts.ready.then(()=>{if($('end').style.display==='flex')fitMsg()})}
 function finish(){ended=1;showEnd();sfx('win')}
 
 function move(d){P.dir=d;const[x,y]=DX[d],nx=P.x+x,ny=P.y+y,c=M[ny]&&M[ny][nx];if(!c||SOLID.includes(c))return;P.x=nx;P.y=ny;P.step++;sfx('step');
@@ -652,14 +688,14 @@ function checkInteraction(){const[x,y]=DX[P.dir],tx=P.x+x,ty=P.y+y,c=(M[ty]||[])
   if(Math.max(Math.abs(P.x-STATION_MASTER.x),Math.abs(P.y-STATION_MASTER.y))<=1)return 'station';
   return null}
 
-function act(){if(!started||ended||busy)return;if(lines.length){nextLine();return}
+function act(){if(!started||ended||busy||photo)return;if(lines.length){nextLine();return}
   const interaction=checkInteraction();
   if(interaction==='party'){startSurpriseCutscene();return}
-  if(interaction==='station'){say(['Masinis: Kereta berikutnya menuju kota akan segera berangkat.','Selamat berkunjung, Bu Laili. Hati-hati di perjalanan!']);return}
+  if(interaction==='station'){say(['Masinis: Seperti biasa, Bu Laili, kereta pulang baru jalan sore nanti.','Jangan sampai ketinggalan ya, Bu. Tapi kayaknya hari ini Ibu bakal pulang agak telat.']);return}
   if(interaction==='vendor'){const vendor=VENDORS.find(v=>Math.max(Math.abs(P.x-v.stand[0]),Math.abs(P.y-v.stand[1]))<=1);shop(vendor);return}
   if(interaction==='quest'){const near=ORD.find(k=>{const[x,y]=QDOOR[k];return Math.max(Math.abs(P.x-x),Math.abs(P.y-y))<=1});talk(near);return}
   const[x,y]=DX[P.dir],tx=P.x+x,ty=P.y+y,c=(M[ty]||[])[tx];
-  if(c==='D'){const quest={'3,6':'c','16,6':'s','23,30':'t','4,16':'b','28,15':'y','38,26':'m','23,6':'k','29,6':'p','44,12':'j'}[tx+','+ty];if(quest)talk(quest);else say([FLAV[tx+','+ty]||'Pintu ini terkunci. Penghuninya mungkin sedang pergi.'])}else if(c==='d')say([FLAV[tx+','+ty]||'Rumah warga. Tirainya tertutup; sepertinya penghuninya sedang keluar.'])}
+  if(c==='D'){const quest={'3,6':'c','16,6':'s','23,30':'t','4,16':'b','28,15':'y','38,26':'m','23,6':'k','29,6':'p','44,12':'j'}[tx+','+ty];if(quest)talk(quest);else say([doorHint(tx,ty)])}else if(c==='d')say([FLAV[tx+','+ty]||'Rumah warga. Tirainya tertutup; sepertinya penghuninya sedang keluar.'])}
 
 let NOW=0,ZS=3,VW=240,VH=176;
 const RC={C:'#8a5a3a',S:'#e0b830',T:'#4a6a9a',A:'#e88aa8',B:'#5ab88a',V:'#b03a3a',Y:'#6a5ad0',M:'#d18a3d',Q:'#68904d',U:'#4f8c65',K:'#7d4fb0',P:'#c0492f',J:'#2f8f9a'},WC={C:'#ead5b5',S:'#dbe5ec',T:'#d7e0ec',A:'#f1dfcc',B:'#f2d8e3',V:'#eadfc9',Y:'#d5e2e5',M:'#eadbbc',Q:'#c6a77d',U:'#d5e8d5',K:'#e6dcf0',P:'#f0dcd0',J:'#d6eef0'},HC=['#c8503d','#3d8a8a','#8a4aa8','#d18a3d','#4a7ac8'];
@@ -876,6 +912,27 @@ function drawBadmintonPlayers(){const swing=Math.sin(NOW/210),sx=2*T,sy=10*T,tx=
  g.beginPath();g.moveTo(tx+4,ty+8);g.lineTo(tx-swing*3,ty+3);g.stroke();g.beginPath();g.ellipse(tx-swing*3,ty+2,2,3,-.4,0,Math.PI*2);g.stroke();
  g.font='8px serif';g.textAlign='center';g.fillText('🏸',T*2.6+Math.sin(NOW/210)*13,T*11+Math.cos(NOW/210)*10);
 }
+function drawFootballPlayer(x,y,shirt,shorts,phase,number){
+ const stride=Math.sin(NOW/180+phase),px=Math.round(x+stride*2),py=Math.round(y-Math.abs(Math.sin(NOW/210+phase))*2);
+ person(px,py,shirt,'#30251f');R(shirt,px+3,py+7,10,6);R('#fff4d6',px+4,py+7,8,1);
+ R(shorts,px+3,py+12,10,2);R('#fff4d6',px+4,py+14,2,2);R('#fff4d6',px+10,py+14,2,2);
+ R('#30251f',px+3,py+15,4,1);R('#30251f',px+9,py+15,4,1);
+ g.fillStyle='#fff4d6';g.font='bold 4px monospace';g.textAlign='center';g.textBaseline='middle';g.fillText(number,px+8,py+10);g.textBaseline='alphabetic'
+}
+function drawFootballMatch(){
+ const fx=30*T,fy=19*T,t=NOW/700;
+ R('#fff',fx,fy+2*T,2,2*T);R('#fff',fx,fy+2*T,5,1);R('#fff',fx,fy+4*T-1,5,1);
+ R('#fff',fx+10*T-2,fy+2*T,2,2*T);R('#fff',fx+10*T-5,fy+2*T,5,1);R('#fff',fx+10*T-5,fy+4*T-1,5,1);
+ const players=[
+  [.8,1.1,'#d94f57','#fff4d6',0,'2'],[2.8,3.4,'#d94f57','#fff4d6',1.4,'5'],
+  [4.1,1.2,'#d94f57','#fff4d6',2.8,'9'],[7.2,3.6,'#d94f57','#fff4d6',4.2,'11'],
+  [1.8,3.1,'#4a7ac8','#d94f57',.7,'3'],[4.8,3.6,'#4a7ac8','#d94f57',2.1,'6'],
+  [6.2,1.3,'#4a7ac8','#d94f57',3.5,'8'],[8.1,2.7,'#4a7ac8','#d94f57',4.9,'10']
+ ];
+ players.forEach(([x,y,shirt,shorts,phase,number])=>drawFootballPlayer(
+  fx+x*T+Math.sin(t+phase)*5,fy+y*T+Math.cos(t*.8+phase)*2,shirt,shorts,phase,number));
+ g.font='9px serif';g.textAlign='center';g.fillText('⚽',fx+5*T+Math.sin(t)*3*T,fy+3*T+Math.cos(t*1.3)*1.5*T)
+}
 function drawStationMaster(){const x=27*T,y=30*T;person(x,y,'#344f70','#2a2830');R('#25354d',x+3,y-2,10,2);R('#e3bd59',x+5,y-5,6,3);R('#e3bd59',x+6,y+8,4,3)}
 // NPC penjaga yang menetap di ambang pintu tiap bangunan misi
 const KEEP={
@@ -905,6 +962,84 @@ const QM=[['c',3,4.6],['s',16,4.6],['t',23,28.6],['n',13,15],['b',4,13.6],['y',2
 const CL=(sh)=>{for(let k=0;k<7;k++){const cx=((NOW/(70-k*4)+k*173)%(W*T+240))-120,cy=(k*97)%(H*T-80)+30,o=sh?[12,40]:[0,0];g.fillStyle=sh?'rgba(0,0,0,.09)':'rgba(255,255,255,.8)';[[0,0,36,8],[6,-5,22,7],[20,-3,20,6]].forEach(([a,b,w,h])=>g.fillRect(cx+a+o[0],cy+b+o[1],w,h))}};
 const BD=()=>{g.fillStyle='#2a2a3a';for(let k=0;k<5;k++){const bx=Math.round(((NOW/(16+k*3)+k*211)%(W*T+300))-150),by=Math.round(40+(k*127)%(H*T-120)+Math.sin(NOW/500+k)*8),f=((NOW/140|0)+k)%2;g.fillRect(bx,by,3,2);g.fillRect(bx-3,by-(f?2:0),3,1);g.fillRect(bx+3,by-(f?2:0),3,1);g.fillRect(bx-5,by+(f?0:1),2,1);g.fillRect(bx+6,by+(f?0:1),2,1)}};
 function drawSakuraPetals(cx,cy){g.save();for(let tree=0;tree<SAKURA_TREES.length;tree++){const[tx,ty]=SAKURA_TREES[tree],x=tx*T,y=ty*T;if(x<cx-30||x>cx+VW+30||y<cy-40||y>cy+VH+40)continue;for(let i=0;i<3;i++){const phase=((NOW/32+i*43+tree*29)%120)/120,px=x+((i*11+Math.sin(NOW/430+i+tree)*4+phase*16)%30)-7,py=y-8+phase*34;if(px<cx-12||px>cx+VW+12||py<cy-12||py>cy+VH+12)continue;g.save();g.globalAlpha=.18+Math.sin(phase*Math.PI)*.62;g.fillStyle=i%2?'#ffd5e2':'#f58db0';g.translate(px,py);g.rotate(Math.sin(NOW/260+i+tree)*.8);g.beginPath();g.ellipse(0,0,2,3,.3,0,Math.PI*2);g.fill();g.restore()}}g.restore()}
+// ===== PANAH PENUNJUK MISI =====
+const GI={t:-1e9,u:64,d:12};
+function guideInsets(){
+ if(NOW-GI.t<400)return GI;GI.t=NOW;
+ const st=$('stage').getBoundingClientRect(),q=$('qb').getBoundingClientRect(),hd=$('hud').getBoundingClientRect(),dp=$('dp').getBoundingClientRect(),ab=$('a').getBoundingClientRect();
+ let u=Math.max(12,q.bottom-st.top+6,hd.bottom-st.top+6),d=12;
+ const pt=Math.min(dp.top,ab.top);if(pt<st.bottom-4)d=Math.max(12,st.bottom-pt+6);
+ if(st.height-u-d<90){u=12;d=12}
+ GI.u=u;GI.d=d;return GI}
+function guideTarget(){
+ if(partyOn)return[PARTY_POS.x,PARTY_POS.y,'#ff7aa8'];
+ const k=CUR();if(!k)return null;
+ if(k==='n'&&AC.n&&got()<3)return null;
+ const d=QDOOR[k];return[d[0],d[1],AC[k]?'#7fc0f0':'#ffd54a']}
+function drawMissionArrow(cx,cy){
+ if(!started||ended||arrivalState||partyCut||busy||lines.length)return;
+ const tg=guideTarget();if(!tg)return;
+ const dpr=Math.min(window.devicePixelRatio||1,3),k=dpr*VW/cv.width,gi=guideInsets();
+ const x0=cx+12*k,x1=cx+VW-12*k,y0=cy+gi.u*k,y1=cy+VH-gi.d*k;
+ if(x1-x0<40*k||y1-y0<40*k)return;
+ const tx=tg[0]*T+8,ty=tg[1]*T+8;
+ if(tx>=x0&&tx<=x1&&ty>=y0&&ty<=y1)return;
+ const ox=(x0+x1)/2,oy=(y0+y1)/2,dx=tx-ox,dy=ty-oy,hw=(x1-x0)/2,hh=(y1-y0)/2;
+ const s=Math.min(hw/Math.abs(dx||1e-6),hh/Math.abs(dy||1e-6)),an=Math.atan2(dy,dx),ux=Math.cos(an),uy=Math.sin(an),bob=RM?0:Math.sin(NOW/230)*2*k;
+ const px=ox+dx*s-ux*(14*k)+ux*bob,py=oy+dy*s-uy*(14*k)+uy*bob,L=24*k;
+ g.save();
+ g.translate(px,py);g.rotate(an);
+ g.fillStyle=tg[2];g.strokeStyle='#1b1430';g.lineWidth=2.5*k;g.lineJoin='round';
+ g.beginPath();g.moveTo(L*.55,0);g.lineTo(-L*.45,-L*.5);g.lineTo(-L*.2,0);g.lineTo(-L*.45,L*.5);g.closePath();g.stroke();g.fill();
+ g.rotate(-an);g.translate(-px,-py);
+ const n=Math.abs(P.x-tg[0])+Math.abs(P.y-tg[1]),txt=n+' langkah';
+ g.font='bold '+(11*k)+'px monospace';g.textAlign='center';g.textBaseline='middle';
+ const w=g.measureText(txt).width+10*k,lx=Math.max(cx+w/2+6*k,Math.min(cx+VW-w/2-6*k,px-ux*26*k)),ly=Math.max(y0+8*k,Math.min(y1-8*k,py-uy*26*k));
+ g.fillStyle='rgba(27,20,48,.88)';g.fillRect(lx-w/2,ly-8*k,w,16*k);
+ g.fillStyle='#fff4d6';g.fillText(txt,lx,ly+.5*k);
+ g.restore()}
+
+// ===== EFEK WAKTU: PAGI -> SORE =====
+const DAY_T=[0,0,0,0,0,0,0,.35,.6,.85,1];
+let DAYV=0,DAYL=0;
+function drawDayTint(cx,cy){
+ const tg=photo?photoTime:DAY_T[Math.min(cnt(),10)],dtm=Math.min(100,NOW-(DAYL||NOW));DAYL=NOW;
+ DAYV+=(tg-DAYV)*(1-Math.exp(-dtm/1200));
+ const v=DAYV;if(v<.01)return;
+ g.save();
+ g.globalCompositeOperation='multiply';
+ const gr=g.createLinearGradient(0,cy,0,cy+VH);
+ gr.addColorStop(0,'rgba(255,178,120,'+(.5*v).toFixed(3)+')');gr.addColorStop(1,'rgba(226,140,170,'+(.5*v).toFixed(3)+')');
+ g.fillStyle=gr;g.fillRect(cx-1,cy-1,VW+2,VH+2);
+ g.globalCompositeOperation='screen';
+ const sx=cx+VW*.85,sy=cy+VH*.1,sr=Math.max(VW,VH)*.7,sg=g.createRadialGradient(sx,sy,2,sx,sy,sr);
+ sg.addColorStop(0,'rgba(255,150,70,'+(.24*v).toFixed(3)+')');sg.addColorStop(1,'rgba(255,150,70,0)');
+ g.fillStyle=sg;g.fillRect(cx-1,cy-1,VW+2,VH+2);
+ g.globalCompositeOperation='source-over';
+ const t=RM?0:NOW;
+ for(let i=0;i<5;i++){const x=((t/(90+i*8)+i*257)%(W*T+300))-150,y=(i*131)%(H*T-120)+40;
+  if(x>cx+VW||x+70<cx||y-8>cy+VH||y+16<cy)continue;
+  g.globalAlpha=.34*v;g.fillStyle=i%2?'#ff9a7a':'#ffb58a';
+  [[0,0,56,9],[8,-6,36,8],[28,-3,34,7]].forEach(([a,b,w,h])=>g.fillRect(Math.round(x+a),Math.round(y+b),w,h))}
+ g.globalAlpha=1;
+ const lf=Math.max(0,(v-.3)/.7);
+ if(lf>0){g.globalCompositeOperation='lighter';
+  const x0=Math.max(0,cx/T|0),x1=Math.min(W-1,(cx+VW)/T|0),y0=Math.max(0,cy/T|0),y1=Math.min(H-1,(cy+VH)/T|0);
+  for(let y=y0;y<=y1;y++)for(let x=x0;x<=x1;x++)if(M[y][x]==='i'){
+   const lx=x*T+8,ly=y*T+6,rg=g.createRadialGradient(lx,ly,1,lx,ly,28);
+   rg.addColorStop(0,'rgba(255,190,90,'+(.45*lf).toFixed(3)+')');rg.addColorStop(1,'rgba(255,190,90,0)');
+   g.fillStyle=rg;g.fillRect(lx-28,ly-28,56,56)}}
+ g.restore()}
+
+// ===== PETUNJUK PINTU =====
+function doorHint(x,y){
+ if(x===18&&y===15){const n=cnt();
+  if(n>=8)return 'Balai Desa: Pintunya terkunci. Dari celah pintu tercium aroma kue, lalu ada yang berbisik, "Sst, jangan keras-keras!"';
+  if(n>=5)return 'Balai Desa: Pintunya terkunci. Terdengar bisik-bisik dan tawa tertahan dari dalam.';
+  if(n>=3)return 'Balai Desa: Tirainya tertutup rapat. Terdengar suara kursi digeser dari dalam.';
+  return 'Balai Desa: Pintunya masih tertutup. Kepala Desa minta Bu Laili datang sore nanti.'}
+ return FLAV[x+','+y]||'Pintu ini terkunci. Penghuninya mungkin sedang pergi.'}
+
 function draw(){NOW=Date.now();const cam=arrivalState?arrCam(NOW-arrivalStartedAt):partyCut?pcCam(NOW-pcT0):null,ZE=ZS*(cam?cam.z:1);VW=cv.width/ZE;VH=cv.height/ZE;g.setTransform(ZE,0,0,ZE,0,0);g.imageSmoothingEnabled=false;const camX=cam?cam.fx:P.x*T+8,camY=cam?cam.fy:P.y*T+8,cx=Math.round(Math.max(0,Math.min(W*T-VW,camX-VW/2))),cy=Math.round(Math.max(0,Math.min(H*T-VH,camY-VH/2)));
  R('#2b6e3a',0,0,VW,VH);g.save();g.translate(-cx,-cy);SN.s=Math.abs(ZE-Math.round(ZE))>1e-6?ZE:0;SN.x=cx;SN.y=cy;
  const x0=Math.max(0,cx/T|0),x1=Math.min(W-1,(cx+VW)/T|0),y0=Math.max(0,cy/T|0),y1=Math.min(H-1,(cy+VH)/T|0);
@@ -917,7 +1052,7 @@ function draw(){NOW=Date.now();const cam=arrivalState?arrCam(NOW-arrivalStartedA
  ZL.forEach(([zx,zy,n])=>{g.font='bold 5px monospace';const w=Math.ceil(g.measureText(n).width)+8;R('rgba(27,20,48,.85)',Math.round(zx*T-w/2),zy*T,w,9);g.fillStyle='#fff4d6';g.fillText(n,zx*T,zy*T+5)});
  CARTS.forEach(([cx,cy,col,icon,label])=>{const px=cx*T,py=cy*T;R('rgba(0,0,0,.22)',px+1,py+14,30,3);R('#8a5a3a',px+2,py+6,28,8);R('#a5714a',px+2,py+6,28,2);R(col,px+1,py-1,30,5);for(let k=0;k<6;k++)R('#fff',px+3+k*5,py-1,3,5);R('#1b1430',px+10,py-2,10,7);R('#fff4d6',px+2,py+8,26,4);g.fillStyle='#fff4d6';g.font='8px serif';g.fillText(icon,px+15,py+3);g.fillStyle='#3a2a6a';g.font='4.5px monospace';g.fillText(label,px+15,py+11);R('#222',px+6,py+12,5,5);R('#222',px+21,py+12,5,5);R('rgba(255,255,255,.5)',px+12+(NOW/300|0)%3*3,py-5-(NOW/100%6|0)%3,2,2)});
  VENDORS.forEach(v=>villager(v.stand[0]*T,v.stand[1]*T,v.color,'#392b24',v.female,v.scarf));
- {const fx=30*T,fy=19*T,t=NOW/700;R('#fff',fx,fy+2*T,2,2*T);R('#fff',fx,fy+2*T,5,1);R('#fff',fx,fy+4*T-1,5,1);R('#fff',fx+10*T-2,fy+2*T,2,2*T);R('#fff',fx+10*T-5,fy+2*T,5,1);R('#fff',fx+10*T-5,fy+4*T-1,5,1);person(Math.round(fx+3*T+Math.sin(t+1)*2*T),Math.round(fy+2*T+Math.cos(t)*T),'#d95a5a','#3a2318');person(Math.round(fx+7*T+Math.sin(t+3)*2*T),Math.round(fy+3*T+Math.sin(t)*T),'#5a8ad9','#3a2318');g.font='9px serif';g.fillText('⚽',fx+5*T+Math.sin(t)*3*T,fy+3*T+Math.cos(t*1.3)*1.5*T)}
+ drawFootballMatch();
  g.textBaseline='alphabetic';g.fillStyle='#fff';
  const cinematicMs=arrivalState?NOW-arrivalStartedAt:-1,parkX=21*T,ease=t=>t*t*(3-2*t);
  const tx=arrivalState?cinematicMs<3800?Math.round(-220+(parkX+220)*ease(Math.max(0,cinematicMs/3800))):cinematicMs<ARR.depart?parkX:Math.round(parkX+Math.pow((cinematicMs-ARR.depart)/1000,2)*70):Math.round((NOW/25)%(W*T+260)-200),ty=33*T;
@@ -933,7 +1068,7 @@ function draw(){NOW=Date.now();const cam=arrivalState?arrCam(NOW-arrivalStartedA
  // Party indicator
  if(partyOn){const mx=PARTY_POS.x*T+8,my=PARTY_POS.y*T-2+b*2;g.fillStyle='rgba(255,122,168,.4)';g.beginPath();g.arc(mx,my,12+b*3,0,7);g.fill();g.fillStyle='#ff7aa8';g.beginPath();g.arc(mx,my,9,0,7);g.fill();g.strokeStyle='#fff';g.lineWidth=2;g.stroke();R('#fff',mx-1,my-7,2,2);R('#ffd54a',mx-1,my-5,2,2);R('#5ab8ff',mx-2,my-3,4,2);R('#fff',mx-3,my-1,6,2);R('#ffd54a',mx-4,my+1,8,2);
    // Arrow pointing to party
-  if(P.x!==PARTY_POS.x||P.y!==PARTY_POS.y){const tx=PARTY_POS.x*T+8,ty=PARTY_POS.y*T;if(tx<cx||tx>cx+VW||ty<cy||ty>cy+VH){const ax=Math.max(cx+12,Math.min(cx+VW-12,tx)),ay=Math.max(cy+34,Math.min(cy+VH-12,ty)),an=Math.atan2(ty-(cy+VH/2),tx-(cx+VW/2));g.save();g.translate(ax,ay);g.rotate(an);g.fillStyle='#ff7aa8';g.strokeStyle='#fff';g.lineWidth=2;g.beginPath();g.moveTo(10,0);g.lineTo(-6,-8);g.lineTo(-6,8);g.closePath();g.fill();g.stroke();g.restore()}}}
+  if(false){const tx=PARTY_POS.x*T+8,ty=PARTY_POS.y*T;if(tx<cx||tx>cx+VW||ty<cy||ty>cy+VH){const ax=Math.max(cx+12,Math.min(cx+VW-12,tx)),ay=Math.max(cy+34,Math.min(cy+VH-12,ty)),an=Math.atan2(ty-(cy+VH/2),tx-(cx+VW/2));g.save();g.translate(ax,ay);g.rotate(an);g.fillStyle='#ff7aa8';g.strokeStyle='#fff';g.lineWidth=2;g.beginPath();g.moveTo(10,0);g.lineTo(-6,-8);g.lineTo(-6,8);g.closePath();g.fill();g.stroke();g.restore()}}}
  let playerX=P.x,playerY=P.y,playerStep=P.step%2,showPlayer=!partyCut,playerDir=P.dir,playerAlpha=1,waving=false;
  if(arrivalState){const ms=cinematicMs,ap=arrEase(arrSeg(ms,ARR.appear[0],ARR.appear[1])),wk=arrEase(arrSeg(ms,ARR.walk[0],ARR.walk[1])),bk=arrEase(arrSeg(ms,ARR.zoomOut[0],ARR.zoomOut[1]));
   showPlayer=ms>=ARR.appear[0];playerAlpha=Math.min(1,ap*2.5);
@@ -945,10 +1080,10 @@ function draw(){NOW=Date.now();const cam=arrivalState?arrCam(NOW-arrivalStartedA
   if(arrivalState&&cinematicMs>=ARR.appear[0]&&cinematicMs<ARR.wave[0]){R('#6b4423',px+14,py+8,5,6);R('#d9a05a',px+15,py+7,3,2);R('#a5714a',px+15,py+10,3,3)}
   if(waving){const wv=Math.round(Math.sin(NOW/100));R('#ff7aa8',px+12,py+8,2,3);R('#f2c9a0',px+13+wv,py+5,2,3)}
   if(heldItem){const offset=({up:[8,0],down:[8,15],left:[0,10],right:[16,10]})[P.dir];g.font='8px serif';g.textAlign='center';g.fillText(heldItem.icon,px+offset[0],py+offset[1])}
-  g.font='bold 7px monospace';g.textAlign='center';const nm='Laili Maulida',w=Math.ceil(g.measureText(nm).width)+8,lx=Math.round(px+8-w/2),ly=py-19;
+  g.font='bold 7px monospace';g.textAlign='center';const nm='Laili Maulida',w=Math.ceil(g.measureText(nm).width)+8,lx=Math.round(px+8-w/2),ly=photo?-99999:py-19;
   R('rgba(27,20,48,.88)',lx,ly,w,10);R('#ff7aa8',lx,ly,w,1);g.fillStyle='#fff4d6';g.textBaseline='middle';g.fillText(nm,px+8,ly+5.5);g.textBaseline='alphabetic';
   R('#ff7aa8',px+5,ly+11+b,6,2);R('#ff7aa8',px+6,ly+13+b,4,2);R('#ff7aa8',px+7,ly+15+b,2,2)}
- drawLiterasiCanopy();if(partyCut)drawPartyCut(cx,cy);g.restore();SN.s=0;g.setTransform(1,0,0,1,0,0);const gr=g.createRadialGradient(cv.width/2,cv.height/2,Math.min(cv.width,cv.height)*.35,cv.width/2,cv.height/2,Math.max(cv.width,cv.height)*.75);gr.addColorStop(0,'rgba(0,0,0,0)');gr.addColorStop(1,'rgba(20,10,40,.4)');g.fillStyle=gr;g.fillRect(0,0,cv.width,cv.height)}
+ drawLiterasiCanopy();drawDayTint(cx,cy);if(partyCut)drawPartyCut(cx,cy);drawMissionArrow(cx,cy);g.restore();SN.s=0;g.setTransform(1,0,0,1,0,0);const gr=g.createRadialGradient(cv.width/2,cv.height/2,Math.min(cv.width,cv.height)*.35,cv.width/2,cv.height/2,Math.max(cv.width,cv.height)*.75);gr.addColorStop(0,'rgba(0,0,0,0)');gr.addColorStop(1,'rgba(20,10,40,.4)');g.fillStyle=gr;g.fillRect(0,0,cv.width,cv.height)}
 function loop(t){if(started&&!ended&&!busy&&!lines.length&&heldDirection&&t-last>=MOVE_INTERVAL){last=t;move(heldDirection)}student();draw();requestAnimationFrame(loop)}
 fit();addEventListener('resize',fit);requestAnimationFrame(loop);
 // ===== AUDIO =====
@@ -1018,10 +1153,13 @@ function card(){
   rc('#ffb84d',Wd/2-190,737,150,4);rc('#ffb84d',Wd/2+40,737,150,4);
   rc('#ff7aa8',Wd/2-6,730,12,6);rc('#ff7aa8',Wd/2-18,736,36,6);rc('#ff7aa8',Wd/2-6,742,12,6);
   const msg=(CFG.pesan.match(/[^.!?]+[.!?]+/g)||[CFG.pesan]).slice(0,2).join(' ').replace(/\s+/g,' ').trim();
-  let fs=44,ls,lh;for(;fs>=30;fs-=2){x.font='600 '+fs+'px '+D;ls=wrapT(x,msg,Wd-240);lh=Math.round(fs*1.45);if(ls.length*lh<=360)break}
+  let fs=44,ls,lh;for(;fs>=30;fs-=2){x.font='600 '+fs+'px '+D;ls=wrapT(x,msg,Wd-240);lh=Math.round(fs*1.45);if(ls.length*lh<=290)break}
   fs=Math.max(fs,30);x.font='600 '+fs+'px '+D;x.fillStyle='#fff4d6';
-  const m0=770,m1=1150;let y=Math.round(m0+(m1-m0-ls.length*lh)/2+fs*.95);
+  const m0=770,m1=1075;let y=Math.round(m0+(m1-m0-ls.length*lh)/2+fs*.95);
   ls.forEach(l=>{x.fillText(l,Wd/2,y);y+=lh});
+  x.textAlign='center';x.fillStyle='#ffb84d';x.font='18px '+F;x.fillText('HADIAH DARI PARA WARGA',Wd/2,1100);
+  {const gs=GIFT_ICONS.map(([fn,off])=>spriteCanvas(16,20,()=>{g.save();g.translate(0,off);fn();g.restore()})),gw=48,gh=60,gp=10,tw=gs.length*gw+(gs.length-1)*gp,gx=Math.round(Wd/2-tw/2);
+   x.imageSmoothingEnabled=false;gs.forEach((s,i)=>x.drawImage(s,gx+i*(gw+gp),1110,gw,gh))}
   rc('rgba(255,184,77,.12)',Wd/2-270,1186,540,84);x.strokeStyle='#ffb84d';x.lineWidth=3;x.strokeRect(Wd/2-270,1186,540,84);
   x.fillStyle='#ff7aa8';x.font='22px '+F;x.fillText('PETUALANGAN DI DESA',Wd/2,1224);
   x.fillStyle='#ffb84d';x.font='18px '+F;x.fillText('MISI '+NQ+'/'+NQ+' SELESAI',Wd/2,1254);
@@ -1032,7 +1170,7 @@ function reset(){location.reload()}
 $('again').onclick=reset;
 
 // ===== NPC MURID (banyak, datang dari segala arah) =====
-const GREETINGS=['Selamat pagi, Bu Guru!','Halo, Bu Laili!','Bu Guru, apa kabar?','Semangat mengajar, Bu!','Assalamu’alaikum, Bu Guru!','Selamat siang, Bu Laili!','Salam, Bu Guru!','Bu Guru hebat!','Terima kasih, Bu Guru!','Permisi, Bu Guru!'];
+const GREETINGS=['Bu Laili datang lagi!','Halo, Bu Laili! Kangen kelas Ibu!','Bu Guru, apa kabar?','Semangat, Bu Laili!','Assalamu’alaikum, Bu Guru!','Selamat siang, Bu Laili!','Ibu sering ke sini ya!','Bu Guru hebat!','Bu, jangan pulang cepat-cepat ya!','Ditunggu sampai sore ya, Bu!'];
 const SR=[
  [[1,7],[46,7]],[[1,17],[46,17]],[[1,27],[46,27]],
  [[6,7],[6,27]],[[23,7],[23,27]],[[41,7],[41,27]],
@@ -1060,7 +1198,7 @@ function student(){if(!started||ended||lines.length||busy||partyOn){stPrev=0;ret
   if(sk.out){sk.a-=dt/500;if(sk.a<=0){sk.on=0;sk.t=NOW+1500+Math.random()*3500}return}
   sk.a=Math.min(1,sk.a+dt/500);
   if(sk.a>.5&&NOW>sk.gc&&Math.max(Math.abs(sk.x-P.x),Math.abs(sk.y-P.y))<=2){
-   sk.gc=NOW+16000;sk.b=NOW+3000;sk.w=NOW+1000;sk.msg=GREETINGS[Math.random()*GREETINGS.length|0];
+  sk.gc=NOW+16000;sk.b=NOW+3000;sk.w=NOW+1000;sk.msg=pickGreeting();
    if(NOW>sfxHi){sfxHi=NOW+800;sfx('hi')}}
   if(NOW<sk.w)return;
   const tx=sk.x*T,ty=sk.y*T;
@@ -1080,7 +1218,7 @@ function drawStudent(){
   R('#2a3f7a',sx+(sk.female?2:3),sy+11,sk.female?12:10,3);R(sk.bag,sx+1,sy+8,3,5);
   if(NOW<sk.b)R('#f2c9a0',sx+13,sy+2+(NOW/160|0)%2,2,4);
   g.globalAlpha=1;
-  if(NOW<sk.b){g.font='bold 6px monospace';g.textAlign='center';const text=sk.msg,w=Math.ceil(g.measureText(text).width)+8,bx=Math.round(sx+8-w/2),by=sy-15;
+  if(NOW<sk.b&&!photo){g.font='bold 6px monospace';g.textAlign='center';const text=sk.msg,w=Math.ceil(g.measureText(text).width)+8,bx=Math.round(sx+8-w/2),by=sy-15;
    R('#fff4d6',bx,by,w,10);R('#3a2a6a',bx,by,w,1);R('#fff4d6',sx+6,by+10,4,3);g.fillStyle='#3a2a6a';g.textBaseline='middle';g.fillText(text,sx+8,by+5.5);g.textBaseline='alphabetic'}})}
 
 // Interaction indicator
@@ -1089,13 +1227,13 @@ setInterval(()=>{const hint=$('vendor-hint'),vendor=started&&!ended&&!busy&&!lin
   if(!started||ended||busy||lines.length){$('a').classList.remove('can-interact');return}
   const has=checkInteraction();if(has)$('a').classList.add('can-interact');else $('a').classList.remove('can-interact')},200);
 
-function finishArrival(){if(!arrivalState)return;clearInterval(arrivalTimer);arrivalTimer=null;arrivalState=0;arrivalCaptionIndex=-1;$('arrival-scene').classList.remove('active');document.body.classList.remove('arrival-active');P.x=27;P.y=31;P.dir='up';P.step++;busy=0;$('dlg').classList.add('big');$('a').classList.add('pulse');say(['Ini pertama kalinya Laili menginjakkan kaki di desa ini. Di tasnya ada surat undangan bergambar bunga lily merah muda.','Isinya singkat: "Kepala Desa mengundang Bu Laili sebagai tamu kehormatan. Mohon datang ke Balai Desa sore ini."','Sambil menunggu sore, sapalah warga. Mulai dari Petugas Stasiun di pintu Stasiun: jalan saja ke kiri beberapa langkah dan cari tanda !.','Kamu bebas berkeliling desa kapan saja: jajan, ngobrol dengan warga, atau menikmati bunga sakura.'],()=>{$('dlg').classList.remove('big');$('a').classList.remove('pulse')})}
+function finishArrival(){if(!arrivalState)return;clearInterval(arrivalTimer);arrivalTimer=null;arrivalState=0;arrivalCaptionIndex=-1;$('arrival-scene').classList.remove('active');document.body.classList.remove('arrival-active');P.x=27;P.y=31;P.dir='up';P.step++;busy=0;$('dlg').classList.add('big');$('a').classList.add('pulse');say(['Ini bukan pertama kalinya Laili datang ke desa ini. Ia sudah sering ke sini, dan warganya juga sudah kenal dengannya.','Pagi tadi Kepala Desa mengirim pesan: "Bu Laili, mohon mampir ke Balai Desa sore nanti. Ada hal yang perlu dibicarakan."','Laili tidak memikirkannya lebih jauh. Jadwalnya padat, sampai-sampai ia tidak ingat hari ini tanggal berapa.','Sambil menunggu sore, sapa warga dulu. Mulai dari Petugas Stasiun di dekat pintu: jalan ke kiri beberapa langkah dan cari tanda !.','Kamu bebas berkeliling desa kapan saja: jajan, ngobrol dengan warga, atau lihat bunga sakura.'],()=>{$('dlg').classList.remove('big');$('a').classList.remove('pulse')})}
 function startArrivalCutscene(){started=1;busy=1;arrivalState=1;arrivalStartedAt=Date.now();arrivalCaptionIndex=0;P.x=30.25;P.y=32;P.dir='left';P.step=0;document.body.classList.add('arrival-active');$('arrival-text').textContent=ARRIVAL_SCRIPT[0][1];$('arrival-scene').classList.add('active');arrivalTimer=setInterval(()=>{const elapsed=Date.now()-arrivalStartedAt;let index=0;ARRIVAL_SCRIPT.forEach((s,i)=>{if(elapsed>=s[0])index=i});if(index!==arrivalCaptionIndex){arrivalCaptionIndex=index;$('arrival-text').textContent=ARRIVAL_SCRIPT[index][1]}if(elapsed>=ARR.end)finishArrival()},80)}
 $('arrival-skip').onclick=finishArrival;
 $('go').onclick=()=>{$('start').style.display='none';bgStart('calm');startArrivalCutscene()};
 const KEY={ArrowUp:'up',ArrowDown:'down',ArrowLeft:'left',ArrowRight:'right',w:'up',s:'down',a:'left',d:'right'};
 const kd=e=>KEY[e.key]||KEY[(e.key||'').toLowerCase()];
-function startMove(d){if(!started||busy||lines.length||ended)return;heldDirection=d;last=performance.now();move(d)}
+function startMove(d){if(!started||busy||lines.length||ended||photo)return;heldDirection=d;last=performance.now();move(d)}
 function stopMove(d){if(heldDirection===d)heldDirection=null}
 addEventListener('keydown',e=>{if(e.key==='Escape'&&dismissDialog()){e.preventDefault();return}const d=kd(e);if(document.activeElement&&document.activeElement.tagName==='BUTTON')document.activeElement.blur();
  if(d){if(!e.repeat)startMove(d);e.preventDefault()}
@@ -1109,6 +1247,85 @@ document.querySelectorAll('[data-d]').forEach(b=>{const d=b.dataset.d;
 $('a').addEventListener('pointerdown',e=>{e.preventDefault();act()});
 $('dlg-back').onclick=dismissDialog;
 $('dlg').addEventListener('pointerdown',e=>{if(lines.length&&!e.target.closest('button'))nextLine()});
+
+// ===== SAPAAN MURID BERUBAH SESUAI PROGRES =====
+const GREET_SUS=[
+ ['Bu, jangan lihat tas saya!','Bu, sudah ketemu Pak Kades?','Bu, kami nggak ngapa-ngapain kok!','Eh, Bu Laili! Mau ke mana, Bu?','Bu, tadi kami cuma main kok!'],
+ ['Jangan ke Balai Desa dulu, Bu!','Kami nggak ngumpul di Balai Desa!','Bu, tas saya nggak ada isinya!','Sst, jangan bilang Ibu dulu...','Bu, tadi kami nggak bisik-bisik kok!'],
+ ['Bu, sebentar lagi sore ya...','Bu, jangan buru-buru ke sana!','Bu, hari ini spesial lho... eh!','Aduh, hampir aja keceplosan!','Bu, sabar ya, sebentar lagi!']
+];
+const GREET_POST=['Selamat ulang tahun, Bu Laili!','Panjang umur, Bu Guru!','Kuenya enak kan, Bu?','Bu, foto bareng yuk!','Semoga sehat terus, Bu!','Makasih sudah sering ke sini, Bu!','Bu, jangan pulang dulu ya!'];
+function pickGreeting(){
+ if(explore||ended)return GREET_POST[Math.random()*GREET_POST.length|0];
+ const n=cnt(),st=n>=9?3:n>=6?2:n>=3?1:0,src=st&&Math.random()>.3?GREET_SUS[st-1]:GREETINGS;
+ return src[Math.random()*src.length|0]}
+
+// ===== PESAN KEPALA DESA SETELAH MISI KE-5 =====
+function kadesSMS(tries){tries=tries||0;if(smsDone||ended||partyReady||partyOn||explore)return;
+ if(busy||lines.length){if(tries<30)setTimeout(()=>kadesSMS(tries+1),1500);return}
+ smsDone=1;sfx('hi');if(navigator.vibrate)navigator.vibrate([80,60,80]);
+ say(['Ponsel Laili bergetar. Ada pesan masuk dari Kepala Desa.','Kepala Desa: "Bu, sudah sampai mana? Jangan lupa mampir ke Balai Desa sore ini ya."','Laili membalas singkat: "Masih keliling desa, Pak. Warganya minta tolong terus hari ini."'],null,false)}
+
+// ===== KUCING DI PESTA =====
+function pixelCat(px,py,t,i){
+ const tl=(t/260|0)%2,hc=BC[(i||0)%5];
+ R('rgba(0,0,0,.25)',px+2,py+14,12,2);
+ R('#e08a3c',px+3,py+8,10,6);R('#f0a85a',px+4,py+9,8,4);R('#fff4d6',px+6,py+10,4,4);
+ R('#e08a3c',px+12,py+9-tl,2,4);R('#e08a3c',px+13,py+8-tl,2,2);
+ R('#fff4d6',px+3,py+13,3,2);R('#fff4d6',px+10,py+13,3,2);
+ R('#e08a3c',px+3,py+3,10,6);R('#f0a85a',px+4,py+4,8,4);
+ R('#e08a3c',px+3,py+1,2,3);R('#e08a3c',px+11,py+1,2,3);R('#ffb2ca',px+4,py+2,1,1);R('#ffb2ca',px+11,py+2,1,1);
+ R('#b8641f',px+7,py+3,2,1);R('#b8641f',px+3,py+10,1,2);
+ R('#3a2318',px+5,py+5,1,2);R('#3a2318',px+10,py+5,1,2);R('#ff7aa8',px+7,py+7,2,1);
+ R('#fff',px+7,py-3,2,1);R('#ffd54a',px+7,py-2,2,1);R(hc,px+6,py-1,4,1);R('#5ab8ff',px+6,py,4,1);R(hc,px+6,py+1,4,1);R('#ffd54a',px+6,py+2,4,1)}
+
+// ===== HADIAH DI KARTU (urutan: stasiun, pasar, ibu, bunga, kafe, sekolah, musik, pos, perpustakaan, sanggar) =====
+const GIFT_ICONS=[
+ [()=>{R('#3a6ab0',1,4,14,8);R('#bfe6ff',2,5,12,6);R('#3a6ab0',5,5,1,6);R('#16284a',7,6,6,1);R('#16284a',7,8,4,1);R('#d94f57',2,7,2,2);R('#f2c230',13,4,2,2)},2],
+ [()=>{R('#3d9150',7,1,2,2);R('#d94f57',3,3,5,5);R('#d94f57',8,3,5,5);R('#ff8a8a',4,4,1,1);R('#ff8a8a',9,4,1,1);R('#a5714a',1,7,14,7);R('#d9a05a',1,7,14,1);R('#8a5a3a',1,10,14,1);R('#8a5a3a',4,7,1,7);R('#8a5a3a',8,7,1,7);R('#8a5a3a',12,7,1,7)},1],
+ [()=>{R('#5ab8ff',2,8,12,6);R('#3d8ad9',1,5,14,4);R('#ffd54a',7,5,2,9);R('#ffd54a',4,2,4,3);R('#ffd54a',8,2,4,3);R('#fff8d8',7,4,2,1)},1],
+ [()=>lilyBouquet(0,0),0],
+ [()=>{R('#e9e4d6',1,13,12,1);R('#fff4d6',2,6,9,7);R('#8a5a3a',3,7,7,2);R('#d9d4c6',2,11,9,2);R('#fff4d6',11,7,3,1);R('#fff4d6',13,8,1,3);R('#fff4d6',11,11,3,1);R('rgba(255,255,255,.75)',4,2,1,3);R('rgba(255,255,255,.75)',7,1,1,4)},1],
+ [()=>{[[7,1,2,2],[6,3,4,2],[1,5,14,1],[2,6,12,1],[3,7,10,1],[4,8,8,2],[3,10,4,1],[9,10,4,1],[3,11,3,1],[10,11,3,1],[2,12,3,1],[11,12,3,1]].forEach(([a,b,w,h])=>R('#ffd54a',a,b,w,h));R('#fff8d8',7,3,2,2)},1],
+ [()=>{R('#7d4fb0',5,2,2,10);R('#7d4fb0',5,2,8,2);R('#7d4fb0',11,2,2,8);R('#7d4fb0',2,10,5,3);R('#7d4fb0',8,8,5,3);R('#b98cff',6,3,1,8)},1],
+ [()=>{R('#fff4d6',1,3,14,10);R('#d9cfb4',1,3,14,1);for(let i=0;i<6;i++){R('#d9cfb4',1+i,4+i,1,1);R('#d9cfb4',14-i,4+i,1,1)}R('#d94f57',7,9,2,2);R('#e8827a',7,8,2,1)},1],
+ [()=>{R('#5a3aa0',1,3,14,11);R('#7d5ad0',1,3,14,2);R('#fff4d6',2,5,12,8);R('#b9b09a',8,5,1,8);R('#9a8a60',3,7,4,1);R('#9a8a60',3,9,4,1);R('#9a8a60',10,7,4,1);R('#9a8a60',10,9,4,1);R('#d94f57',11,1,2,5)},1],
+ [()=>{R('#6b4423',1,2,14,12);R('#d9a05a',2,3,12,10);R('#9fd3f5',3,4,10,5);R('#4a9558',3,9,10,3);R('#ffd54a',10,5,2,2);R('#ff7aa8',5,10,2,1);R('#fff',4,5,3,1)},1]
+];
+
+// ===== PAS PESAN AKHIR KE KOTAK =====
+function fitMsg(){const b=$('msgbox'),m=$('msg');m.style.fontSize='';let s=parseFloat(getComputedStyle(m).fontSize)||16,n=0;
+ while(b.scrollHeight>b.clientHeight+1&&s>12&&n++<30){s-=.5;m.style.fontSize=s+'px'}}
+addEventListener('resize',()=>{if($('end').style.display==='flex')fitMsg()});
+
+// ===== MODE JALAN-JALAN & MODE FOTO =====
+let xT=null;
+function showPhotoBtn(){document.body.classList.remove('xhide');clearTimeout(xT);xT=setTimeout(()=>document.body.classList.add('xhide'),2500)}
+function setPhoto(on){photo=on?1:0;heldDirection=null;const b=document.body;b.classList.toggle('photo',!!photo);b.classList.remove('xhide');clearTimeout(xT);
+ $('xfoto').textContent=photo?'✕':'📷';$('xfoto').setAttribute('aria-label',photo?'Keluar mode foto':'Mode foto');
+ if(photo)showPhotoBtn();requestAnimationFrame(()=>{fit();setTimeout(fit,150)})}
+function startExplore(){
+ explore=1;ended=0;busy=0;partyOn=0;partyReady=0;lines=[];li=0;heldDirection=null;
+ clearInterval(endTyping);endTyping=null;fxOn=0;
+ $('end').style.display='none';$('endfx').style.display='none';
+ const b=document.body;b.classList.remove('is-end');b.classList.add('explore');
+ bgStart('calm');sfx('ok');hud();
+ requestAnimationFrame(()=>{fit();setTimeout(fit,150)})}
+function exitExplore(){if(busy||lines.length)return;setPhoto(0);explore=0;ended=1;busy=1;heldDirection=null;document.body.classList.remove('explore');bgStart('bday');showEnd()}
+$('roam').onclick=startExplore;
+function togglePhotoChoices(){
+ if(photo){setPhoto(0);return}
+ if(busy||lines.length)return;
+ document.body.classList.toggle('photo-choose');
+ $('xday').classList.toggle('selected',photoTime===0);$('xevening').classList.toggle('selected',photoTime===1);
+ $('xday').setAttribute('aria-pressed',photoTime===0);$('xevening').setAttribute('aria-pressed',photoTime===1)}
+function selectPhotoTime(time){photoTime=time;document.body.classList.remove('photo-choose');setPhoto(1)}
+$('xfoto').onclick=togglePhotoChoices;
+$('xday').onclick=()=>selectPhotoTime(0);
+$('xevening').onclick=()=>selectPhotoTime(1);
+$('xend').onclick=exitExplore;
+$('stage').addEventListener('pointerdown',()=>{if(photo)showPhotoBtn()});
+addEventListener('keydown',e=>{if(!explore)return;if(e.key==='p'||e.key==='P')$('xfoto').click();else if(e.key==='Escape'){e.preventDefault();if(document.body.classList.contains('photo-choose'))document.body.classList.remove('photo-choose');else if(photo)setPhoto(0);else exitExplore()}});
 </script>
 </body>
 </html>

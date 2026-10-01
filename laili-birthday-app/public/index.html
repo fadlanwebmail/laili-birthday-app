@@ -162,6 +162,7 @@ body.arrival-active #pad,body.arrival-active #qb{visibility:hidden}
 #endfx{display:none;pointer-events:none}
 #end{background:transparent;gap:12px}
 #end h1{text-shadow:0 3px 0 #3a2a6a,0 0 18px rgba(255,184,77,.35)}
+#end .end-name{display:inline-block;white-space:nowrap;font-size:calc(var(--fs)*.8)}
 #endscene{display:flex;align-items:flex-end;justify-content:center;gap:10px;padding-top:6px}
 #endcake{width:144px;height:120px}
 #endlaili{position:relative;inset:auto;flex:none;width:100px;height:120px;margin-bottom:-7px;image-rendering:pixelated;animation:hop 1.1s steps(1,end) infinite}
@@ -187,6 +188,8 @@ body.is-end #pad{display:none}
 #end .row button{font-size:calc(var(--fs)*.8);padding:.8em .5em}
 @media (max-width:560px){#end .row{grid-template-columns:1fr 1fr}#end .row #shot{grid-column:1/-1}}
 @media (max-height:480px){#end h1{font-size:calc(var(--fs)*.95)}}
+@media (max-width:600px){#end .end-name{font-size:clamp(10px,calc(var(--fs)*.7),13px)}}
+@media (max-width:340px){#end .end-name{font-size:10px}}
 
 /* ===== MODE JALAN-JALAN & FOTO ===== */
 #xbar{position:absolute;right:8px;top:8px;display:none;flex-direction:column;gap:8px;z-index:9}
@@ -237,7 +240,7 @@ body.photo:not(.xhide) #xhint{display:block}
   <div id="xhint">Ketuk layar untuk menampilkan tombol keluar</div>
   <div class="ov" id="end">
     <div id="endscene"><canvas id="endcake" width="48" height="40"></canvas><canvas id="endlaili" width="20" height="24"></canvas><canvas id="endbq" width="16" height="20"></canvas></div>
-    <h1>Selamat ulang tahun,<br>Laili!</h1>
+    <h1>Selamat ulang tahun,<br><span class="end-name">Laili Maulida Rahmawati!</span></h1>
     <div id="msgbox"><div id="msg"></div></div>
     <div class="row"><button id="shot">Simpan kartu 📸</button><button id="roam">Jalan-jalan 🌸</button><button id="again">Main lagi ↻</button></div>
   </div>
@@ -1170,7 +1173,7 @@ function reset(){location.reload()}
 $('again').onclick=reset;
 
 // ===== NPC MURID (banyak, datang dari segala arah) =====
-const GREETINGS=['Bu Laili datang lagi!','Halo, Bu Laili! Kangen kelas Ibu!','Bu Guru, apa kabar?','Semangat, Bu Laili!','Assalamu’alaikum, Bu Guru!','Selamat siang, Bu Laili!','Ibu sering ke sini ya!','Bu Guru hebat!','Bu, jangan pulang cepat-cepat ya!','Ditunggu sampai sore ya, Bu!'];
+const GREETINGS=['Bu Laili datang lagi!','Halo, Bu Laili! Kangen kelas Ibu!','Bu Guru, apa kabar?','Semangat, Bu Laili!','Assalamu’alaikum, Bu Guru!','Assalamu’alaikum, Bu Laili!','Selamat siang, Bu Laili!','Ibu sering ke sini ya!','Bu Guru hebat!','Bu, jangan pulang cepat-cepat ya!','Ditunggu sampai sore ya, Bu!'];
 const SR=[
  [[1,7],[46,7]],[[1,17],[46,17]],[[1,27],[46,27]],
  [[6,7],[6,27]],[[23,7],[23,27]],[[41,7],[41,27]],
@@ -1255,9 +1258,12 @@ const GREET_SUS=[
  ['Bu, sebentar lagi sore ya...','Bu, jangan buru-buru ke sana!','Bu, hari ini spesial lho... eh!','Aduh, hampir aja keceplosan!','Bu, sabar ya, sebentar lagi!']
 ];
 const GREET_POST=['Selamat ulang tahun, Bu Laili!','Panjang umur, Bu Guru!','Kuenya enak kan, Bu?','Bu, foto bareng yuk!','Semoga sehat terus, Bu!','Makasih sudah sering ke sini, Bu!','Bu, jangan pulang dulu ya!'];
+const GREET_FAVORED=['Assalamu’alaikum, Bu Laili!','Tidak sabar mengikuti Kelas Ibu Lagi!'];
 function pickGreeting(){
  if(explore||ended)return GREET_POST[Math.random()*GREET_POST.length|0];
- const n=cnt(),st=n>=9?3:n>=6?2:n>=3?1:0,src=st&&Math.random()>.3?GREET_SUS[st-1]:GREETINGS;
+ const n=cnt(),st=n>=9?3:n>=6?2:n>=3?1:0;
+ if(Math.random()<.6){const favored=st?['Bu, jangan lihat tas saya!',...GREET_FAVORED]:GREET_FAVORED;return favored[Math.random()*favored.length|0]}
+ const src=st&&Math.random()>.3?GREET_SUS[st-1]:GREETINGS;
  return src[Math.random()*src.length|0]}
 
 // ===== PESAN KEPALA DESA SETELAH MISI KE-5 =====

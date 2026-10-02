@@ -231,7 +231,7 @@ body.photo:not(.xhide) #xhint{display:block}
 /* ===== MODE FOTO DARI SPOT FOTO ===== */
 body.photo #xbar{display:flex}
 
-/* ===== UI v2 — tempel tepat sebelum </style> ===== */
+/* ===== UI v2 ===== */
 :root{--ink:#fff4d6;--acc:#ffc857;--pink:#ff7aa8;--panel:#2b2150;--edge:#0e0a1c}
 body{background:radial-gradient(120% 80% at 50% 0,#2c2154 0,#1b1430 62%)}
 
@@ -1620,7 +1620,7 @@ function paintGame(cb){
   const button=document.createElement('button');button.textContent='Campur';button.disabled=selected.length<2;button.style.opacity=selected.length<2?.5:1;button.onclick=()=>{if(key===rounds[index]){sfx('ok');index++;selected=[];if(index===rounds.length){mgStatus('Semua warna sudah pas. Lukisannya hidup!');box.innerHTML='';setTimeout(()=>{if(mgOpenNow())mgClose(1)},700)}else redraw('Tepat!')}else{sfx('bad');selected=[];redraw('Hasilnya '+mix[key][0]+', bukan '+target[0]+'. Coba kombinasi lain.')}};box.appendChild(button)};redraw('')}
 
 /* ================================================================
-   PATCH UI v2 — tempel blok ini PALING BAWAH, tepat sebelum </script>
+   PATCH UI v2
    ================================================================ */
 
 // ---------- 1. NASKAH ----------

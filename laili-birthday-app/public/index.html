@@ -222,9 +222,6 @@ body.photo:not(.xhide) #xhint{display:block}
 #mg-b{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;align-items:center;width:min(100%,640px)}
 #mg-b button:disabled{cursor:default}
 #mg-x{background:transparent;color:var(--ink);box-shadow:none;border:1px solid rgba(255,244,214,.45);font-size:calc(var(--fs)*.8)}
-/* ===== LEWATI PESTA ===== */
-#pcut-skip{position:absolute;top:12px;right:12px;padding:8px 10px;font-size:12px;pointer-events:auto}
-@media (orientation:landscape){#pcut-skip{top:52px}}
 /* ===== KUCING DI LAYAR AKHIR ===== */
 #endcat{position:relative;inset:auto;flex:none;width:56px;height:63px;image-rendering:pixelated;animation:hop 1.1s steps(1,end) infinite;animation-delay:.6s}
 @media (max-height:480px){#endcat{width:42px;height:47px}}
@@ -282,7 +279,7 @@ button:active{transform:translateY(3px);box-shadow:inset -3px -3px 0 rgba(0,0,0,
     <div id="arrival-caption"><div id="arrival-kicker">Stasiun Desa</div><p id="arrival-text"></p></div>
   </div>
   <div id="dlg"><button id="dlg-back" type="button">Kembali</button><img id="tico" alt="" style="display:none;width:26px;height:26px;image-rendering:pixelated;vertical-align:middle;margin-right:.4em"><span id="tx"></span><span id="arrow">▼</span><div id="ch"></div><div id="hint">Tekan A / Spasi atau sentuh dialog untuk lanjut.</div></div>
-  <div id="pcut"><button id="pcut-skip" type="button">Lewati</button><div id="pcut-cap"><div id="pcut-kick"></div><p id="pcut-text"></p></div></div>
+  <div id="pcut"><div id="pcut-cap"><div id="pcut-kick"></div><p id="pcut-text"></p></div></div>
   <div class="ov" id="start">
     <h1>Selamat datang,<br>Laili!</h1>
     <div>Hari ini kamu datang lagi ke desa yang sudah sering kamu kunjungi. Warganya sudah kenal kamu, tapi hari ini sikap mereka agak aneh.<br><br>Siap berkunjung?</div>
@@ -1463,7 +1460,6 @@ Object.assign(SF,{
  quack:t=>{tone(330,t,.1,'sawtooth',.04);tone(300,t+.12,.12,'sawtooth',.04)},
  rustle:t=>{const n=AX.sampleRate*.35|0,b=AX.createBuffer(1,n,AX.sampleRate),d=b.getChannelData(0);for(let i=0;i<n;i++)d[i]=(Math.random()*2-1)*Math.sin(i/n*Math.PI)*.5;const s=AX.createBufferSource(),f=AX.createBiquadFilter(),gn=AX.createGain();f.type='highpass';f.frequency.value=2500;gn.gain.value=.35;s.buffer=b;s.connect(f);f.connect(gn);gn.connect(MS);s.start(t)}
 });
-$('pcut-skip').onclick=()=>{if(!partyCut)return;bgStart('bday');endParty()};
 addEventListener('keydown',e=>{if(e.key==='Escape'&&$('mg').style.display==='flex'){e.preventDefault();mgClose(0)}});
 addEventListener('keydown',e=>{if($('ch').style.display==='grid'&&/^[1-5]$/.test(e.key)){const b=$('ch').children[+e.key-1];if(b){b.click();e.preventDefault()}}});
 

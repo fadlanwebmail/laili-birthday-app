@@ -406,7 +406,7 @@ const LILY_BEDS=[
  [45,28],[34,25],[39,32],[44,32],[40,26],[21,1],[22,8]
 ];
 LILY_BEDS.forEach(([x,y])=>{if('.lL'.includes(M[y][x]))M[y][x]='z'});
-fill('.',32,1,33,3);fill('p',31,4,34,4);fill('.',32,5,33,7);
+fill('.',32,1,33,3);fill('p',31,4,34,4);fill('p',32,5,33,6);
 // ===== STASIUN MODERN: bangunan diperlebar (x19-29, y28-30) =====
 fill('T',19,28,29,30);M[30][23]='D';M[30][27]='N';
 const FLAV={'4,16':'Toko bunga: Lily merah muda ini baru mekar pagi tadi. Harumnya menenangkan.','10,6':'Toko roti: Roti hangat baru keluar dari oven. Aromanya tercium sampai ke jalan. 🥐','18,15':'Balai Desa: Tempat warga berkumpul. Sepertinya sedang ada kegiatan di dalam.','43,20':'Pos Ronda: Dua sesepuh desa sedang bertukar cerita sambil menikmati teh hangat.','28,15':'Perpustakaan desa: Suasananya tenang dan nyaman, cocok untuk membaca. 📚','38,26':'Pasar desa: Para pedagang menjajakan sayur dan buah segar. 🛒','38,6':'Minimarket desa: Berbagai kebutuhan sehari-hari tersedia di sini.'};
@@ -422,6 +422,7 @@ const ITEMS=[
 let started=0,ended=0,partyOn=0,partyReady=0,last=0,lines=[],li=0,typing=null,after=null,busy=0;
 let explore=0,photo=0,smsDone=0,photoTime=0;
 let arrivalState=0,arrivalStartedAt=0,arrivalTimer=null,arrivalCaptionIndex=-1;
+const CAT_SCENE={active:0,startedAt:0,stage:0,face:'down'};
 const ARR={zoom:2,zoomIn:[3400,5000],door:5600,appear:[6600,8000],walk:[8000,10600],wave:[10600,12400],depart:12400,zoomOut:[14000,15600],end:16200};
 const ARRIVAL_SCRIPT=[
  [0,'Pagi itu, Laili naik kereta lokal ke desa yang sudah sering ia kunjungi.'],
@@ -756,8 +757,8 @@ function move(d){P.dir=d;const[x,y]=DX[d],nx=P.x+x,ny=P.y+y,c=M[ny]&&M[ny][nx];i
   const ox=P.x,oy=P.y;P.x=nx;P.y=ny;P.step++;catTrail(ox,oy);sfx('step');
   const it=ITEMS.find(i=>AC.n&&!i.got&&i.x===nx&&i.y===ny);
   if(it){it.got=1;hud();sfx('pick');if(navigator.vibrate)navigator.vibrate(50);
-   if(it.n==='kucing')catJoin(it.x,it.y);
-   say([(it.e==='{L}'?'{L}':'')+(it.m||('Kamu menemukan '+it.n+(it.e==='{L}'?'':' '+it.e)+'.'))+' ('+got()+' dari 3)'])}
+  if(it.n==='kucing'){catJoin(ox,oy);startCatCutscene(P.dir)}
+  else say([(it.e==='{L}'?'{L}':'')+(it.m||('Kamu menemukan '+it.n+(it.e==='{L}'?'':' '+it.e)+'.'))+' ('+got()+' dari 3)'])}
   if(partyOn&&nx===PARTY_POS.x&&ny===PARTY_POS.y){startSurpriseCutscene();return}
 }
 
@@ -1164,7 +1165,7 @@ function doorHint(x,y){
   return 'Balai Desa: Pintunya masih tertutup. Kepala Desa minta Bu Laili datang sore nanti.'}
  return FLAV[x+','+y]||'Pintu ini terkunci. Penghuninya mungkin sedang pergi.'}
 
-function draw(){NOW=Date.now();const cam=arrivalState?arrCam(NOW-arrivalStartedAt):partyCut?pcCam(NOW-pcT0):null,ZE=ZS*(cam?cam.z:1);VW=cv.width/ZE;VH=cv.height/ZE;g.setTransform(ZE,0,0,ZE,0,0);g.imageSmoothingEnabled=false;const camX=cam?cam.fx:P.x*T+8,camY=cam?cam.fy:P.y*T+8,cx=Math.round(Math.max(0,Math.min(W*T-VW,camX-VW/2))),cy=Math.round(Math.max(0,Math.min(H*T-VH,camY-VH/2)));
+function draw(){NOW=Date.now();const cam=arrivalState?arrCam(NOW-arrivalStartedAt):partyCut?pcCam(NOW-pcT0):CAT_SCENE.active?catCam(NOW-CAT_SCENE.startedAt):null,ZE=ZS*(cam?cam.z:1);VW=cv.width/ZE;VH=cv.height/ZE;g.setTransform(ZE,0,0,ZE,0,0);g.imageSmoothingEnabled=false;const camX=cam?cam.fx:P.x*T+8,camY=cam?cam.fy:P.y*T+8,cx=Math.round(Math.max(0,Math.min(W*T-VW,camX-VW/2))),cy=Math.round(Math.max(0,Math.min(H*T-VH,camY-VH/2)));
  R('#2b6e3a',0,0,VW,VH);g.save();g.translate(-cx,-cy);SN.s=Math.abs(ZE-Math.round(ZE))>1e-6?ZE:0;SN.x=cx;SN.y=cy;
  const x0=Math.max(0,cx/T|0),x1=Math.min(W-1,(cx+VW)/T|0),y0=Math.max(0,cy/T|0),y1=Math.min(H-1,(cy+VH)/T|0);
  for(let y=y0;y<=y1;y++)for(let x=x0;x<=x1;x++)tile(M[y][x],x,y);
@@ -1185,7 +1186,7 @@ function draw(){NOW=Date.now();const cam=arrivalState?arrCam(NOW-arrivalStartedA
  if(arrivalState&&cinematicMs>=ARR.wave[0]&&cinematicMs<ARR.depart+1500){const wv=Math.round(Math.sin(NOW/110));R('#25354d',bx+8,ty+3,5,1);R('#f2c9a0',bx+9,ty+4,3,3);R('#3a2318',bx+9,ty+5,1,1);R('#344f70',bx+13,ty+4,2,2);R('#f2c9a0',bx+14,ty+1+wv,2,3)}}
  drawStationMaster();drawKeepers();drawPartyLeft();if(!partyCut){drawAmbient();drawFarm();drawWoodSigns()}
  if(AC.n)ITEMS.forEach(i=>{if(i.got)return;const ix=i.x*T+8,iy=i.y*T+9,pulse=(Math.sin(NOW/170)+1)/2;g.save();g.globalAlpha=.4+pulse*.45;g.fillStyle='#ffe887';g.shadowColor='#fff1a6';g.shadowBlur=7+pulse*7;g.beginPath();g.arc(ix,iy,6+pulse*3,0,Math.PI*2);g.fill();g.restore();if(i.n==='bunga')lilyBloom(ix,iy,5);else{g.font='10px serif';g.textAlign='center';g.fillText(i.e,ix,iy+4)}g.font='bold 8px monospace';g.fillStyle='#fff4d6';g.fillText('!',ix+7,iy-5)});
- if(!partyCut){person(13*T,16*T,'#8a4aa8','#bbb');walkers();WK.forEach(w=>villager(w.x*T,w.y*T,w.c,'#3a2318',w.female));drawStudent();drawCat()}
+ if(!partyCut){person(13*T,16*T,'#8a4aa8','#bbb');walkers();WK.forEach(w=>villager(w.x*T,w.y*T,w.c,'#3a2318',w.female));if(!CAT_SCENE.active)drawStudent();drawCat()}
  drawButterflies();
  CL(0);BD();drawSakuraPetals(cx,cy);drawFallPetals();const b=Math.floor(NOW/350)%2;
  QM.forEach(([k,x,y])=>{if(Q[k]||k!==CUR())return;const mx=x*T+8,my=y*T-20+b,ac=AC[k],cur=TG()===k,r=cur?8:6;g.fillStyle=ac?'rgba(127,192,240,.22)':'rgba(255,213,74,.2)';g.beginPath();g.arc(mx,my,r+4,0,7);g.fill();g.fillStyle=ac?'#7fc0f0':'#ffd54a';g.beginPath();g.arc(mx,my,r,0,7);g.fill();g.strokeStyle='#3a2a6a';g.lineWidth=1.5;g.stroke();g.fillStyle='#3a2a6a';g.font='bold '+(cur?12:10)+'px monospace';g.textAlign='center';g.textBaseline='middle';g.fillText(ac?'?':'!',mx,my+1);g.textBaseline='alphabetic'});
@@ -1200,15 +1201,15 @@ function draw(){NOW=Date.now();const cam=arrivalState?arrCam(NOW-arrivalStartedA
   playerStep=(ap>0&&ap<1)||(wk>0&&wk<1)||(bk>0&&bk<1)?Math.floor(ms/200)%2:0;
   playerDir=ms<ARR.walk[0]?'down':ms<ARR.wave[0]?'left':ms<ARR.zoomOut[0]?'right':'left';
   waving=ms>=ARR.wave[0]&&ms<ARR.depart+1400}
- if(showPlayer){const px=playerX*T,py=playerY*T;g.globalAlpha=playerAlpha;drawHeroAura(px,py,NOW);hijabi(px,py,playerDir,playerStep);g.globalAlpha=1;g.font='8px serif';g.textAlign='center';g.fillStyle='#ffe887';g.fillText('✦',px+14,py+1+Math.sin(NOW/260)*2);
+ if(showPlayer){const px=playerX*T,py=playerY*T;g.globalAlpha=playerAlpha;drawHeroAura(px,py,NOW);hijabi(px,py,CAT_SCENE.active?CAT_SCENE.face:playerDir,playerStep);if(CAT_SCENE.active)drawPettingArm(px,py,CAT_SCENE.face,NOW-CAT_SCENE.startedAt);g.globalAlpha=1;g.font='8px serif';g.textAlign='center';g.fillStyle='#ffe887';g.fillText('✦',px+14,py+1+Math.sin(NOW/260)*2);
   if(arrivalState&&cinematicMs>=ARR.appear[0]&&cinematicMs<ARR.wave[0]){R('#6b4423',px+14,py+8,5,6);R('#d9a05a',px+15,py+7,3,2);R('#a5714a',px+15,py+10,3,3)}
   if(waving){const wv=Math.round(Math.sin(NOW/100));R('#ff7aa8',px+12,py+8,2,3);R('#f2c9a0',px+13+wv,py+5,2,3)}
   if(heldItem){const offset=({up:[8,0],down:[8,15],left:[0,10],right:[16,10]})[P.dir];g.font='8px serif';g.textAlign='center';g.fillText(heldItem.icon,px+offset[0],py+offset[1])}
-  g.font='bold 7px monospace';g.textAlign='center';const nm='Laili Maulida',w=Math.ceil(g.measureText(nm).width)+8,lx=Math.round(px+8-w/2),ly=photo?-99999:py-19;
+  g.font='bold 7px monospace';g.textAlign='center';const nm='Laili Maulida',w=Math.ceil(g.measureText(nm).width)+8,lx=Math.round(px+8-w/2),ly=photo?-99999:py-(CAT.name&&Math.max(Math.abs(P.x-CAT.x),Math.abs(P.y-CAT.y))<=1?32:19);
   R('rgba(27,20,48,.88)',lx,ly,w,10);R('#ff7aa8',lx,ly,w,1);g.fillStyle='#fff4d6';g.textBaseline='middle';g.fillText(nm,px+8,ly+5.5);g.textBaseline='alphabetic';
   R('#ff7aa8',px+5,ly+11+b,6,2);R('#ff7aa8',px+6,ly+13+b,4,2);R('#ff7aa8',px+7,ly+15+b,2,2)}
- drawLiterasiCanopy();drawDayTint(cx,cy);drawFireflies(cx,cy);if(partyCut)drawPartyCut(cx,cy);drawMissionArrow(cx,cy);g.restore();SN.s=0;g.setTransform(1,0,0,1,0,0);const gr=g.createRadialGradient(cv.width/2,cv.height/2,Math.min(cv.width,cv.height)*.35,cv.width/2,cv.height/2,Math.max(cv.width,cv.height)*.75);gr.addColorStop(0,'rgba(0,0,0,0)');gr.addColorStop(1,'rgba(20,10,40,.4)');g.fillStyle=gr;g.fillRect(0,0,cv.width,cv.height)}
-function loop(t){if(started&&!ended&&!busy&&!lines.length&&heldDirection&&t-last>=MOVE_INTERVAL){last=t;move(heldDirection)}student();ambient();draw();requestAnimationFrame(loop)}
+ drawCatName();drawLiterasiCanopy();drawDayTint(cx,cy);drawFireflies(cx,cy);if(partyCut)drawPartyCut(cx,cy);drawMissionArrow(cx,cy);g.restore();SN.s=0;g.setTransform(1,0,0,1,0,0);const gr=g.createRadialGradient(cv.width/2,cv.height/2,Math.min(cv.width,cv.height)*.35,cv.width/2,cv.height/2,Math.max(cv.width,cv.height)*.75);gr.addColorStop(0,'rgba(0,0,0,0)');gr.addColorStop(1,'rgba(20,10,40,.4)');g.fillStyle=gr;g.fillRect(0,0,cv.width,cv.height)}
+function loop(t){updateCatCutscene();if(started&&!ended&&!busy&&!lines.length&&heldDirection&&t-last>=MOVE_INTERVAL){last=t;move(heldDirection)}student();ambient();draw();requestAnimationFrame(loop)}
 fit();addEventListener('resize',fit);requestAnimationFrame(loop);
 // ===== AUDIO =====
 let AX=null,MS=null,bgG=null,bgD=null,bgNodes=[],bgT=null,bgM='',bgI=0,muted=0;
@@ -1353,7 +1354,7 @@ setInterval(()=>{const hint=$('vendor-hint'),vendor=started&&!ended&&!busy&&!lin
 
 function finishArrival(){if(!arrivalState)return;clearInterval(arrivalTimer);arrivalTimer=null;arrivalState=0;arrivalCaptionIndex=-1;$('arrival-scene').classList.remove('active');document.body.classList.remove('arrival-active');P.x=27;P.y=31;P.dir='up';P.step++;busy=0;$('dlg').classList.add('big');$('a').classList.add('pulse');say(['Ini bukan pertama kalinya Laili datang ke desa ini. Ia sudah sering ke sini, dan warganya juga sudah kenal dengannya.','Pagi tadi Kepala Desa mengirim pesan: "Bu Laili, mohon mampir ke Balai Desa sore nanti. Ada hal yang perlu dibicarakan."','Laili menikmati suasana desa yang terasa akrab.','Sambil menunggu sore, sapa warga dulu. Mulai dari Petugas Stasiun di dekat pintu: jalan ke kiri beberapa langkah dan cari tanda !.','Kamu bebas berkeliling desa kapan saja: jajan, ngobrol dengan warga, atau lihat bunga sakura.'],()=>{$('dlg').classList.remove('big');$('a').classList.remove('pulse')})}
 function startArrivalCutscene(){started=1;busy=1;arrivalState=1;arrivalStartedAt=Date.now();arrivalCaptionIndex=0;P.x=30.25;P.y=32;P.dir='left';P.step=0;document.body.classList.add('arrival-active');$('arrival-text').textContent=ARRIVAL_SCRIPT[0][1];$('arrival-scene').classList.add('active');arrivalTimer=setInterval(()=>{const elapsed=Date.now()-arrivalStartedAt;let index=0;ARRIVAL_SCRIPT.forEach((s,i)=>{if(elapsed>=s[0])index=i});if(index!==arrivalCaptionIndex){arrivalCaptionIndex=index;$('arrival-text').textContent=ARRIVAL_SCRIPT[index][1]}if(elapsed>=ARR.end)finishArrival()},80)}
-$('arrival-skip').onclick=finishArrival;
+$('arrival-skip').onclick=()=>CAT_SCENE.active?finishCatCutscene():finishArrival();
 $('go').onclick=()=>{$('start').style.display='none';bgStart('calm');startArrivalCutscene()};
 const KEY={ArrowUp:'up',ArrowDown:'down',ArrowLeft:'left',ArrowRight:'right',w:'up',s:'down',a:'left',d:'right'};
 const kd=e=>KEY[e.key]||KEY[(e.key||'').toLowerCase()];
@@ -1484,7 +1485,7 @@ Object.assign(FLAV,{
  '4,20':'Rumah Pohon: Tiga anak tangganya hilang. Papan kecil bertuliskan “Khusus anak-anak. Guru boleh masuk kalau bawa jajan.”'
 });
 
-const CAT={on:0,x:0,y:0,rx:0,ry:0,seen:{}},TR=[];
+const CAT={on:0,x:0,y:0,rx:0,ry:0,name:'',seen:{}},TR=[];
 const CAT_NOTE={
  n:'Ibu: Nah, itu kucing Ibu, ikut Nak Laili! Syukurlah. Eh... maksud Ibu, kasihan kalau dia kesasar.',
  t:'Petugas: Wah, Ibu diikuti kucing. Hati-hati, Bu, kucing suka naik kereta tanpa tiket.',
@@ -1498,9 +1499,15 @@ const CAT_NOTE={
  j:'Pelukis: Kucingnya duduk manis seperti model lukisan. Boleh saya gambar sebentar nanti, Bu?'
 };
 const CAT_GREETS=['Bu, kucingnya ikut terus!','Wah, Bu Laili punya kucing baru!','Kucingnya lucu, Bu! Namanya siapa?','Bu, kucingnya boleh dielus nggak?'];
-function catJoin(x,y){CAT.on=1;CAT.x=x;CAT.y=y;CAT.rx=x*T;CAT.ry=y*T;TR.length=0;sfx('meow')}
+function catJoin(x,y){CAT.on=1;CAT.x=x;CAT.y=y;CAT.rx=x*T;CAT.ry=y*T;CAT.name='';TR.length=0;sfx('meow')}
 function catTrail(ox,oy){if(!CAT.on)return;TR.push([ox,oy]);if(TR.length>3)TR.shift();const q=TR.length>=2?TR[TR.length-2]:TR[0];CAT.x=q[0];CAT.y=q[1]}
 function drawCat(){if(!CAT.on||partyCut)return;const dx=CAT.x*T-CAT.rx,dy=CAT.y*T-CAT.ry,d=Math.hypot(dx,dy);if(d>0){const s=Math.min(d,Math.max(.9,d*.18));CAT.rx+=dx/d*s;CAT.ry+=dy/d*s}const mv=d>1.5,py=Math.round(CAT.ry)-(mv&&(NOW/110|0)%2?1:0);pixelCat(Math.round(CAT.rx),py,NOW,0,true)}
+function drawCatName(){if(!CAT.on||!CAT.name||partyCut)return;const cx=Math.round(CAT.rx)+8,py=Math.round(CAT.ry)-13;g.font='bold 7px monospace';g.textAlign='center';g.textBaseline='middle';const w=Math.ceil(g.measureText(CAT.name).width)+8;R('rgba(27,20,48,.9)',cx-w/2,py-4,w,9);R('#ffc857',cx-w/2,py-4,w,1);g.fillStyle='#fff4d6';g.fillText(CAT.name,cx,py+.5);g.textBaseline='alphabetic'}
+function catCam(ms){const zoomIn=arrEase(arrSeg(ms,0,500)),zoomOut=arrEase(arrSeg(ms,3500,4200)),focus=arrEase(arrSeg(ms,3500,4200)),midX=(P.x+CAT.x)/2,midY=(P.y+CAT.y)/2;return{z:1+1.05*zoomIn*(1-zoomOut),fx:(midX+(P.x-midX)*focus)*T+8,fy:(midY+(P.y-midY)*focus)*T+8}}
+function startCatCutscene(direction){const face={up:'down',down:'up',left:'right',right:'left'}[direction]||'down';CAT_SCENE.active=1;CAT_SCENE.startedAt=Date.now();CAT_SCENE.stage=0;CAT_SCENE.face=face;P.dir=face;busy=1;$('arrival-kicker').textContent='Kucing Baru';$('arrival-text').textContent='Laili berjongkok dan mengelus kucing itu.';$('arrival-scene').classList.add('active');document.body.classList.add('arrival-active')}
+function finishCatCutscene(){if(!CAT_SCENE.active)return;CAT_SCENE.active=0;CAT.name='Meow';busy=0;$('arrival-scene').classList.remove('active');document.body.classList.remove('arrival-active')}
+function updateCatCutscene(){if(!CAT_SCENE.active)return;const elapsed=Date.now()-CAT_SCENE.startedAt,stage=elapsed>=1800?1:0;if(stage!==CAT_SCENE.stage){CAT_SCENE.stage=stage;$('arrival-text').textContent='Laili: "Mulai sekarang namamu Meow, ya!"'}if(elapsed>=4200)finishCatCutscene()}
+function drawPettingArm(px,py,dir,elapsed){if(elapsed<450||elapsed>3500)return;const reach=7+Math.round((Math.sin(elapsed/115)+1)*1.5),arm={left:[px+4,py+9,-1,0],right:[px+12,py+9,1,0],up:[px+7,py+3,0,-1],down:[px+8,py+10,0,1]}[dir];if(!arm)return;const[hx,hy,dx,dy]=arm,tx=hx+dx*reach,ty=hy+dy*reach;g.strokeStyle='#f2c9a0';g.lineWidth=2;g.lineCap='square';g.beginPath();g.moveTo(hx,hy);g.lineTo(tx,ty);g.stroke();R('#f2c9a0',tx-1,ty-1,3,3)}
 
 const AMB={cd:{},roof:{until:0},
  CH:[{x:36,y:28,col:'#fff4d6'},{x:38,y:27,col:'#c9772e'},{x:34,y:28,col:'#8a5a3a'}].map(c=>({...c,rx:c.x*T,ry:c.y*T,t:0,fl:0,box:[33,27,41,28]})),

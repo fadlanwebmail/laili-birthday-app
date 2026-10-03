@@ -151,9 +151,11 @@ body.arrival-active #pad,body.arrival-active #qb{visibility:hidden}
 /* PESTA PIXEL-ART */
 #pcut{position:absolute;inset:0;display:none;z-index:102;pointer-events:none}
 #pcut.active{display:block}
+#pcut-skip{position:absolute;top:12px;right:12px;padding:8px 10px;font-size:12px;pointer-events:auto}
 #pcut-cap{position:absolute;left:50%;bottom:14px;transform:translateX(-50%);width:min(94%,760px);padding:12px 18px;background:rgba(27,20,48,.92);border:1px solid rgba(255,184,77,.6);border-radius:6px;text-align:center}
 #pcut-kick{margin-bottom:6px;color:var(--acc);font:600 clamp(11px,1.6vmin + 6px,15px) 'DM Sans',sans-serif;letter-spacing:.08em;text-transform:uppercase}
 #pcut-text{margin:0;color:var(--ink);font:600 clamp(16px,2.6vmin + 8px,24px)/1.5 'DM Sans',sans-serif;min-height:3em;display:flex;align-items:center;justify-content:center}
+@media (orientation:landscape){#pcut-skip{top:52px}}
 @media (orientation:landscape) and (max-height:480px){#pcut-cap{padding:8px 14px;bottom:8px}#pcut-text{font-size:clamp(14px,3.4vh + 4px,18px);min-height:2.6em}}
 @media (max-width:380px){#pcut-cap{padding:10px 12px}#pcut-text{font-size:16px}}
 /* kue tiup lilin pixel */
@@ -268,6 +270,30 @@ button:active{transform:translateY(3px);box-shadow:inset -3px -3px 0 rgba(0,0,0,
 #logo{width:78px;height:78px;image-rendering:pixelated;filter:drop-shadow(0 0 14px rgba(255,122,168,.55))}
 #start h1{text-shadow:0 4px 0 #3a2a6a,0 0 26px rgba(255,200,87,.35)}
 @media (orientation:landscape) and (max-height:480px){#logo{width:44px;height:44px}#start>#skyline{height:18%}}
+/* ===== PATCH: font dialog terbaca ===== */
+#dlg,#ch,#mg-t,#mg-s{font-family:'Pixelify Sans',ui-monospace,Menlo,monospace;font-weight:500}
+#dlg{font-size:clamp(15px,1.1vmin + 12px,21px);line-height:1.55;letter-spacing:.01em}
+#dlg.big{font-size:clamp(17px,1.3vmin + 14px,26px)}
+#hint{font-size:.8em}
+#who{font-family:'Press Start 2P',ui-monospace,monospace;font-size:max(10px,calc(var(--fs)*.7))}
+#dlg-back{font-family:'Press Start 2P',ui-monospace,monospace;font-size:10px}
+#ch button{font-size:clamp(15px,1.1vmin + 12px,21px)}
+#mg-t{font-size:clamp(16px,1.2vmin + 13px,24px);line-height:1.5}
+#mg-s{font-size:clamp(14px,1vmin + 11px,19px);line-height:1.5}
+#qb{font-family:'Pixelify Sans',ui-monospace,Menlo,monospace;font-weight:500;font-size:max(13px,calc(var(--fs)*.95));line-height:1.35}
+
+/* ===== PATCH: tombol simpan foto ===== */
+#xsave{display:none;transition:opacity .4s}
+body.photo #xsave{display:flex;align-items:center;justify-content:center}
+body.photo.xhide #xsave{opacity:0;pointer-events:none}
+
+/* ===== PATCH: tombol makan ===== */
+#eat{position:absolute;right:10px;bottom:54px;z-index:9;display:none;padding:.55em .8em;font-size:calc(var(--fs)*.8);background:var(--pink);color:#fff}
+#eat.show{display:block}
+body.photo #eat,body.arrival-active #eat{display:none!important}
+@media (orientation:landscape){
+ #eat{bottom:calc(var(--k)*1.4 + 28px + env(safe-area-inset-bottom,0px));right:max(22px,env(safe-area-inset-right))}
+}
 </style>
 </head>
 <body>
@@ -279,7 +305,7 @@ button:active{transform:translateY(3px);box-shadow:inset -3px -3px 0 rgba(0,0,0,
     <div id="arrival-caption"><div id="arrival-kicker">Stasiun Desa</div><p id="arrival-text"></p></div>
   </div>
   <div id="dlg"><button id="dlg-back" type="button">Kembali</button><img id="tico" alt="" style="display:none;width:26px;height:26px;image-rendering:pixelated;vertical-align:middle;margin-right:.4em"><span id="tx"></span><span id="arrow">▼</span><div id="ch"></div><div id="hint">Tekan A / Spasi atau sentuh dialog untuk lanjut.</div></div>
-  <div id="pcut"><div id="pcut-cap"><div id="pcut-kick"></div><p id="pcut-text"></p></div></div>
+  <div id="pcut"><button id="pcut-skip" type="button">Lewati adegan</button><div id="pcut-cap"><div id="pcut-kick"></div><p id="pcut-text"></p></div></div>
   <div class="ov" id="start">
     <h1>Selamat datang,<br>Laili!</h1>
     <div>Hari ini kamu datang lagi ke desa yang sudah sering kamu kunjungi. Warganya sudah kenal kamu, tapi hari ini sikap mereka agak aneh.<br><br>Siap berkunjung?</div>
@@ -501,7 +527,7 @@ const QS={
    {q:'Hari Guru Nasional diperingati setiap tanggal berapa?',o:['2 Mei','20 Mei','25 November','17 Agustus'],a:2},
   {q:'Sekolah tempat Bu Laili mengajar adalah...',o:['SMPN 47 JAKARTA','SMAN 74 JAKARTA','SMPN 74 JAKARTA','adalah pokoknya'],a:2,
     h:'Hampir, Bu. Cek lagi nomor dan jenjangnya.',
-   hx:{'pokoknya':'Itu bukan nama sekolah, Bu. "Pokoknya" itu jawaban murid yang belum belajar. 😄'}},
+   hx:{'adalah pokoknya':'Itu bukan nama sekolah, Bu. "Pokoknya" itu jawaban murid yang belum belajar. 😄'}},
   {q:'Siapa tokoh yang mengembangkan teori perkembangan kognitif dalam empat tahap?',o:['Skinner','Vygotsky','Piaget','Bandura'],a:2,h:'Tokoh asal Swiss ini menyebut tahap sensorimotor, praoperasional, operasional konkret, dan operasional formal.'}
   ],()=>done('s',['Jawabanmu tepat semua. Kamu lulus! 🏫'])))},
  b(){if(Q.b)return say(['Penjual bunga: Pesanannya sudah siap. Terima kasih, Bu Laili!']);
@@ -754,7 +780,7 @@ function move(d){P.dir=d;const[x,y]=DX[d],nx=P.x+x,ny=P.y+y,c=M[ny]&&M[ny][nx];i
   const ox=P.x,oy=P.y;P.x=nx;P.y=ny;P.step++;catTrail(ox,oy);sfx('step');
   const it=ITEMS.find(i=>AC.n&&!i.got&&i.x===nx&&i.y===ny);
   if(it){it.got=1;hud();sfx('pick');if(navigator.vibrate)navigator.vibrate(50);
-  if(it.n==='kucing'){catJoin(ox,oy);startCatCutscene(P.dir)}
+  if(it.n==='kucing'){catJoin(ox,oy);startPetCutscene();return}
   else say([(it.e==='{L}'?'{L}':'')+(it.m||('Kamu menemukan '+it.n+(it.e==='{L}'?'':' '+it.e)+'.'))+' ('+got()+' dari 3)'])}
   if(partyOn&&nx===PARTY_POS.x&&ny===PARTY_POS.y){startSurpriseCutscene();return}
 }
@@ -1162,7 +1188,7 @@ function doorHint(x,y){
   return 'Balai Desa: Pintunya masih tertutup. Kepala Desa minta Bu Laili datang sore nanti.'}
  return FLAV[x+','+y]||'Pintu ini terkunci. Penghuninya mungkin sedang pergi.'}
 
-function draw(){NOW=Date.now();const cam=arrivalState?arrCam(NOW-arrivalStartedAt):partyCut?pcCam(NOW-pcT0):CAT_SCENE.active?catCam(NOW-CAT_SCENE.startedAt):null,ZE=ZS*(cam?cam.z:1);VW=cv.width/ZE;VH=cv.height/ZE;g.setTransform(ZE,0,0,ZE,0,0);g.imageSmoothingEnabled=false;const camX=cam?cam.fx:P.x*T+8,camY=cam?cam.fy:P.y*T+8,cx=Math.round(Math.max(0,Math.min(W*T-VW,camX-VW/2))),cy=Math.round(Math.max(0,Math.min(H*T-VH,camY-VH/2)));
+function draw(){NOW=Date.now();stepPV();const cam=arrivalState?arrCam(NOW-arrivalStartedAt):partyCut?pcCam(NOW-pcT0):petCut?petCam(NOW-petT0):CAT_SCENE.active?catCam(NOW-CAT_SCENE.startedAt):null,ZE=ZS*(cam?cam.z:1);VW=cv.width/ZE;VH=cv.height/ZE;g.setTransform(ZE,0,0,ZE,0,0);g.imageSmoothingEnabled=false;const camX=cam?cam.fx:PV.x+8,camY=cam?cam.fy:PV.y+8,cx=Math.round(Math.max(0,Math.min(W*T-VW,camX-VW/2))),cy=Math.round(Math.max(0,Math.min(H*T-VH,camY-VH/2)));
  R('#2b6e3a',0,0,VW,VH);g.save();g.translate(-cx,-cy);SN.s=Math.abs(ZE-Math.round(ZE))>1e-6?ZE:0;SN.x=cx;SN.y=cy;
  const x0=Math.max(0,cx/T|0),x1=Math.min(W-1,(cx+VW)/T|0),y0=Math.max(0,cy/T|0),y1=Math.min(H-1,(cy+VH)/T|0);
  for(let y=y0;y<=y1;y++)for(let x=x0;x<=x1;x++)tile(M[y][x],x,y);
@@ -1191,7 +1217,7 @@ function draw(){NOW=Date.now();const cam=arrivalState?arrCam(NOW-arrivalStartedA
  if(partyOn){const mx=PARTY_POS.x*T+8,my=PARTY_POS.y*T-2+b*2;g.fillStyle='rgba(255,122,168,.4)';g.beginPath();g.arc(mx,my,12+b*3,0,7);g.fill();g.fillStyle='#ff7aa8';g.beginPath();g.arc(mx,my,9,0,7);g.fill();g.strokeStyle='#fff';g.lineWidth=2;g.stroke();R('#fff',mx-1,my-7,2,2);R('#ffd54a',mx-1,my-5,2,2);R('#5ab8ff',mx-2,my-3,4,2);R('#fff',mx-3,my-1,6,2);R('#ffd54a',mx-4,my+1,8,2);
    // Arrow pointing to party
   if(false){const tx=PARTY_POS.x*T+8,ty=PARTY_POS.y*T;if(tx<cx||tx>cx+VW||ty<cy||ty>cy+VH){const ax=Math.max(cx+12,Math.min(cx+VW-12,tx)),ay=Math.max(cy+34,Math.min(cy+VH-12,ty)),an=Math.atan2(ty-(cy+VH/2),tx-(cx+VW/2));g.save();g.translate(ax,ay);g.rotate(an);g.fillStyle='#ff7aa8';g.strokeStyle='#fff';g.lineWidth=2;g.beginPath();g.moveTo(10,0);g.lineTo(-6,-8);g.lineTo(-6,8);g.closePath();g.fill();g.stroke();g.restore()}}}
- let playerX=P.x,playerY=P.y,playerStep=P.step%2,showPlayer=!partyCut,playerDir=P.dir,playerAlpha=1,waving=false;
+ let playerX=Math.round(PV.x)/T,playerY=(Math.round(PV.y)-(PV.mv&&(NOW/110|0)%2?1:0))/T,playerStep=P.step%2,showPlayer=!partyCut,playerDir=P.dir,playerAlpha=1,waving=false;
  if(arrivalState){const ms=cinematicMs,ap=arrEase(arrSeg(ms,ARR.appear[0],ARR.appear[1])),wk=arrEase(arrSeg(ms,ARR.walk[0],ARR.walk[1])),bk=arrEase(arrSeg(ms,ARR.zoomOut[0],ARR.zoomOut[1]));
   showPlayer=ms>=ARR.appear[0];playerAlpha=Math.min(1,ap*2.5);
   playerX=30.25-1.65*wk-1.6*bk;playerY=32.6-0.6*ap-0.6*wk-0.4*bk;
@@ -1205,7 +1231,7 @@ function draw(){NOW=Date.now();const cam=arrivalState?arrCam(NOW-arrivalStartedA
   g.font='bold 7px monospace';g.textAlign='center';const nm='Laili Maulida',w=Math.ceil(g.measureText(nm).width)+8,lx=Math.round(px+8-w/2),ly=photo?-99999:py-(CAT.name&&Math.max(Math.abs(P.x-CAT.x),Math.abs(P.y-CAT.y))<=1?32:19);
   R('rgba(27,20,48,.88)',lx,ly,w,10);R('#ff7aa8',lx,ly,w,1);g.fillStyle='#fff4d6';g.textBaseline='middle';g.fillText(nm,px+8,ly+5.5);g.textBaseline='alphabetic';
   R('#ff7aa8',px+5,ly+11+b,6,2);R('#ff7aa8',px+6,ly+13+b,4,2);R('#ff7aa8',px+7,ly+15+b,2,2)}
- drawCatName();drawLiterasiCanopy();drawDayTint(cx,cy);drawFireflies(cx,cy);if(partyCut)drawPartyCut(cx,cy);drawMissionArrow(cx,cy);g.restore();SN.s=0;g.setTransform(1,0,0,1,0,0);const gr=g.createRadialGradient(cv.width/2,cv.height/2,Math.min(cv.width,cv.height)*.35,cv.width/2,cv.height/2,Math.max(cv.width,cv.height)*.75);gr.addColorStop(0,'rgba(0,0,0,0)');gr.addColorStop(1,'rgba(20,10,40,.4)');g.fillStyle=gr;g.fillRect(0,0,cv.width,cv.height)}
+ drawLiterasiCanopy();drawDayTint(cx,cy);drawFireflies(cx,cy);if(partyCut)drawPartyCut(cx,cy);if(petCut)drawPetCut(cx,cy);drawMissionArrow(cx,cy);g.restore();SN.s=0;g.setTransform(1,0,0,1,0,0);const gr=g.createRadialGradient(cv.width/2,cv.height/2,Math.min(cv.width,cv.height)*.35,cv.width/2,cv.height/2,Math.max(cv.width,cv.height)*.75);gr.addColorStop(0,'rgba(0,0,0,0)');gr.addColorStop(1,'rgba(20,10,40,.4)');g.fillStyle=gr;g.fillRect(0,0,cv.width,cv.height)}
 function loop(t){updateCatCutscene();if(started&&!ended&&!busy&&!lines.length&&heldDirection&&t-last>=MOVE_INTERVAL){last=t;move(heldDirection)}student();ambient();draw();requestAnimationFrame(loop)}
 fit();addEventListener('resize',fit);requestAnimationFrame(loop);
 // ===== AUDIO =====
@@ -1285,7 +1311,7 @@ function card(){
   rc('rgba(255,184,77,.12)',Wd/2-270,1186,540,84);x.strokeStyle='#ffb84d';x.lineWidth=3;x.strokeRect(Wd/2-270,1186,540,84);
   x.fillStyle='#ff7aa8';x.font='22px '+F;x.fillText('PETUALANGAN DI DESA',Wd/2,1224);
   x.fillStyle='#ffb84d';x.font='18px '+F;x.fillText('MISI '+NQ+'/'+NQ+' SELESAI',Wd/2,1254);
-  c.toBlob(b=>{if(!b)return;const url=URL.createObjectURL(b),a=document.createElement('a');a.href=url;a.download='ulang-tahun-'+CFG.nama+'.png';document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000)})
+  c.toBlob(b=>deliverBlob(b,'ulang-tahun-'+CFG.nama+'.png','Selamat ulang tahun, '+CFG.nama+'!'))
  })}
 $('shot').onclick=card;
 function reset(){location.reload()}
@@ -1483,7 +1509,7 @@ Object.assign(FLAV,{
 
 const CAT={on:0,x:0,y:0,rx:0,ry:0,name:'',seen:{}},TR=[];
 const CAT_NOTE={
- n:'Ibu: Nah, itu kucing Ibu, ikut Nak Laili! Syukurlah. Eh... maksud Ibu, kasihan kalau dia kesasar.',
+ n:'Ibu: Nah, itu kucingnya, ikut Nak Laili! Namanya Meow? Cocok sekali. Eh... maksud Ibu, kasihan kalau dia kesasar.',
  t:'Petugas: Wah, Ibu diikuti kucing. Hati-hati, Bu, kucing suka naik kereta tanpa tiket.',
  m:'Pedagang: Kucingnya dari tadi mengintip lapak sayur, Bu. Tidak apa-apa, asal tidak mencuri jeruk.',
  b:'Penjual bunga: Kucing manis! Tapi jangan biarkan tiduran di atas rangkaian bunga, ya, Bu.',
@@ -1494,11 +1520,10 @@ const CAT_NOTE={
  p:'Petugas Pos: Kucing ini tidak ada alamat tujuannya, Bu? Kalau ada, saya kirim. Eh, bercanda.',
  j:'Pelukis: Kucingnya duduk manis seperti model lukisan. Boleh saya gambar sebentar nanti, Bu?'
 };
-const CAT_GREETS=['Bu, kucingnya ikut terus!','Wah, Bu Laili punya kucing baru!','Kucingnya lucu, Bu! Namanya siapa?','Bu, kucingnya boleh dielus nggak?'];
+const CAT_GREETS=['Bu, kucingnya ikut terus!','Wah, Bu Laili punya kucing baru!','Meow lucu banget, Bu! Namanya cocok.','Bu, kucingnya boleh dielus nggak?'];
 function catJoin(x,y){CAT.on=1;CAT.x=x;CAT.y=y;CAT.rx=x*T;CAT.ry=y*T;CAT.name='';TR.length=0;sfx('meow')}
 function catTrail(ox,oy){if(!CAT.on)return;TR.push([ox,oy]);if(TR.length>3)TR.shift();const q=TR.length>=2?TR[TR.length-2]:TR[0];CAT.x=q[0];CAT.y=q[1]}
-function drawCat(){if(!CAT.on||partyCut)return;const dx=CAT.x*T-CAT.rx,dy=CAT.y*T-CAT.ry,d=Math.hypot(dx,dy);if(d>0){const s=Math.min(d,Math.max(.9,d*.18));CAT.rx+=dx/d*s;CAT.ry+=dy/d*s}const mv=d>1.5,py=Math.round(CAT.ry)-(mv&&(NOW/110|0)%2?1:0);pixelCat(Math.round(CAT.rx),py,NOW,0,true)}
-function drawCatName(){if(!CAT.on||!CAT.name||partyCut)return;const cx=Math.round(CAT.rx)+8,py=Math.round(CAT.ry)-13;g.font='bold 7px monospace';g.textAlign='center';g.textBaseline='middle';const w=Math.ceil(g.measureText(CAT.name).width)+8;R('rgba(27,20,48,.9)',cx-w/2,py-4,w,9);R('#ffc857',cx-w/2,py-4,w,1);g.fillStyle='#fff4d6';g.fillText(CAT.name,cx,py+.5);g.textBaseline='alphabetic'}
+function drawCat(){if(!CAT.on||partyCut||petCut)return;const dx=CAT.x*T-CAT.rx,dy=CAT.y*T-CAT.ry,d=Math.hypot(dx,dy);if(d>0){const s=Math.min(d,Math.max(.9,d*.18));CAT.rx+=dx/d*s;CAT.ry+=dy/d*s}const mv=d>1.5,py=Math.round(CAT.ry)-(mv&&(NOW/110|0)%2?1:0);pixelCat(Math.round(CAT.rx),py,NOW,0,true);catTag(Math.round(CAT.rx),py)}
 function catCam(ms){const zoomIn=arrEase(arrSeg(ms,0,500)),zoomOut=arrEase(arrSeg(ms,3500,4200)),focus=arrEase(arrSeg(ms,3500,4200)),midX=(P.x+CAT.x)/2,midY=(P.y+CAT.y)/2;return{z:1+1.05*zoomIn*(1-zoomOut),fx:(midX+(P.x-midX)*focus)*T+8,fy:(midY+(P.y-midY)*focus)*T+8}}
 function startCatCutscene(direction){const face={up:'down',down:'up',left:'right',right:'left'}[direction]||'down';CAT_SCENE.active=1;CAT_SCENE.startedAt=Date.now();CAT_SCENE.stage=0;CAT_SCENE.face=face;P.dir=face;busy=1;$('arrival-kicker').textContent='Kucing Baru';$('arrival-text').textContent='Laili berjongkok dan mengelus kucing itu.';$('arrival-scene').classList.add('active');document.body.classList.add('arrival-active')}
 function finishCatCutscene(){if(!CAT_SCENE.active)return;CAT_SCENE.active=0;CAT.name='Meow';busy=0;$('arrival-scene').classList.remove('active');document.body.classList.remove('arrival-active')}
@@ -1649,7 +1674,7 @@ function finishArrival(){if(!arrivalState)return;clearInterval(arrivalTimer);arr
 (()=>{const w=document.createElement('div');w.id='who';$('dlg').insertBefore(w,$('tico'))})();
 const NAMEPFX=/^([A-Z][A-Za-z .’'\/ -]{1,24}):\s+(?=\S)/;
 function parseLine(raw){let ic=false,s=raw;if(s.startsWith('{L}')){ic=true;s=s.slice(3).trimStart()}
- const m=s.match(NAMEPFX);let name='';if(m&&!/^(Saldo|Sisa)/.test(m[1])){name=m[1];s=s.slice(m[0].length)}
+ const m=s.match(NAMEPFX);let name='';if(m&&!/^(Saldo|Sisa|Misi|Bunga|Paket|Kucing)/.test(m[1])){name=m[1];s=s.slice(m[0].length)}
  return{ic,name,s}}
 function typeLine(){const p=parseLine(lines[li]),s=p.s,wh=$('who');
  $('tico').src=lilyURL();$('tico').style.display=p.ic?'inline-block':'none';
@@ -1728,6 +1753,152 @@ tile=function(c,x,y){
  _tile(c,x,y);
  if(c==='.'){const h=(x*73+y*151)%13;if(h<3){R('#3f8a4e',px+3+h*3,py+4,1,2);R('#3f8a4e',px+4+h*3,py+3,1,2)}else if(h===5)R('#5cb266',px+10,py+11,2,1)}
 };
+
+// ===== CUTSCENE: LAILI MENGELUS KUCING & MEMBERI NAMA "MEOW" =====
+const CAT_NAME='Meow';
+let petCut=0,petT0=0,petTimer=null,petCap=-1,petSi=0,_pk=0;
+const PET={x:0,y:0,side:1};
+const PET_CAP=[
+ ['Laili','Ketemu! Kamu duduk manis banget, kayak murid baris belakang.'],
+ ['','Laili berjongkok, lalu mengelus kepala kucing itu pelan-pelan.'],
+ ['Laili','Kamu kucing yang dicari Ibu tadi, ya? Kok belum punya nama?'],
+ ['Laili','Aku panggil kamu Meow, ya. Cocok, kan?'],
+ ['','Meow mengeong senang, lalu mengikuti Laili.']
+].map(([who,txt])=>{const r=[_pk,who,txt];_pk+=Math.max(2600,1000+38*txt.length);return r}),
+PET_END=_pk+800,PET_PAT=PET_CAP[1][0],PET_NAME_AT=PET_CAP[3][0]+1100,
+PET_SFX=[[PET_PAT,'purr'],[PET_PAT+1300,'purr'],[PET_PAT+2600,'purr'],[PET_NAME_AT,'meow'],[PET_NAME_AT+600,'ok']];
+SF.purr=t=>{for(let i=0;i<10;i++)tone(85+(i%2)*12,t+i*.05,.07,'sawtooth',.018)};
+
+function nameTag(cx,ly,text){g.font='bold 7px monospace';g.textAlign='center';const w=Math.ceil(g.measureText(text).width)+8,lx=Math.round(cx-w/2);
+ R('rgba(27,20,48,.88)',lx,ly,w,10);R('#ff7aa8',lx,ly,w,1);g.fillStyle='#fff4d6';g.textBaseline='middle';g.fillText(text,cx,ly+5.5);g.textBaseline='alphabetic'}
+function catTag(px,py){if(!CAT.name||photo)return;let ly=py-13;const lx=P.x*T+8,ll=P.y*T-19;
+ if(Math.abs(px+8-lx)<46&&Math.abs(ly-ll)<11)ly=ll-11;
+ nameTag(px+8,ly,CAT.name)}
+function pixelHeart(x,y,c){R(c,x+1,y,2,1);R(c,x+4,y,2,1);R(c,x,y+1,7,2);R(c,x+1,y+3,5,1);R(c,x+2,y+4,3,1);R(c,x+3,y+5,1,1)}
+
+const petCam=ms=>{const zt=Math.max(1.6,Math.min(3,Math.min(cv.width,cv.height)/ZS/(6*T))),zi=arrEase(arrSeg(ms,0,1100)),zo=arrEase(arrSeg(ms,PET_END-1200,PET_END));
+ return{z:1+(zt-1)*zi*(1-zo),fx:PET.x+8+PET.side*8,fy:PET.y+10}};
+
+function startPetCutscene(){if(petCut)return;
+ busy=1;petCut=1;heldDirection=null;SKS.forEach(s=>s.on=0);
+ PET.x=P.x*T;PET.y=P.y*T;PET.side=P.x<W-3?1:-1;P.dir=PET.side>0?'right':'left';
+ petT0=Date.now();petCap=-1;petSi=0;
+ document.body.classList.add('arrival-active');$('dlg').style.display='none';$('pcut').classList.add('active');
+ petTimer=setInterval(petTick,80);petTick()}
+function petTick(){const el=Date.now()-petT0;let i=0;PET_CAP.forEach((c,k)=>{if(el>=c[0])i=k});
+ if(i!==petCap){petCap=i;const k=$('pcut-kick');k.textContent=PET_CAP[i][1];k.style.display=PET_CAP[i][1]?'':'none';$('pcut-text').textContent=PET_CAP[i][2]}
+ while(petSi<PET_SFX.length&&el>=PET_SFX[petSi][0])sfx(PET_SFX[petSi++][1]);
+ if(el>=PET_END)endPetCutscene()}
+function endPetCutscene(){if(!petCut)return;
+ petCut=0;clearInterval(petTimer);petTimer=null;
+ $('pcut').classList.remove('active');$('pcut-kick').style.display='';document.body.classList.remove('arrival-active');
+ CAT.name=CAT_NAME;CAT.x=P.x+PET.side;CAT.y=P.y;CAT.rx=PET.x+PET.side*16;CAT.ry=PET.y+4;
+ busy=0;say(['Meow ikut berjalan di belakang Laili. ('+got()+' dari 3)'])}
+
+function drawPetCut(cx,cy){
+ const t=NOW-petT0,sd=PET.side,px=PET.x,py=PET.y,kx=px+sd*16,ky=py+4,sw=Math.sin(t/170),
+  hop=t>=PET_NAME_AT&&t<PET_NAME_AT+1800?Math.round(Math.abs(Math.sin((t-PET_NAME_AT)/150))*3):0;
+ pixelCat(kx,ky-hop,t,0,true);
+ if(t>=PET_PAT&&t<PET_END-500){
+  const hx=kx+8+Math.round(sw*3),hy=ky+2,sx=px+(sd>0?12:4),sy=py+7;
+  g.save();g.strokeStyle='#b07acc';g.lineWidth=3;g.lineCap='round';g.beginPath();g.moveTo(sx,sy);g.quadraticCurveTo((sx+hx)/2,Math.max(sy,hy)+3,hx,hy);g.stroke();g.restore();
+  R('#f2c9a0',hx-1,hy-1,3,3);
+  for(let i=0;i<3;i++){const u=((t-PET_PAT)/1800+i/3)%1;g.globalAlpha=Math.sin(u*Math.PI);
+   pixelHeart(Math.round(kx+5+Math.sin(u*6+i*2)*5),Math.round(ky-4-u*20),i%2?'#ff7aa8':'#ff9ec2')}
+  g.globalAlpha=1}
+ if(t>=PET_NAME_AT){
+  CAT.name=CAT_NAME;const a=Math.min(1,(t-PET_NAME_AT)/300);
+  g.globalAlpha=a;catTag(kx,ky-hop+Math.round((1-a)*8));g.globalAlpha=1;
+  if(t<PET_NAME_AT+1400)for(let i=0;i<4;i++){const an=i*1.57+t/260,r=11+Math.sin(t/120+i)*2,
+   sx=Math.round(kx+8+Math.cos(an)*r),sy=Math.round(ky+7+Math.sin(an)*r*.7);
+   R('#fff4d6',sx,sy-2,1,5);R('#fff4d6',sx-2,sy,5,1);R('#ffd54a',sx,sy,1,1)}}
+}
+
+$('pcut-skip').onclick=()=>{if(petCut){endPetCutscene();return}if(!partyCut)return;bgStart('bday');endParty()};
+
+/* ================================================================
+   PATCH: gerakan halus, simpan foto/kartu, makan jajanan
+   ================================================================ */
+
+const PV={x:P.x*T,y:P.y*T,t:0,mv:0};
+function stepPV(){
+ const tx=P.x*T,ty=P.y*T,dt=Math.min(50,NOW-(PV.t||NOW));PV.t=NOW;
+ const dx=tx-PV.x,dy=ty-PV.y,d=Math.hypot(dx,dy);
+ PV.mv=d>.5?1:0;
+ if(!d)return;
+ if(arrivalState||RM||d>2.5*T){PV.x=tx;PV.y=ty;PV.mv=0;return}
+ const s=Math.min(d,dt*T/(MOVE_INTERVAL*.9));
+ PV.x+=dx/d*s;PV.y+=dy/d*s}
+{
+ const _startPetCutscene=startPetCutscene;
+ startPetCutscene=function(){PV.x=P.x*T;PV.y=P.y*T;PV.mv=0;_startPetCutscene()}
+}
+
+const PREFER_SHARE=true;
+SF.shutter=t=>{tone(1800,t,.03,'square',.05);tone(900,t+.04,.06,'square',.04)};
+function dlBlob(blob,name){
+ const url=URL.createObjectURL(blob),a=document.createElement('a');
+ a.href=url;a.download=name;document.body.appendChild(a);a.click();a.remove();
+ setTimeout(()=>URL.revokeObjectURL(url),1000);return true}
+function deliverBlob(blob,name,title){
+ if(!blob)return Promise.resolve(false);
+ const coarse=matchMedia('(pointer:coarse)').matches;
+ if(PREFER_SHARE&&coarse&&navigator.share&&window.File){
+  const file=new File([blob],name,{type:'image/png'});
+  if(navigator.canShare&&navigator.canShare({files:[file]}))
+   return navigator.share({files:[file],title}).then(()=>true).catch(e=>(e&&e.name==='AbortError')?false:dlBlob(blob,name))}
+ return Promise.resolve(dlBlob(blob,name))}
+(()=>{
+ const b=document.createElement('button');b.id='xsave';b.type='button';b.textContent='💾';b.setAttribute('aria-label','Simpan foto');
+ $('xfoto').after(b);
+ let saving=0;
+ b.onclick=()=>{
+  if(saving||!photo)return;saving=1;
+  const out=document.createElement('canvas');out.width=cv.width;out.height=cv.height;
+  const x=out.getContext('2d');x.imageSmoothingEnabled=false;x.drawImage(cv,0,0);
+  const u=Math.max(1,out.width/420),m=10*u;
+  x.font='600 '+(11*u)+'px "Pixelify Sans",monospace';x.textAlign='right';x.textBaseline='bottom';
+  x.fillStyle='rgba(27,20,48,.7)';x.fillText('Petualangan di Desa Misterius',out.width-m+u,out.height-m+u);
+  x.fillStyle='#fff4d6';x.fillText('Petualangan di Desa Misterius',out.width-m,out.height-m);
+  sfx('shutter');
+  if(!RM){const f=document.createElement('div');
+   f.style.cssText='position:absolute;inset:0;background:#fff;opacity:.85;pointer-events:none;z-index:30;transition:opacity .35s';
+   $('stage').appendChild(f);requestAnimationFrame(()=>f.style.opacity=0);setTimeout(()=>f.remove(),450)}
+  out.toBlob(blob=>{
+   deliverBlob(blob,'desa-misterius-'+Date.now()+'.png','Foto dari Desa Misterius').then(ok=>{
+    saving=0;showPhotoBtn();
+    if(ok){const h=$('xhint'),old=h.textContent;h.textContent='Foto tersimpan 📸';h.style.display='block';
+     setTimeout(()=>{h.textContent=old;h.style.display=''},1800)}})
+  },'image/png')}
+})();
+
+SF.nyam=t=>[500,420,500,380].forEach((f,i)=>tone(f,t+i*.08,.06,'square',.04));
+const EAT_MSG={
+ 'Es krim':['Es krim dingin dan manis. Lumernya cepat, seperti semangat murid di hari Senin.','Tinggal stik kosong dan senyum kecil. 🍦'],
+ 'Sate ayam':['Sate ayamnya empuk, bumbu kacangnya pas. Tusuknya dibuang ke tempat sampah, guru teladan tidak buang sampah sembarangan.','Perut Laili berterima kasih. 🍢'],
+ 'Es kelapa':['Es kelapa segar. Sekali sedot, capek keliling desa langsung hilang.','Kelapa mudanya dikerok sampai bersih. Tidak ada yang tersisa. 🥥'],
+ 'Martabak mini':['Martabak mininya masih hangat. Cokelat dan kejunya meleleh. Awas belepotan, Bu.','Habis dalam sekejap. Kecil-kecil, tapi bahagianya besar. 🥞'],
+ 'Seblak':['Seblak! Pedasnya naik pelan-pelan, lalu tiba-tiba menampar.','Laili minum air. Wajahnya merah seperti tinta koreksi, tapi mangkuknya tetap habis. 🍜'],
+ 'Mi ayam':['Mi ayamnya gurih, ayamnya banyak, kuahnya hangat.','Laili menghabiskannya tanpa sisa, seperti murid yang kelaparan saat jam istirahat. 🍲']
+};
+function eat(){
+ if(!heldItem||!started||ended||busy||lines.length||photo||arrivalState||partyCut||petCut)return;
+ const it=heldItem;heldItem=null;hud();sfx('nyam');
+ const s=document.createElement('span');s.className='plus';s.textContent='Nyam! 😋';$('stage').appendChild(s);setTimeout(()=>s.remove(),1600);
+ say(EAT_MSG[it.name]||[it.name+' sudah habis. Enak!'])}
+const eatBtn=document.createElement('button');
+eatBtn.id='eat';eatBtn.type='button';eatBtn.onclick=eat;$('stage').appendChild(eatBtn);
+setInterval(()=>{
+ const on=!!heldItem&&started&&!ended&&!busy&&!lines.length&&!photo&&!arrivalState&&!partyCut&&!petCut;
+ eatBtn.classList.toggle('show',on);
+ if(on){const t='Makan '+heldItem.icon;if(eatBtn.textContent!==t){eatBtn.textContent=t;eatBtn.setAttribute('aria-label','Makan '+heldItem.name)}}
+},200);
+addEventListener('keydown',e=>{if((e.key==='f'||e.key==='F')&&!e.repeat)eat()});
+{
+ const _shop=shop;shop=function(v){
+  if(heldItem){sfx('tick');say([v.seller+': Habiskan dulu '+heldItem.name.toLowerCase()+' di tangan Ibu, ya.','Tekan tombol Makan atau tombol F.']);return}
+  _shop(v)}
+}
 
 </script>
 </body>

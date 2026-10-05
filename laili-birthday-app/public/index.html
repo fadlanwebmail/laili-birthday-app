@@ -2142,7 +2142,15 @@ function buildBarrier(){return spriteCanvas(16,32,()=>{
  g.fillText('PERON',8,13.5);g.textBaseline='alphabetic'})}
 
 function drawGateBase(){if(!GATE_B)GATE_B=buildGateBase();g.drawImage(GATE_B,17*T,28*T)}
-function drawBarrier(){if(!WEST_CLOSED)return;if(!BARR)BARR=buildBarrier();g.drawImage(BARR,16*T,31*T)}
+function drawBarrier(){
+ if(!WEST_CLOSED)return;
+ if(!BARR)BARR=buildBarrier();
+ const x=16*T,y=31*T;
+ g.drawImage(BARR,x,y);
+ R('#16284a',x-8,y+9,32,12);
+ R('#ffc857',x-8,y+9,32,1);R('#ffc857',x-8,y+20,32,1);
+ R('#ffc857',x-8,y+9,1,12);R('#ffc857',x+23,y+9,1,12);
+ crispText('PERON',x+8,y+15,27,8,'#fff4d6','#0b1424')}
 function drawGateTop(){
  if(!GATE_T)GATE_T=buildGateTop();
  const x=17*T,y=28*T,under=PV.x>17*T&&PV.x<19*T&&PV.y>27*T+2&&PV.y<29*T+4;
@@ -2535,7 +2543,7 @@ function paxStep(dt){
  if(partyOn||partyCut){PAX.length=0;TRN.sched.length=0}
  else if(arrivalState){
   const ms=NOW-arrivalStartedAt;
-  if(!ARR_PAX)ARR_PAX=[[0,'kid'],[0,'adult']].map(([k,kd],i)=>({at:ARR.appear[1]+700+i*800,done:0,k,kd,w:1}));
+  if(!ARR_PAX)ARR_PAX=[[0,'kid'],[0,'adult'],[1,'adult']].map(([k,kd],i)=>({at:ARR.appear[1]+700+i*800,done:0,k,kd,w:1}));
   ARR_PAX.forEach(p=>{if(!p.done&&ms>=p.at){p.done=1;paxSpawn(p)}})}
  else{const i=trainInfo();
   if(i){if(!i.ex&&i.ct>=TRT.spawn-300&&i.ct<TRT.dep&&TRN.n!==i.n)paxPlan(i.n);
@@ -2670,6 +2678,39 @@ function trainFx(){
  const ox=tx+162,oy=33*T-3;
  for(let i=0;i<5;i++){const u=(NOW/650+i/5)%1,sw=RM?0:Math.sin(NOW/400+i*2)*2;
   R('rgba(236,236,246,'+(.7*(1-u)).toFixed(2)+')',Math.round(ox+sw-u*10),Math.round(oy-u*18),2+Math.round(u*4),2+Math.round(u*4))}}}
+
+/* ===== BANGUNAN: SPORT CENTER DI SISI LAPANGAN BOLA ===== */
+(()=>{
+ const sx=25,sy=20,sw=5,sh=4;
+ for(let y=sy;y<sy+sh;y++)for(let x=sx;x<sx+sw;x++)M[y][x]='a';
+ for(let x=24;x<30;x++)M[24][x]='p';
+ FZ.push({x0:24,y0:24,x1:30,y1:26,n:0,L:[
+  'Penjaga Sport Center: Selamat datang! Warga desa bisa berolahraga dan bermain bola di sini.',
+  'Penjaga Sport Center: Lapangan bola ada tepat di samping gedung. Hati-hati kalau bolanya melambung ke luar!',
+  'Penjaga Sport Center: Setelah berolahraga, minum air yang cukup, ya. Jangan langsung menantang Pak Kades lari keliling desa.'
+ ]});
+ const _drawSportCenter=drawWoodSigns;
+ drawWoodSigns=function(){
+  _drawSportCenter();
+  const x=sx*T,y=sy*T;
+  R('rgba(0,0,0,.25)',x-2,y+59,sw*T+5,6);
+  R('#b7c5d4',x+2,y+16,sw*T-4,43);R('#d9e1e8',x+4,y+17,sw*T-8,39);
+  R('#8296aa',x+2,y+15,sw*T-4,3);R('#5c7189',x+5,y+12,sw*T-10,3);
+  R('#233d5b',x+8,y+9,sw*T-16,4);R('#365878',x+11,y+6,sw*T-22,4);
+  R('#ffb84d',x+5,y+16,sw*T-10,2);
+  R('#6a94b8',x+7,y+23,17,13);R('#d9f0ff',x+9,y+25,13,9);
+  R('#6a94b8',x+sw*T-24,y+23,17,13);R('#d9f0ff',x+sw*T-22,y+25,13,9);
+  R('#8296aa',x+15,y+23,1,13);R('#8296aa',x+sw*T-16,y+23,1,13);
+  R('#ffb84d',x+8,y+39,sw*T-16,2);
+  R('#233d5b',x+30,y+42,20,19);R('#152a43',x+32,y+44,16,17);
+  R('#ffc857',x+32,y+44,16,2);R('#a6d7ee',x+34,y+47,12,8);
+  R('#b7c5d4',x+2,y+58,sw*T-4,4);
+  R('#16284a',x+7,y+17,sw*T-14,7);R('#ffc857',x+7,y+17,sw*T-14,1);
+  crispText('SPORT CENTER',x+sw*T/2,y+20.5,sw*T-18,5.5,'#fff4d6','#0b1424');
+  R('#d94f57',x+sw*T/2-2,y+30,4,4);R('#fff4d6',x+sw*T/2-2,y+31,4,1);
+  R('#fff4d6',x+sw*T/2-1,y+30,1,4);
+ }
+})();
 
 </script>
 </body>

@@ -454,9 +454,13 @@ LILY_BEDS.forEach(([x,y])=>{if('.lL'.includes(M[y][x]))M[y][x]='z'});
 fill('.',32,1,33,3);fill('p',31,4,34,4);fill('p',32,5,33,6);
 // ===== STASIUN MODERN: bangunan diperlebar (x19-29, y28-30) =====
 fill('T',19,28,29,30);M[30][23]='D';M[30][27]='N';
-const FLAV={'4,16':'Toko bunga: Lily merah muda ini baru mekar pagi tadi. Harumnya menenangkan.','10,6':'Toko roti: Roti hangat baru keluar dari oven. Aromanya tercium sampai ke jalan. 🥐','18,15':'Balai Desa: Tempat warga berkumpul. Sepertinya sedang ada kegiatan di dalam.','43,20':'Pos Ronda: Dua sesepuh desa sedang bertukar cerita sambil menikmati teh hangat.','28,15':'Perpustakaan desa: Suasananya tenang dan nyaman, cocok untuk membaca. 📚','38,26':'Pasar desa: Para pedagang menjajakan sayur dan buah segar. 🛒','38,6':'Minimarket desa: Berbagai kebutuhan sehari-hari tersedia di sini.','3,10':'Puskesmas Desa: Selamat datang. Petugas kesehatan siap membantu warga desa.'};
-for(let y=8;y<=10;y++)for(let x=2;x<=5;x++)M[y][x]='I';
-M[10][3]='D';
+const FLAV={'4,16':'Toko bunga: Lily merah muda ini baru mekar pagi tadi. Harumnya menenangkan.','10,6':'Toko roti: Roti hangat baru keluar dari oven. Aromanya tercium sampai ke jalan. 🥐','18,15':'Balai Desa: Tempat warga berkumpul. Sepertinya sedang ada kegiatan di dalam.','43,20':'Pos Ronda: Dua sesepuh desa sedang bertukar cerita sambil menikmati teh hangat.','28,15':'Perpustakaan desa: Suasananya tenang dan nyaman, cocok untuk membaca. 📚','38,26':'Pasar desa: Para pedagang menjajakan sayur dan buah segar. 🛒','38,6':'Minimarket desa: Berbagai kebutuhan sehari-hari tersedia di sini.','9,12':'Puskesmas Desa: Selamat datang. Petugas kesehatan siap membantu warga desa.'};
+for(let y=8;y<=10;y++)for(let x=2;x<=5;x++)M[y][x]='.';
+for(let y=10;y<=12;y++)for(let x=7;x<=10;x++)M[y][x]='I';
+M[12][9]='D';
+for(let x=6;x<=9;x++)M[13][x]='p';
+SAKURA_TREES.splice(SAKURA_TREES.findIndex(([x,y])=>x===7&&y===10),1);
+bld('H',2,29,3,3);bld('H',8,29,4,9);bld('H',30,29,4,31);bld('H',35,29,4,36);
 const SOLID='#CSTHABVYMDdNrwFibOIkKPJievaR',DX={up:[0,-1],down:[0,1],left:[-1,0],right:[1,0]};
 const P={x:23,y:9,dir:'down',step:0},Q={n:0,c:0,t:0,s:0,b:0,y:0,m:0,k:0,p:0,g:0,h:0,j:0},AC={};
 const KEYS=['n','c','t','s','b','y','m','k','p','g','h','j'],NQ=12,ORD=['t','m','n','b','c','s','k','p','g','h','y','j'],
@@ -537,7 +541,7 @@ function simon(cb){simonCb=cb;busy=1;$('sm').style.display='flex';play()}
 const QS={
  n(){if(Q.n)return say(['Ibu: Terima kasih, Nak Laili. Ibu senang barang-barangnya sudah ketemu.']);
   if(got()<3){const rest=ITEMS.filter(i=>!i.got);
-  return say([got()?'Ibu: Tinggal '+rest.length+' barang lagi, Nak. Semangat, jangan menyerah seperti murid yang lihat soal esai.':'Ibu: Aduh, Nak Laili. Tiga barang Ibu tercecer waktu belanja tadi: bunga, kucing, dan paket. Ibu memang pelupa, tapi belum sampai seperti guru yang mencari spidol padahal terselip di jilbab.'].concat(rest.flatMap(i=>ITEM_HINT[i.n].map((t,j)=>j?t:i.e+' '+t)),['Kalau sudah ketemu semua, kembali ke sini.']))}
+  return say([got()?'Ibu: Tinggal '+rest.length+' barang lagi, Nak. Semangat, jangan menyerah seperti murid yang lihat soal esai.':'Ibu: Aduh, Nak Laili. Tiga barang Ibu tercecer waktu belanja tadi: bunga, kucing, dan paket. Ibu memang pelupa, tapi belum sampai seperti guru yang mencari spidol padahal terselip di hijab.'].concat(rest.flatMap(i=>ITEM_HINT[i.n].map((t,j)=>j?t:i.e+' '+t)),['Kalau sudah ketemu semua, kembali ke sini.']))}
   done('n',['Ketiga barang Ibu sudah kembali. 📦'])},
  c(){if(Q.c)return say(['Barista: Mesin kopi kembali berfungsi. Terima kasih sudah membantu.']);
   say(['Barista: Mesin ini hanya bisa diperbaiki dengan urutan tombol yang tepat.','Perhatikan lampu yang menyala, lalu ulangi urutannya. Ada lima langkah.'],()=>simon(()=>{busy=0;done('c',['Mesin kopi kembali menyala. ☕'])}))},
@@ -1074,6 +1078,18 @@ function lilyBouquet(px,py){
  lilyBloom(px+4,py+6,3);lilyBloom(px+12,py+6,3);lilyBloom(px+8,py+3,3);
  R('#e96397',px+4,py+14,8,2);R('#e96397',px+5,py+12,2,2);R('#e96397',px+9,py+12,2,2);R('#ffb2ca',px+7,py+13,2,2);R('#e96397',px+6,py+16,1,3);R('#e96397',px+9,py+16,1,3)}
 function person(px,py,d,h){R('rgba(0,0,0,.25)',px+3,py+14,10,2);R('#3a2a6a',px+4,py+12,3,3);R('#3a2a6a',px+9,py+12,3,3);R(d,px+3,py+7,10,6);R('#f2c9a0',px+4,py+2,8,6);R(h,px+3,py+1,10,3);R('#3a2318',px+6,py+5,1,1);R('#3a2318',px+9,py+5,1,1)}
+function drawParkChild(px,py){
+ R('rgba(0,0,0,.22)',px+2,py+11,8,2);R('#3a2a6a',px+3,py+10,2,2);R('#3a2a6a',px+7,py+10,2,2);
+ R('#f2c94c',px+2,py+6,8,4);R('#f2c9a0',px+3,py+1,6,5);R('#5a3320',px+2,py,8,2);
+ R('#3a2318',px+4,py+3,1,1);R('#3a2318',px+7,py+3,1,1);R('#f2c9a0',px+1,py+7,2,3);R('#f2c9a0',px+9,py+7,2,3)
+}
+function drawParkKite(x,y){
+ const sway=Math.sin(NOW/520)*5,cx=x+sway,cy=y+Math.sin(NOW/360)*3;
+ g.strokeStyle='#f3dfb4';g.lineWidth=1;g.beginPath();g.moveTo(160,72);g.quadraticCurveTo(164,53,cx,cy+8);g.stroke();
+ R('#d94f57',cx,cy-6,5,6);R('#5ab8ff',cx+5,cy,5,6);R('#ffd54a',cx,cy+6,5,6);R('#b98cff',cx-5,cy,5,6);
+ R('#fff4d6',cx,cy-1,1,8);R('#fff4d6',cx-4,cy+3,8,1);
+ for(let i=0;i<3;i++){const ty=cy+11+i*6,tx=cx+(i%2?2:-2);R('#d94f57',tx,ty,3,2);R('#ffd54a',tx+3,ty+2,3,2)}
+}
 function scarfVillager(px,py,shirt,scarf){
  R('rgba(0,0,0,.25)',px+3,py+14,10,2);R('#3a2a6a',px+4,py+13,3,2);R('#3a2a6a',px+9,py+13,3,2);
  R(shirt,px+3,py+7,10,7);R(shirt,px+2,py+11,12,3);R('#fff4d6',px+5,py+9,6,1);
@@ -1103,7 +1119,21 @@ function drawPicnic(){
  const mx=5*T,my=3*T;R('#8d3b61',mx,my,4*T,2*T);R('#ffb7cd',mx+2,my+2,4*T-4,2*T-4);
  for(let x=1;x<4;x++)R('#d85d89',mx+x*T,my+3,2,2*T-6);
  R('#fff4d6',mx+7,my+8,8,5);R('#d9534f',mx+10,my+9,4,3);R('#6b4423',mx+48,my+8,10,10);R('#a5714a',mx+50,my+5,6,4);
- villager(5*T,4*T,'#d95a5a','#3a2318',true,'#d69a3a');villager(6*T,4*T,'#5a8ad9','#3a2318',false);villager(7*T,4*T,'#f2c94c','#3a2318',true);
+ const bx=T,by=5*T;
+ R('rgba(0,0,0,.2)',bx+1,by+13,48,3);R('#6b4423',bx+3,by+1,2,12);R('#6b4423',bx+43,by+1,2,12);
+ R('#8a5a3a',bx+2,by+3,44,3);R('#a5714a',bx+2,by+3,44,1);
+ villager(bx+14,by-10,'#d95a5a','#3a2318',true,'#d69a3a');
+ R('#6b4423',bx+2,by+10,2,5);R('#6b4423',bx+42,by+10,2,5);
+ R('#8a5a3a',bx,by+8,48,3);R('#d9a05a',bx,by+8,48,1);
+ const py=4*T;
+ villager(5*T,py,'#d95a5a','#3a2318',true,'#d69a3a');
+ person(6*T,py,'#5a8ad9','#3a2318');
+ drawParkChild(7*T+2,py+4);
+ drawParkKite(10*T+8,20);
+ const fx=9*T,fy=py;
+ villager(fx,fy,'#4fae5e','#3a2318',false);
+ g.strokeStyle='#4fae5e';g.lineWidth=2;g.beginPath();g.moveTo(fx+12,fy+8);g.lineTo(fx+16,fy+3);g.stroke();
+ R('#f2c9a0',fx+15,fy+2,2,2)
 }
 function drawBadminton(){
  const x=T,y=9*T,w=4*T,h=6*T;
@@ -2825,7 +2855,7 @@ function drawPurpleFlowers(x0,y0,x1,y1){
  const _drawClinicBase=drawWoodSigns;
  drawWoodSigns=function(){
   _drawClinicBase();
-  const x=2*T,y=8*T;
+  const x=7*T,y=10*T;
   R('rgba(0,0,0,.25)',x-2,y+45,68,5);
   R('#d5dce3',x+1,y+10,62,38);R('#edf1f4',x+3,y+12,58,34);
   R('#9aa9b8',x+1,y+9,62,4);R('#c8d3de',x+4,y+6,56,4);
@@ -2838,12 +2868,64 @@ function drawPurpleFlowers(x0,y0,x1,y1){
   R('#73879a',x+2,y+34,60,2);R('#c2cbd3',x+3,y+36,58,2);
   R('#31506c',x+9,y+13,46,7);R('#ffc857',x+9,y+13,46,1);
   crispText('PUSKESMAS',x+32,y+17,43,5.5,'#fff4d6','#152a43');
-  R('#365878',x+16,y+31,16,17);R('#233d5b',x+17,y+32,14,16);
-  R('#a6d7ee',x+19,y+34,10,7);R('#d9f0ff',x+20,y+35,4,2);
-  R('#ffc857',x+16,y+31,16,2);R('#d9a05a',x+23,y+40,1,2);
-  R('#d94f57',x+37,y+34,3,10);R('#d94f57',x+34,y+37,9,3);
+  R('#365878',x+32,y+31,16,17);R('#233d5b',x+33,y+32,14,16);
+  R('#a6d7ee',x+35,y+34,10,7);R('#d9f0ff',x+36,y+35,4,2);
+  R('#ffc857',x+32,y+31,16,2);R('#d9a05a',x+43,y+40,1,2);
+  R('#d94f57',x+22,y+34,3,10);R('#d94f57',x+19,y+37,9,3);
   R('#d9a05a',x+1,y+47,62,1);
  }
+}
+
+/* ===== BANGUNAN PENUNJANG STASIUN, MENGGANTIKAN RUMAH WARGA ===== */
+{
+ const stationFacilities=[
+  {x:2,w:3,label:'BENGKEL',roof:'#40566a',wall:'#b6c8d2',door:'#31506c'},
+  {x:8,w:4,label:'GUDANG',roof:'#6a5841',wall:'#d0bd91',door:'#6b4423'},
+  {x:30,w:4,label:'RUANG KONTROL',roof:'#435d77',wall:'#c3d1d8',door:'#31506c'},
+  {x:35,w:4,label:'DEPO LISTRIK',roof:'#60734a',wall:'#c8d0ad',door:'#53643d'}
+ ];
+ const _drawStationSupportBuildings=drawWoodSigns;
+ drawWoodSigns=function(){
+  _drawStationSupportBuildings();
+  for(const b of stationFacilities){
+   const x=b.x*T,y=28*T,w=b.w*T;
+   R('rgba(0,0,0,.25)',x+2,y+44,w-4,5);
+   R(b.wall,x+2,y+12,w-4,33);R('#e6e4d8',x+4,y+14,w-8,28);
+   R('#253647',x,y+9,w,5);R(b.roof,x+2,y+5,w-4,6);R('#9baab2',x+5,y+3,w-10,2);
+   R('#f0b94e',x+3,y+14,w-6,2);
+   for(let px=x+6;px<x+w-12;px+=Math.max(14,Math.floor(w/3))){
+    R('#557b94',px,y+21,10,9);R('#bfe6ff',px+2,y+23,6,5);R('#8296aa',px+6,y+22,1,7)
+   }
+   const dw=Math.min(14,w-12),dx=x+(w-dw)/2;
+   R(b.door,dx,y+31,dw,14);R('#a6d7ee',dx+2,y+33,dw-4,5);
+   R('#ffc857',dx,y+31,dw,2);R('#d9a05a',dx+dw-3,y+39,1,2);
+   R('#233d5b',x+5,y+15,w-10,6);R('#ffc857',x+5,y+15,w-10,1);
+   crispText(b.label,x+w/2,y+19,w-12,4.8,'#fff4d6','#0b1424');
+   R('#d9a05a',x+2,y+44,w-4,1)
+  }
+ }
+}
+
+/* ===== SAWAH: PAGAR KAYU DENGAN GERBANG TERBUKA ===== */
+function drawRicePaddyFence(){
+ const x=40*T,y=28*T,right=47*T,bottom=33*T;
+ const post=(px,py)=>{R('#51311f',px-2,py-2,4,8);R('#a5714a',px-1,py-1,2,6);R('#d9a05a',px-1,py-2,2,1)};
+ const railH=(x0,x1,py)=>{R('#51311f',x0,py,x1-x0,3);R('#a5714a',x0,py,x1-x0,1)};
+ const railV=(px,y0,y1)=>{R('#51311f',px,y0,3,y1-y0);R('#a5714a',px,y0,1,y1-y0)};
+ const leftGate=x+2*T,rightGate=x+4*T;
+ railH(x,leftGate,y+4);railH(x,leftGate,y+11);
+ railH(rightGate,right,y+4);railH(rightGate,right,y+11);
+ [x,right].forEach(px=>{railV(px,y+4,bottom-2);railV(px+7,y+4,bottom-2);
+  for(let py=y+8;py<bottom-3;py+=16)post(px,py)});
+ railH(x,right,bottom-3);
+ for(let px=x+8;px<right-4;px+=16)post(px,bottom-4);
+ [[x,y+3],[right,y+3],[leftGate,y+3],[rightGate,y+3],[x,bottom-4],[right,bottom-4]].forEach(([px,py])=>post(px,py));
+ railV(leftGate+5,y+2,y+T-1);railV(leftGate+11,y+2,y+T-1);
+ railV(rightGate+2,y+2,y+T-1);railV(rightGate+8,y+2,y+T-1);
+}
+{
+ const _drawFarmWithFence=drawFarm;
+ drawFarm=function(){_drawFarmWithFence();drawRicePaddyFence()}
 }
 
 </script>

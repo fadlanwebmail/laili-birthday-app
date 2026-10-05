@@ -454,8 +454,10 @@ LILY_BEDS.forEach(([x,y])=>{if('.lL'.includes(M[y][x]))M[y][x]='z'});
 fill('.',32,1,33,3);fill('p',31,4,34,4);fill('p',32,5,33,6);
 // ===== STASIUN MODERN: bangunan diperlebar (x19-29, y28-30) =====
 fill('T',19,28,29,30);M[30][23]='D';M[30][27]='N';
-const FLAV={'4,16':'Toko bunga: Lily merah muda ini baru mekar pagi tadi. Harumnya menenangkan.','10,6':'Toko roti: Roti hangat baru keluar dari oven. Aromanya tercium sampai ke jalan. 🥐','18,15':'Balai Desa: Tempat warga berkumpul. Sepertinya sedang ada kegiatan di dalam.','43,20':'Pos Ronda: Dua sesepuh desa sedang bertukar cerita sambil menikmati teh hangat.','28,15':'Perpustakaan desa: Suasananya tenang dan nyaman, cocok untuk membaca. 📚','38,26':'Pasar desa: Para pedagang menjajakan sayur dan buah segar. 🛒','38,6':'Minimarket desa: Berbagai kebutuhan sehari-hari tersedia di sini.'};
-const SOLID='#CSTHABVYMDdNrwFibOfQUkKPJzevaR',DX={up:[0,-1],down:[0,1],left:[-1,0],right:[1,0]};
+const FLAV={'4,16':'Toko bunga: Lily merah muda ini baru mekar pagi tadi. Harumnya menenangkan.','10,6':'Toko roti: Roti hangat baru keluar dari oven. Aromanya tercium sampai ke jalan. 🥐','18,15':'Balai Desa: Tempat warga berkumpul. Sepertinya sedang ada kegiatan di dalam.','43,20':'Pos Ronda: Dua sesepuh desa sedang bertukar cerita sambil menikmati teh hangat.','28,15':'Perpustakaan desa: Suasananya tenang dan nyaman, cocok untuk membaca. 📚','38,26':'Pasar desa: Para pedagang menjajakan sayur dan buah segar. 🛒','38,6':'Minimarket desa: Berbagai kebutuhan sehari-hari tersedia di sini.','3,10':'Puskesmas Desa: Selamat datang. Petugas kesehatan siap membantu warga desa.'};
+for(let y=8;y<=10;y++)for(let x=2;x<=5;x++)M[y][x]='I';
+M[10][3]='D';
+const SOLID='#CSTHABVYMDdNrwFibOIkKPJievaR',DX={up:[0,-1],down:[0,1],left:[-1,0],right:[1,0]};
 const P={x:23,y:9,dir:'down',step:0},Q={n:0,c:0,t:0,s:0,b:0,y:0,m:0,k:0,p:0,g:0,h:0,j:0},AC={};
 const KEYS=['n','c','t','s','b','y','m','k','p','g','h','j'],NQ=12,ORD=['t','m','n','b','c','s','k','p','g','h','y','j'],
  OBJ={n:'Bantu Ibu mencari tiga barangnya',b:'Bantu penjual bunga menyiapkan pesanan',c:'Bantu barista memperbaiki mesin kopi',m:'Bantu pedagang menghitung belanjaan',t:'Bantu petugas merapikan jadwal kereta',y:'Bantu pustakawan merapikan rak buku',s:'Ikuti cerdas cermat di sekolah',k:'Bantu guru musik menyetel alat musik',p:'Bantu petugas pos memilah surat dan paket',j:'Bantu pelukis menyelesaikan lukisannya',g:'Bantu Ibu Kebun menanam bibit di Rumah Kaca',h:'Bantu peternak memerah susu sapi'};
@@ -1257,7 +1259,7 @@ function draw(){NOW=Date.now();stepPV();const cam=arrivalState?arrCam(NOW-arriva
  for(let y=y0;y<=y1;y++)for(let x=x0;x<=x1;x++)tile(M[y][x],x,y);
  drawRoseFlowers(x0,y0,x1,y1);
  drawPurpleFlowers(x0,y0,x1,y1);
- for(let y=y0;y<=y1;y++)for(let x=x0;x<=x1;x++){const c=M[y][x];if('CSTHABVYMDdKPJR'.includes(c)&&M[y+1]&&!'CSTHABVYMDdKPJR'.includes(M[y+1][x]))R('rgba(0,0,0,.22)',x*T,y*T+T,T,3)}
+ for(let y=y0;y<=y1;y++)for(let x=x0;x<=x1;x++){const c=M[y][x];if('CSTHABVYMDdKPJRI'.includes(c)&&M[y+1]&&!'CSTHABVYMDdKPJRI'.includes(M[y+1][x]))R('rgba(0,0,0,.22)',x*T,y*T+T,T,3)}
  drawKoiPond();drawPondRestArea();drawTreehouse();
  drawPicnic();drawBadminton();drawBadmintonPlayers();drawLiterasi();drawStation();drawPosRonda();
  CL(1);g.textAlign='center';g.textBaseline='middle';
@@ -2817,6 +2819,32 @@ function drawPurpleFlowers(x0,y0,x1,y1){
   R('#fff4d6',x+sw*T/2-1,y+30,1,4);
  }
 })();
+
+/* ===== BANGUNAN: PUSKESMAS DESA ===== */
+{
+ const _drawClinicBase=drawWoodSigns;
+ drawWoodSigns=function(){
+  _drawClinicBase();
+  const x=2*T,y=8*T;
+  R('rgba(0,0,0,.25)',x-2,y+45,68,5);
+  R('#d5dce3',x+1,y+10,62,38);R('#edf1f4',x+3,y+12,58,34);
+  R('#9aa9b8',x+1,y+9,62,4);R('#c8d3de',x+4,y+6,56,4);
+  R('#496986',x+8,y+3,48,4);R('#365878',x+13,y,38,4);
+  R('#d94f57',x+28,y+1,8,12);R('#d94f57',x+25,y+4,14,6);
+  R('#6a94b8',x+5,y+19,12,12);R('#bfe6ff',x+7,y+21,8,8);
+  R('#8296aa',x+10,y+21,1,8);
+  R('#6a94b8',x+47,y+19,12,12);R('#bfe6ff',x+49,y+21,8,8);
+  R('#8296aa',x+52,y+21,1,8);
+  R('#73879a',x+2,y+34,60,2);R('#c2cbd3',x+3,y+36,58,2);
+  R('#31506c',x+9,y+13,46,7);R('#ffc857',x+9,y+13,46,1);
+  crispText('PUSKESMAS',x+32,y+17,43,5.5,'#fff4d6','#152a43');
+  R('#365878',x+16,y+31,16,17);R('#233d5b',x+17,y+32,14,16);
+  R('#a6d7ee',x+19,y+34,10,7);R('#d9f0ff',x+20,y+35,4,2);
+  R('#ffc857',x+16,y+31,16,2);R('#d9a05a',x+23,y+40,1,2);
+  R('#d94f57',x+37,y+34,3,10);R('#d94f57',x+34,y+37,9,3);
+  R('#d9a05a',x+1,y+47,62,1);
+ }
+}
 
 </script>
 </body>

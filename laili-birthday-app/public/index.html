@@ -461,7 +461,7 @@ M[12][9]='D';
 for(let x=6;x<=9;x++)M[13][x]='p';
 SAKURA_TREES.splice(SAKURA_TREES.findIndex(([x,y])=>x===7&&y===10),1);
 bld('H',2,29,3,3);bld('H',8,29,4,9);bld('H',30,29,4,31);bld('H',35,29,4,36);
-const SOLID='#CSTHABVYMDdNrwFibOIkKPJievaR',DX={up:[0,-1],down:[0,1],left:[-1,0],right:[1,0]};
+const SOLID='#CSTHABVYMDdNrwFibOIfQUkKPJevaR',DX={up:[0,-1],down:[0,1],left:[-1,0],right:[1,0]};
 const P={x:23,y:9,dir:'down',step:0},Q={n:0,c:0,t:0,s:0,b:0,y:0,m:0,k:0,p:0,g:0,h:0,j:0},AC={};
 const KEYS=['n','c','t','s','b','y','m','k','p','g','h','j'],NQ=12,ORD=['t','m','n','b','c','s','k','p','g','h','y','j'],
  OBJ={n:'Bantu Ibu mencari tiga barangnya',b:'Bantu penjual bunga menyiapkan pesanan',c:'Bantu barista memperbaiki mesin kopi',m:'Bantu pedagang menghitung belanjaan',t:'Bantu petugas merapikan jadwal kereta',y:'Bantu pustakawan merapikan rak buku',s:'Ikuti cerdas cermat di sekolah',k:'Bantu guru musik menyetel alat musik',p:'Bantu petugas pos memilah surat dan paket',j:'Bantu pelukis menyelesaikan lukisannya',g:'Bantu Ibu Kebun menanam bibit di Rumah Kaca',h:'Bantu peternak memerah susu sapi'};
@@ -593,6 +593,7 @@ const QS={
 const TG=()=>CUR();
 const INTRO={t:'Petugas: Eh, Bu Laili! Datang lagi, ya? Pas banget, jadwal kereta hari ini berantakan dan saya butuh tangan yang teliti. Bisa bantu menghitung?',m:'Pedagang: Bu Laili! Sering mampir ke sini, ya. Kebetulan, saya butuh bantuan menghitung belanjaan hari ini. Bisa, Bu?',n:'Ibu: Eh, Nak Laili, datang lagi ya? Aduh, kebetulan sekali. Ada tiga barang Ibu yang tercecer di desa waktu belanja tadi. Bisa bantu mencarinya?',b:'Penjual bunga: Bu Laili! Pas sekali Ibu lewat. Ada pesanan rangkaian bunga yang belum selesai dan saya agak bingung. Bantu saya, ya?',y:'Pustakawan: Bu Laili, sering mampir ke perpustakaan ya. Kebetulan sekali, beberapa buku di rak tertukar. Bisa bantu menyusunnya?',c:'Barista: Bu Laili, mampir lagi! Mesin kopinya mendadak rusak pagi ini. Bisa bantu memperbaikinya?',s:'Bu Guru: Bu Laili! Murid-murid sering cerita tentang Ibu. Sebelum ke mana-mana, ikut cerdas cermat dulu ya, sekalian latihan buat anak-anak.',k:'Guru Musik: Bu Laili! Kebetulan saya butuh telinga tambahan untuk menyetel alat musik. Bisa bantu?',p:'Petugas Pos: Bu Laili, ya? Wah, surat dan paket hari ini menumpuk sekali. Bisa bantu saya memilahnya?',j:'Pelukis: Ah, Bu Laili! Saya butuh pendapat dari orang yang jeli untuk lukisan ini. Bisa bantu menyelesaikannya?',g:'Ibu Kebun: Bu Laili! Pas sekali. Ada bibit yang belum ditanam di Rumah Kaca, dan tangan saya penuh. Bantu saya menanamnya, ya?',h:'Peternak: Bu Laili! Sapi-sapi saya sudah menunggu diperah dari tadi, tangan saya pegal. Bisa bantu?'};
 const QDOOR={c:[3,6],s:[16,6],t:[23,30],n:[13,16],b:[4,16],y:[28,15],m:[38,26],k:[23,6],p:[29,6],j:[44,12],g:[23,3],h:[35,3]};
+QDOOR.g=[16,3];
 const STATION_MASTER={x:27,y:30};
 const PARTY_POS={x:18,y:16}; // Depan Balai Desa
 
@@ -1600,10 +1601,10 @@ Object.assign(FLAV,{
  '20,26':'Rumah Pak Hasan: Ada tempelan “Awas anjing galak.” Di bawahnya ada tempelan lain: “Anjingnya sudah pensiun.”',
  '32,26':'Rumah Bu Ning: Pot kemangi berjajar di teras. Satu pot bertuliskan “Jangan dipetik, Bu Laili.” Kok tahu nama Ibu?',
  '44,26':'Rumah Pak Eko: Burung beo di sangkar berteriak “Bu Guru datang!” lalu langsung diam. Sepertinya sudah dilatih.',
- '3,30':'Rumah Pak Kardi: Sandal jepit tertata rapi di samping sepatu karet berlumpur. Pak Kardi mungkin sedang di ladang.',
- '9,30':'Rumah Bu Lastri: Kucing tidur di keset sambil memeluk gulungan benang. Jangan dibangunkan, Bu.',
- '31,30':'Rumah Pak Anwar: Antena TV di atap miring ke arah stasiun. Katanya sinyal sinetron paling bagus kalau antenanya miring begitu.',
- '36,30':'Rumah Bu Wati: Ada gambar kotak lompat dari kapur di depan rumah dan tulisan “Dibuka sore hari.” Anak-anak desa memang kreatif.',
+ '3,30':'Bengkel Stasiun: Bau oli dan suara palu dari dalam. Teknisi sedang merawat roda kereta.',
+ '9,30':'Gudang Stasiun: Kardus dan karung tersusun rapi. Papan kecil: "Barang titipan, jangan dipindah."',
+ '31,30':'Ruang Kontrol: Layar kecil berkedip hijau dan merah. Petugas mengatur jalur kereta dengan serius.',
+ '36,30':'Depo Listrik: Dengung pelan dari trafo. Papan peringatan: "Awas listrik, jangan iseng."',
  '4,20':'Rumah Pohon: Tiga anak tangganya hilang. Papan kecil bertuliskan “Khusus anak-anak. Guru boleh masuk kalau bawa jajan.”'
 });
 
@@ -2469,13 +2470,13 @@ function buildMasjid(){return spriteCanvas(112,64,()=>{
  R(crD,14,32,84,4);R(gd,14,35,84,1);R('rgba(255,255,255,.35)',14,32,84,1);
  R(cr,16,36,80,20);R(crD,16,50,80,6);R(crD,16,36,2,20);R(crD,94,36,2,20);
  dome(56,32,24,22);R(gd,56,7,1,3);crescent(56,4);
- [24,38,66,80].forEach(x=>{for(let r=0;r<15;r++){const w=r<4?4+r:8;R(gd,x+4-w/2,39+r,w,1)}
-  for(let r=0;r<13;r++){const w=r<4?4+r:8;R('#2a5a7a',x+4-w/2,40+r,w,1)}
+ [24,38,66,80].forEach(x=>{for(let r=0;r<15;r++){const w=Math.min(10,4+r*2);R(gd,x+4-(w>>1),39+r,w,1)}
+ for(let r=0;r<13;r++){const w=Math.min(8,2+r*2);R('#2a5a7a',x+4-(w>>1),40+r,w,1)}
   R('#9fd3f5',x+1,43,2,6);R(gd,x+4,43,1,10)});
  R('#16284a',40,36,32,5);R(gd,40,36,1,5);R(gd,71,36,1,5);
  g.font='bold 4px monospace';g.textAlign='center';g.textBaseline='middle';g.fillStyle='#ffe9a8';g.fillText('MASJID',56,38.7);g.textBaseline='alphabetic';
- for(let r=0;r<15;r++){const w=9+r;R(gd,56-w/2,41+r,w,1)}
- for(let r=0;r<14;r++){const w=8+r;R('#6b4423',56-w/2,42+r,w,1)}
+ for(let r=0;r<15;r++){const w=Math.min(18,8+r*2);R(gd,56-(w>>1),41+r,w,1)}
+ for(let r=0;r<14;r++){const w=Math.min(16,6+r*2);R('#6b4423',56-(w>>1),42+r,w,1)}
  R('#8a5632',49,45,6,11);R('#8a5632',57,45,6,11);R('#3a2318',55,44,2,12);R(gd,53,50,1,2);R(gd,58,50,1,2);
  minaret(8);minaret(104);
  R('#d9d2c0',10,56,92,3);R('#b9b2a2',10,58,92,1);R('#e9e4d6',38,58,36,3);R('#cfc8b4',34,61,44,3);R('#b9b2a2',38,60,36,1);
@@ -2576,8 +2577,12 @@ function cartTalk(w){w.wait=Math.max(w.wait,2500);sfx('tick');say([GEROBAK_L[Mat
 {
  const _ambientCart=ambient,_actCart=act,_drawWoodSignsCart=drawWoodSigns;
  ambient=function(){_ambientCart()};
- act=function(){const w=cartNear();if(w){cartTalk(w);return}_actCart()};
- drawWoodSigns=function(){_drawWoodSignsCart();drawNewFarmNpc();drawMasjid();drawGerobak()}
+ act=function(){
+  if(started&&!ended&&!busy&&!photo&&!lines.length&&!checkInteraction()){
+   const w=cartNear();if(w){cartTalk(w);return}
+  }
+  _actCart()};
+ drawWoodSigns=function(){_drawWoodSignsCart();drawMasjid();drawGerobak()}
 }
 
 /* ===== P2 (REVISI): KERETA CEPAT + PENUMPANG KELUAR GERBONG ===== */
@@ -2613,7 +2618,7 @@ function drawTrainDoors(){
  const ty=33*T,door=(bx,o)=>{R('#2a1a30',bx+21-(o>>1),ty+2,o,7);if(o>3)R('#ffd987',bx+22-(o>>1),ty+3,o-2,1)};
  if(arrivalState){
   const ms=NOW-arrivalStartedAt,o=Math.round(10*arrEase(arrSeg(ms,ARR.door,ARR.door+350))*(1-arrEase(arrSeg(ms,ARR.depart-500,ARR.depart-100))));
-  if(o>0&&ms<ARR.depart)[0,1].forEach(k=>door(TRN.park+k*44,o));
+  if(o>0&&ms<ARR.depart)[0,1,2].forEach(k=>door(TRN.park+k*44,o));
   return}
  const o=trainDoorOpen();if(o<=0)return;
  const tx=trainTX();for(let k=0;k<3;k++)door(tx+k*44,o)}
@@ -2879,10 +2884,10 @@ function drawPurpleFlowers(x0,y0,x1,y1){
 /* ===== BANGUNAN PENUNJANG STASIUN, MENGGANTIKAN RUMAH WARGA ===== */
 {
  const stationFacilities=[
-  {x:2,w:3,label:'BENGKEL',roof:'#40566a',wall:'#b6c8d2',door:'#31506c'},
-  {x:8,w:4,label:'GUDANG',roof:'#6a5841',wall:'#d0bd91',door:'#6b4423'},
-  {x:30,w:4,label:'RUANG KONTROL',roof:'#435d77',wall:'#c3d1d8',door:'#31506c'},
-  {x:35,w:4,label:'DEPO LISTRIK',roof:'#60734a',wall:'#c8d0ad',door:'#53643d'}
+  {x:2,w:3,door:3,label:'BENGKEL',roof:'#40566a',wall:'#b6c8d2',doorColor:'#31506c'},
+  {x:8,w:4,door:9,label:'GUDANG',roof:'#6a5841',wall:'#d0bd91',doorColor:'#6b4423'},
+  {x:30,w:4,door:31,label:'RUANG KONTROL',roof:'#435d77',wall:'#c3d1d8',doorColor:'#31506c'},
+  {x:35,w:4,door:36,label:'DEPO LISTRIK',roof:'#60734a',wall:'#c8d0ad',doorColor:'#53643d'}
  ];
  const _drawStationSupportBuildings=drawWoodSigns;
  drawWoodSigns=function(){
@@ -2896,8 +2901,8 @@ function drawPurpleFlowers(x0,y0,x1,y1){
    for(let px=x+6;px<x+w-12;px+=Math.max(14,Math.floor(w/3))){
     R('#557b94',px,y+21,10,9);R('#bfe6ff',px+2,y+23,6,5);R('#8296aa',px+6,y+22,1,7)
    }
-   const dw=Math.min(14,w-12),dx=x+(w-dw)/2;
-   R(b.door,dx,y+31,dw,14);R('#a6d7ee',dx+2,y+33,dw-4,5);
+   const dw=Math.min(14,w-12),dx=b.door*T+1;
+   R(b.doorColor,dx,y+31,dw,14);R('#a6d7ee',dx+2,y+33,dw-4,5);
    R('#ffc857',dx,y+31,dw,2);R('#d9a05a',dx+dw-3,y+39,1,2);
    R('#233d5b',x+5,y+15,w-10,6);R('#ffc857',x+5,y+15,w-10,1);
    crispText(b.label,x+w/2,y+19,w-12,4.8,'#fff4d6','#0b1424');

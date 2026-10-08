@@ -2965,18 +2965,23 @@ function meadowPick(n,minD){
   if(k>=5)cand.push([x,y,k+rnd()*3])}
  cand.sort((a,b)=>b[2]-a[2]);
  let out=[];
- for(let md=minD;md>=2&&out.length<n;md-=2){out=[];
-  for(const c of cand){if(out.length>=n)break;if(out.every(o=>Math.abs(o[0]-c[0])+Math.abs(o[1]-c[1])>=md))out.push(c)}}
+ for(let md=minD;md>=1;md--){
+  out=[];
+  for(const c of cand){if(out.length>=n)break;if(out.every(o=>Math.abs(o[0]-c[0])+Math.abs(o[1]-c[1])>=md))out.push(c)}
+  if(out.length>=n)return out}
  return out}
+const RAB_EXTRA=['Kenari','Pelangi','Mentega','Susu','Salju','Kancil','Nanas','Rintik','Bulan','Pita','Kacang','Lonceng'];
 function critterInit(){
  CR.ready=1;
- meadowPick(6,7).forEach(([x,y],i)=>RAB.push(mkRab(i,x,y)));
- const m=RAB[0];if(!m)return;
- const babies=[['Kapas',0],['Wortel',4]];let bi=0;
- for(const [dx,dy] of [[1,0],[0,1],[-1,0],[0,-1],[1,1],[-1,1],[1,-1],[-1,-1]]){
-  if(bi>=2)break;
-  const x=m.tx+dx,y=m.ty+dy;
-  if(grassOK(x,y)&&!RAB.some(o=>o.tx===x&&o.ty===y)){RAB.push(mkRab(babies[bi][1],x,y,{baby:1,mom:m,name:babies[bi][0]}));bi++}}}
+ meadowPick(12,5).forEach(([x,y],i)=>RAB.push(mkRab(i%6,x,y,i<6?{}:{name:RAB_EXTRA[i-6]})));
+ const fam=[[0,[['Kapas',0],['Wortel',4]]],[3,[['Mungil',2],['Kacang',1]]]];
+ fam.forEach(([mi,kids])=>{
+  const m=RAB[mi];if(!m)return;let bi=0;
+  for(const [dx,dy] of [[1,0],[0,1],[-1,0],[0,-1],[1,1],[-1,1],[1,-1],[-1,-1]]){
+   if(bi>=2)break;
+   const x=m.tx+dx,y=m.ty+dy;
+   if(grassOK(x,y)&&!RAB.some(o=>o.tx===x&&o.ty===y)){
+    RAB.push(mkRab(kids[bi][1],x,y,{baby:1,mom:m,name:kids[bi][0]}));bi++}}})}
 
 const rabOK=(r,x,y)=>grassOK(x,y)&&!(x===P.x&&y===P.y)&&!RAB.some(o=>o!==r&&o.tx===x&&o.ty===y);
 function rabHop(r,t){
@@ -3059,6 +3064,7 @@ function babySprite(px,py,v,fl,pose,t){
 function drawRabbits(){
  const t=NOW;
  RAB.slice().sort((a,b)=>a.y-b.y).forEach(r=>{
+  if(Math.abs(r.x-PV.x)>VW+40||Math.abs(r.y-PV.y)>VH+40)return;
   const loved=t<r.love,pose=loved?'love':r.hop0?'hop':r.pose,px=Math.round(r.x),py=Math.round(r.y-r.az);
   R('rgba(0,0,0,.2)',px+(r.baby?4:3),Math.round(r.y)+14,r.baby?8:10,2);
   if(r.baby)babySprite(px,py,r.v,r.fl,pose,t);else rabbitSprite(px,py,r.v,r.fl,pose,t);
@@ -3084,11 +3090,11 @@ function petRabbit(r){
  const n=RAB.filter(a=>a.petted).length,kind=r.baby?'anak kelinci':'kelinci';
  const L=first?['Laili berjongkok di depan '+kind+' berbulu '+r.v.cn+'.','Laili menamainya "'+r.name+'". '+(r.baby?'Mungil sekali.':'Kelinci itu mengerjapkan mata, setuju.')]:[PET_L[Math.random()*PET_L.length|0]];
  say(L,()=>{
-  if(first)toast('🐰 Kelinci disapa '+n+'/'+RAB.length);
-  if(n===RAB.length&&!CR.all){CR.all=1;setTimeout(bunnyParty,900)}})}
+  if(first)toast('🐰 Kelinci disapa '+(n<10?n+'/10':n+' ekor'));
+  if(n>=Math.min(10,RAB.length)&&!CR.all){CR.all=1;setTimeout(bunnyParty,900)}})}
 function bunnyParty(){
  if(busy||lines.length){setTimeout(bunnyParty,800);return}
- say(['Laili sudah menyapa semua kelinci di desa. Mereka berkumpul, lalu kupu-kupu ikut menari mengelilingi Laili. 🦋'],()=>{
+ say(['Laili sudah menyapa banyak kelinci di desa. Mereka berkumpul, lalu kupu-kupu ikut menari mengelilingi Laili. 🦋'],()=>{
   const t=Date.now();for(let i=0;i<12;i++)BURST.push({sp:i%6,ph:Math.random()*6.28,a:i/12*6.28,dir:i%2?1:-1,born:t+i*120,life:10000});
   sfx('win')})}
 
@@ -3136,7 +3142,7 @@ function pickFlower(b){
  b.tx=f[0];b.ty=f[1];b.tz=f[2]}
 function butInit(){
  const ord=[1,0,2,3,4,5];
- for(let i=0;i<14;i++){
+ for(let i=0;i<30;i++){
   const f=FL[Math.random()*FL.length|0],b=mkBut(ord[i%6],f[0],f[1]);
   b.z=f[2]+6;pickFlower(b);b.st=i%3?'fly':'perch';b.t=Date.now()+Math.random()*3000;BUT.push(b)}
  BUT[0].lady=1;BUT[0].ladyT=Date.now()+9000}
@@ -3174,7 +3180,7 @@ function bflyAt(x,y,z,sp,ph,fly,alpha,shadow){
  bflySprite(px,py,sp,fr);
  g.globalAlpha=1}
 function drawButterfliesAll(){
- BUT.forEach(b=>bflyAt(b.x,b.y,b.z,b.sp,b.ph,b.st==='fly'||b.st==='toLady',1,b.st!=='lady'));
+ BUT.forEach(b=>{if(Math.abs(b.x-PV.x)>VW+40||Math.abs(b.y-PV.y)>VH+40)return;bflyAt(b.x,b.y,b.z,b.sp,b.ph,b.st==='fly'||b.st==='toLady',1,b.st!=='lady')});
  const t=NOW;
  for(let i=BURST.length-1;i>=0;i--){
   const q=BURST[i],age=t-q.born;

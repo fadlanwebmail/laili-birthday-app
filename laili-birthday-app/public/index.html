@@ -3024,43 +3024,54 @@ function rabStep(t){
  })}
 
 function rabbitSprite(px,py,v,fl,pose,t){
- const X=(a,w)=>fl?px+16-a-w:px+a,c=v.c,s=v.s,b=v.b,dk='#2a1a14',
+ const X=(a,w)=>fl?px+16-a-w:px+a,c=v.c,s=v.s,b=v.b,dk='#392b35',
   hop=pose==='hop',love=pose==='love',nib=pose==='nibble',grm=pose==='groom',
-  hy=nib?3:0,wig=(t/170|0)%2,twitch=(t%3300)<160,blink=(t%4200)<110;
- R('#fffdf6',X(hop?0:1,3),py+(hop?7:9),3,3);R('#e8e2d4',X(hop?0:1,3),py+(hop?9:11),3,1);
+  hy=nib?2:0,wig=(t/170|0)%2,twitch=(t%3300)<160,blink=(t%4200)<110;
  if(hop){
-  R(c,X(1,10),py+7,10,5);R(c,X(2,8),py+6,8,1);R(s,X(1,4),py+8,4,3);
-  R(c,X(0,3),py+11,3,2);R(b,X(0,2),py+12,2,1);R(c,X(10,4),py+10,4,2);R(b,X(13,2),py+11,2,1);
-  R(c,X(10,5),py+4,5,5);if(v.patch)R(v.patch,X(10,3),py+4,3,2);
-  R(b,X(13,3),py+6,3,3);R(v.no,X(15,1),py+6,1,1);R(dk,X(12,1),py+5,1,1);
-  if(v.lop){R(c,X(6,5),py+4,5,3);R(s,X(6,3),py+6,3,1)}
-  else{R(c,X(6,6),py+3,6,2);R(v.e,X(7,3),py+3,3,1)}
+  R('#fffdf6',X(0,3),py+9,3,3);R(c,X(2,9),py+7,9,6);R(s,X(2,6),py+11,6,2);
+  R(c,X(9,5),py+5,5,5);if(v.patch)R(v.patch,X(10,3),py+5,3,2);
+  R(b,X(12,3),py+7,3,3);R(v.no,X(14,1),py+7,1,1);
+  R(c,X(5,6),py+3,6,3);R(c,X(6,5),py+2,5,2);
+  R(v.e,X(6,3),py-2,2,5);R(c,X(5,3),py-3,3,7);
+  R(v.e,X(10,2),py-1,2,5);R(c,X(9,3),py-3,3,7);
+  R(dk,X(7,1),py+4,1,1);
   return}
- R(c,X(4,6),py+6,6,1);R(c,X(3,8),py+7,8,6);
- if(v.patch)R(v.patch,X(3,3),py+8,3,3);
- R(s,X(3,4),py+9,4,3);R(b,X(8,3),py+9,3,4);
- R(c,X(5,5),py+13,5,1);R(b,X(8,2),py+13,2,1);R(c,X(10,2),py+10,2,4);R(b,X(10,3),py+13,3,1);
- R(c,X(9,5),py+4+hy,5,5);if(v.patch)R(v.patch,X(9,3),py+4+hy,3,2);
- R(b,X(12,3),py+6+hy,3,3);R(v.no,X(14,1),py+6+hy,1,1);
- R('rgba(255,255,255,.85)',X(14,2),py+7+hy+((wig&&!nib)?0:1),2,1);
- if(love||grm||blink)R(dk,X(10,2),py+5+hy,2,1);else R(dk,X(11,1),py+5+hy,1,1);
- if(love)R('rgba(255,130,150,.75)',X(10,2),py+7+hy,2,1);
- if(nib){R('#5cb266',X(14,1),py+9+hy,1,2);R('#3d9150',X(14,1),py+11+hy,1,1);if(wig)R(b,X(13,2),py+8+hy,2,1)}
- if(grm)R(b,X(11,2),py+6+hy+((t/110|0)%2),2,2);
- if(v.lop){R(c,X(8,3),py+3+hy,3,2);R(c,X(8,2),py+5+hy,2,5);R(s,X(8,2),py+8+hy,2,2)}
- else if(love||grm){R(c,X(6,6),py+3+hy,6,2);R(v.e,X(7,3),py+3+hy,3,1)}
- else{const ey=twitch?1:0;R(c,X(9,2),py-2+hy,2,6);R(v.e,X(10,1),py-1+hy,1,4);R(c,X(12,2),py-3+hy+ey,2,6);R(v.e,X(12,1),py-2+hy+ey,1,4)}}
+ R('#fffdf6',X(7,2),py+12,2,2);R(c,X(3,7),py+8,9,6);R(c,X(4,9),py+7,9,6);
+ R(s,X(4,7),py+11,7,2);R(b,X(6,4),py+9,4,4);
+ if(v.patch)R(v.patch,X(3,3),py+9,3,3);
+ R(c,X(4,4),py+12,4,3);R(c,X(9,4),py+12,4,3);R(b,X(5,2),py+13,2,1);R(b,X(10,2),py+13,2,1);
+ R(c,X(5,6),py+3+hy,6,6);R(c,X(6,8),py+2+hy,8,6);
+ R(b,X(6,4),py+6+hy,4,3);R(b,X(10,2),py+7+hy,2,2);
+ if(v.patch)R(v.patch,X(10,3),py+4+hy,3,2);
+ R(v.e,X(3,2),py+7+hy,2,2);R(v.e,X(11,2),py+7+hy,2,2);
+ R(dk,X(5,2),py+5+hy,2,2);R(dk,X(10,2),py+5+hy,2,2);
+ if(blink){R('#fffdf6',X(5,2),py+6+hy,2,1);R('#fffdf6',X(10,2),py+6+hy,2,1)}
+ R(v.no,X(8,1),py+7+hy,1,1);R(s,X(7,1),py+8+hy,2,1);R(dk,X(8,1),py+8+hy,1,1);
+ if(nib){
+  R('#e87527',X(12,2),py+9+hy,2,4);R('#ffb03b',X(12,1),py+9+hy,1,3);
+  R('#5cb266',X(11,3),py+8+hy,3,1);R('#3d9150',X(13,1),py+7+hy,1,2);
+  if(wig)R('#ffca54',X(12,1),py+10+hy,1,1)}
+ else{R(c,X(6,3),py+9+hy,3,2);R(c,X(9,3),py+9+hy,3,2);R(b,X(7,2),py+10+hy,2,1)}
+ if(grm)R(b,X(10,2),py+6+hy+((t/110|0)%2),2,2);
+ if(love){R(v.e,X(5,2),py+7+hy,2,1);R(v.e,X(10,2),py+7+hy,2,1)}
+ if(v.lop){R(c,X(10,3),py-2,3,5);R(s,X(10,2),py+1,2,2)}
+ else if(love||grm){R(c,X(4,3),py-3,3,7);R(v.e,X(5,1),py-1,1,4);R(c,X(10,3),py-4,3,7);R(v.e,X(11,1),py-2,1,4)}
+ else{R(c,X(4,3),py-5,3,9);R(v.e,X(5,1),py-3,1,6);R(c,X(10,3),py-6,3,10);R(v.e,X(11,1),py-4,1,7)}}
 function babySprite(px,py,v,fl,pose,t){
  const bx=px+3,X=(a,w)=>fl?bx+10-a-w:bx+a,oy=py+6,hop=pose==='hop',love=pose==='love',nib=pose==='nibble',
-  hy=nib?2:0,wig=(t/200|0)%2,dk='#2a1a14';
- R('#fffdf6',X(0,2),oy+(hop?4:5),2,2);
- R(v.c,X(1,6),oy+(hop?3:4),6,4);R(v.b,X(4,3),oy+(hop?5:6),3,2);
- if(hop){R(v.c,X(0,2),oy+7,2,1);R(v.b,X(6,2),oy+6,2,1)}else{R(v.b,X(2,2),oy+8,2,1);R(v.b,X(5,2),oy+8,2,1)}
- R(v.c,X(5,4),oy+1+hy,4,4);R(v.b,X(7,2),oy+3+hy,2,2);R(v.no,X(8,1),oy+3+hy,1,1);
- if(love)R(dk,X(6,2),oy+2+hy,2,1);else R(dk,X(6,1),oy+2+hy,1,1);
- if(hop||love)R(v.c,X(3,4),oy+1,4,1);
- else{R(v.c,X(5,1),oy-2+hy,1,3);R(v.c,X(7,1),oy-3+hy,1,4);R(v.e,X(7,1),oy-2+hy,1,2)}
- if(nib&&wig)R('#5cb266',X(8,1),oy+5+hy,1,1)}
+  hy=nib?1:0,wig=(t/200|0)%2,dk='#392b35';
+ R('#fffdf6',X(1,6),oy+5,6,4);
+ R(v.c,X(2,7),oy+4,7,5);R(v.b,X(4,4),oy+6,4,3);
+ if(v.patch)R(v.patch,X(2,2),oy+6,2,2);
+ R(v.c,X(4,5),oy+1+hy,5,5);R(v.b,X(6,3),oy+3+hy,3,2);
+ R(v.e,X(3,1),oy+4+hy,1,2);R(v.e,X(9,1),oy+4+hy,1,2);
+ R(dk,X(5,1),oy+3+hy,1,1);R(dk,X(8,1),oy+3+hy,1,1);R(v.no,X(7,1),oy+4+hy,1,1);
+ R(v.c,X(3,2),oy-2,2,7);R(v.e,X(4,1),oy-1,1,4);
+ R(v.c,X(8,2),oy-3,2,8);R(v.e,X(9,1),oy-2,1,5);
+ R(v.b,X(3,2),oy+8,2,1);R(v.b,X(8,2),oy+8,2,1);
+ if(hop||love){R(v.c,X(3,5),oy+1,5,1);R(v.c,X(2,2),oy+7,2,2)}
+ if(nib){R('#e87527',X(10,1),oy+5+hy,1,3);R('#5cb266',X(9,2),oy+4+hy,2,1);if(wig)R('#ffca54',X(10,1),oy+6+hy,1,1)}
+ if(love){R(v.e,X(5,1),oy+5,1,1);R(v.e,X(8,1),oy+5,1,1)}}
 function drawRabbits(){
  const t=NOW;
  RAB.slice().sort((a,b)=>a.y-b.y).forEach(r=>{
@@ -3100,30 +3111,39 @@ function bunnyParty(){
 
 const BUT=[],BURST=[];
 const BF_SP=[
- {c:'#f08a2e',c2:'#f5a63a',ed:'#2a1a14',dot:'#fff4d6'},
- {c:'#ff8fb8',c2:'#ffb6d0',ed:'#b02a62',dot:'#fff'},
- {c:'#3d7be8',c2:'#6aa6ff',ed:'#14245a',dot:'#cfe6ff'},
- {c:'#ffd54a',c2:'#ffe88a',ed:'#2a1a14',dot:'#2a1a14',tail:1},
- {c:'#b98cff',c2:'#d6bcff',ed:'#5a3aa0',dot:'#fff4d6'},
- {c:'#f6f3ec',c2:'#ffffff',ed:'#9aa0aa',dot:'#ffd54a'}
+ {c:'#ff9a48',c2:'#73c9f2',ed:'#48245e',dot:'#fff4d6'},
+ {c:'#f49bd3',c2:'#64bdf3',ed:'#48245e',dot:'#fff4d6'},
+ {c:'#69baf2',c2:'#f49bd3',ed:'#48245e',dot:'#fff4d6'},
+ {c:'#ffd56b',c2:'#86c9f2',ed:'#48245e',dot:'#fff4d6'},
+ {c:'#b98cff',c2:'#69baf2',ed:'#48245e',dot:'#fff4d6'},
+ {c:'#f6d8f3',c2:'#84c9f5',ed:'#48245e',dot:'#fff4d6'}
 ];
 function bflySprite(px,py,sp,fr){
- const s=BF_SP[sp],bd='#2a1a14';
- if(fr===0){
-  R(s.c,px-5,py-3,5,3);R(s.c,px-4,py-4,4,1);R(s.c,px+1,py-3,5,3);R(s.c,px+1,py-4,4,1);
-  R(s.c2,px-4,py,4,3);R(s.c2,px-3,py+3,3,1);R(s.c2,px+1,py,4,3);R(s.c2,px+1,py+3,3,1);
-  R(s.ed,px-5,py-3,1,3);R(s.ed,px+5,py-3,1,3);R(s.ed,px-4,py-4,4,1);R(s.ed,px+1,py-4,4,1);R(s.ed,px-4,py+3,3,1);R(s.ed,px+2,py+3,3,1);
-  R(s.dot,px-3,py-2,1,1);R(s.dot,px+3,py-2,1,1);R(s.dot,px-2,py+1,1,1);R(s.dot,px+3,py+1,1,1);
-  if(s.tail){R(s.ed,px-3,py+4,1,2);R(s.ed,px+3,py+4,1,2)}
- }else if(fr===1){
-  R(s.c,px-3,py-3,3,3);R(s.c,px-2,py-4,2,1);R(s.c,px+1,py-3,3,3);R(s.c,px+1,py-4,2,1);
-  R(s.c2,px-2,py,2,3);R(s.c2,px+1,py,2,3);
-  R(s.ed,px-3,py-3,1,3);R(s.ed,px+3,py-3,1,3);R(s.ed,px-2,py-4,2,1);R(s.ed,px+1,py-4,2,1);
-  R(s.dot,px-2,py-2,1,1);R(s.dot,px+2,py-2,1,1);
-  if(s.tail){R(s.ed,px-2,py+3,1,2);R(s.ed,px+2,py+3,1,2)}
- }else{R(s.c,px-1,py-4,3,4);R(s.c2,px-1,py,3,3);R(s.ed,px-1,py-4,3,1);R(s.dot,px,py-2,1,1);R(bd,px,py+3,1,2)}
- if(fr!==2)R(bd,px,py-3,1,6);
- R(bd,px,py-4,1,1);R(bd,px-1,py-5,1,1);R(bd,px-2,py-6,1,1);R(bd,px+1,py-5,1,1);R(bd,px+2,py-6,1,1)}
+ const s=BF_SP[sp],spread=fr===0?1:fr===1?.68:0,
+  wing=(side,x,y,w,h,col)=>R(col,px+Math.round(side*x*spread)-(side<0?Math.max(1,Math.round(w*spread)):0),py+y,Math.max(1,Math.round(w*spread)),h);
+ if(fr===2){
+  R(s.ed,px-2,py-3,2,7);R(s.ed,px+1,py-3,2,7);
+  R(s.c,px-1,py-2,1,5);R(s.c,px+1,py-2,1,5)
+ }else{
+  const upper=[[3,-6,4],[2,-5,6],[1,-4,7],[0,-3,8],[0,-2,8],[1,-1,7],[2,0,5]],
+   upperFill=[[4,-5,3],[3,-4,5],[2,-3,6],[1,-2,7],[1,-1,6],[2,0,4]],
+   lower=[[1,1,4],[1,2,5],[2,3,5],[2,4,4],[3,5,3],[4,6,2]],
+   lowerFill=[[2,1,3],[2,2,4],[3,3,3],[3,4,3],[4,5,2]];
+  [-1,1].forEach(side=>{
+   upper.forEach(([x,y,w])=>wing(side,x,y,w,1,s.ed));
+   upperFill.forEach(([x,y,w],i)=>wing(side,x,y,w,1,i<3?s.c:s.c2));
+   lower.forEach(([x,y,w])=>wing(side,x,y,w,1,s.ed));
+   lowerFill.forEach(([x,y,w],i)=>wing(side,x,y,w,1,i<2?s.c2:s.c));
+   [[4,-4],[2,-2],[5,-1],[2,2],[4,4]].forEach(([x,y],i)=>{
+    const sx=px+Math.round(side*x*spread)-(side<0?1:0),sy=py+y;
+    R(s.dot,sx,sy,1,1);
+    if(i===0||i===3){R(s.dot,sx-1,sy,3,1);R(s.dot,sx,sy-1,1,3)}
+   })
+  })
+ }
+ R(s.ed,px-1,py-4,3,10);R(s.c,px,py-3,1,8);
+ R(s.ed,px,py-4,1,2);R(s.ed,px-1,py-5,1,1);R(s.ed,px+1,py-5,1,1);
+ R(s.ed,px-1,py+5,1,2);R(s.ed,px+1,py+5,1,2)}
 let FL=null;
 function buildFL(){
  FL=[];

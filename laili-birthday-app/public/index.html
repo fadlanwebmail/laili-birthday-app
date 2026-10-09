@@ -3162,7 +3162,7 @@ function pickFlower(b){
  b.tx=f[0];b.ty=f[1];b.tz=f[2]}
 function butInit(){
  const ord=[1,0,2,3,4,5];
- for(let i=0;i<30;i++){
+ for(let i=0;i<22;i++){
   const f=FL[Math.random()*FL.length|0],b=mkBut(ord[i%6],f[0],f[1]);
   b.z=f[2]+6;pickFlower(b);b.st=i%3?'fly':'perch';b.t=Date.now()+Math.random()*3000;BUT.push(b)}
  BUT[0].lady=1;BUT[0].ladyT=Date.now()+9000}
